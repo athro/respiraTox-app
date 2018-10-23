@@ -345,9 +345,10 @@ class respiraToxSettings:
         
         if os.path.exists(settings_filename):
             try:
-                self.settings = json.load(open('respiraTox_defaultSettings.json'))
-                settings_read
-            except:
+                self.settings = json.load(open(settings_filename))
+                settings_read = True
+            except Exception as e:
+                print('An exception occurred: <<{}>>'.format(e))
                 pass
         # if settings could not be read
         if not settings_read:
