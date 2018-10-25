@@ -62,7 +62,7 @@
 	  <h3>The respiraTox Project</h3>
 	  <br>
 	  <p>Some text about the project</p>
-	</div>
+	</div>text
 
 	
 	<div id="about_page_id" class="container tab-pane fade"><br>
@@ -110,6 +110,7 @@
 	    <div class="dropdown-menu">
 	      <!-- <a class="dropdown-item" href="#">SMILES <img src="./icons/111163-justicons/svg/note-interface-symbol.svg" alt="copy&paste" height="16" width="20"> </a> -->
 	      <a class="dropdown-item" onclick="return select_compound_format('SMILES')"  href="#">SMILES <img src="./icons/111163-justicons/svg/note-interface-symbol.svg" alt="copy&paste" height="16" width="20"> </a>
+	      <a class="dropdown-item" onclick="return select_compound_format('EDITOR')"  href="#">EDITOR <img src="./icons/111163-justicons/svg/note-interface-symbol.svg" alt="copy&paste" height="16" width="20"> </a>
 	      <a class="dropdown-item" onclick="return select_compound_format('MDL')">MDL<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
 	      <a class="dropdown-item" onclick="return select_compound_format('SDF')">SDF<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
 	    </div>
@@ -120,17 +121,36 @@
       </div>
       </div>
 
+    <!-- <div class="input-group mb-3"> -->
+    <!--   <small id="fingerprint_type_helptext" class="text-muted"><br/>Select fingerprint type for similarity matching</small> -->
+    <!--   <div class="input-group mb-3"> -->
+    <!--     <div class="input-group-prepend"> -->
+    <!-- 	  <span class="btn-group" id="basic-addon3"> -->
+    <!-- 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint Type</object></button> -->
+    <!-- 	    <div class="dropdown-menu"> -->
+    <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type('FP1 - 1024')">FP1 - 1024</a> -->
+    <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP2 - 2048')">FP2 - 2048</a> -->
+    <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP3 - 2048')">FP3 - 2048</a> -->
+    <!-- 	    </div> -->
+    <!-- 	  </span> -->
+    <!-- 	</div> -->
+	
+    <!-- </div> -->
+
     <div class="input-group mb-3">
-      <small id="fingerprint_type_helptext" class="text-muted"><br/>Select fingerprint type for similarity matching</small>
+      <small id="distance_method_helptext"
+      class="text-muted"><br/>Select distance similarity measures (default is Tanimoto Distance)</small>
       <div class="input-group mb-3">
-        <div class="input-group-prepend">
 	  <span class="btn-group" id="basic-addon3">
-	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint Type</object></button>
+	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="60">Distance</object></button>
 	    <div class="dropdown-menu">
-	      <a class="dropdown-item" onclick="return select_fingerprint_type('FP1 - 1024')">FP1 - 1024</a>
-	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP2 - 2048')">FP2 - 2048</a>
-	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP3 - 2048')">FP3 - 2048</a>
+	      <a class="dropdown-item" onclick="return select_distance_method('Tanimoto')">Tanimoto</a>
+	      <a class="dropdown-item" onclick="return select_distance_method ('Manhattan')">Manhattan</a>
+	      <a class="dropdown-item" onclick="return select_distance_method ('Chebyshev')">Chebyshev</a>
 	    </div>
+	    <fieldset disabled>
+	       <input id="distance_method_id" type="text" class="form-control" style="display:block"  value="Tanimoto" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
+	    </fieldset>
 	  </span>
 	</div>
 	
@@ -173,7 +193,7 @@
           <tr>
             <th style="width:5%" class="table_col_id">Rank</th>
             <th style="width:15%" class="table_col_cas">CAS</th>
-            <th style="width:5%" class="table_col_tanimoto">Tanimoto</th>
+            <th style="width:5%" class="table_col_distance">Distance</th>
             <th style="width:75%" class="table_col_smiles">SMILES</th>
           </tr>
         </thead>
@@ -202,9 +222,11 @@
     </script>
     
     <script src="https://unpkg.com/smiles-drawer@1.0.2/dist/smiles-drawer.min.js"></script>
-    <!-- <script type="text/javascript" language="javascript" src="file:///Users/karwath/owncloud.private/develop/respiraTox/respiraTox_predictionService/scripts/jsme/jsme.nocache.js"></script> -->
+    <!-- <script type="text/javascript" language="javascript" src="scripts/jsme/jsme.nocache.js"></script> -->
     <script type="text/javascript" language="javascript" src="scripts/jsme/jsme.nocache.js"></script>
-    <script src="file:///Users/karwath/owncloud.private/develop/respiraTox/respiraTox_predictionService/predict_script.js"></script>
+    <script type="text/javascript" language="javascript" src="scripts/kekule/kekule.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="scripts/predict_script.js"></script>
 
     <hr>
     <address></address>
@@ -266,9 +288,9 @@
 	    <div id="jsme_container" style="text-align: center"></div>
 	  </div>
 	  <div class="modal-footer">
-	    <button type="button" onclick="alert(jsmeApplet.smiles())">Show SMILES</button>
-	    <button type="button" class="btn btn-secondary" data-dismiss="modal">Save as SMILES</button>
-	    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+	    <!-- <button type="button" onclick="alert(jsmeApplet.smiles())">Show SMILES</button> -->
+	    <button type="button" onclick="smiles_submitted_from_editor(jsmeApplet.smiles())"  class="btn btn-secondary" data-dismiss="modal">Save as SMILES</button>
+	    <button type="button" onclick="smiles_submission_from_editor_cancelled()" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 	    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
 	  </div>
 	</div>
