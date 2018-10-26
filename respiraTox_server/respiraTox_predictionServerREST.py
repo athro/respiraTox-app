@@ -339,7 +339,7 @@ class Job:
 
 class respiraToxSettings:
 
-    def __init__(self,settings_filename='respiraTox_defaultSettings.json'):
+    def __init__(self,settings_filename='respiraTox_settings.json'):
 
         settings_read = None
         
@@ -698,14 +698,14 @@ def setup(settings):
     app.run(debug=True)
 
 
-
+rest_app = None
     
 if __name__ == '__main__':
 
     #settings_filename = None
     
     parser = OptionParser()
-    parser.add_option("-s", "--settings", default='respiraTox_defaultSettings.json', dest="settings_filename", help="the settings filename. Content should be in JSON format (default = respiraTox_defaultSettings.json)", metavar="FILE")
+    parser.add_option("-s", "--settings", default='respiraTox_settings.json', dest="settings_filename", help="the settings filename. Content should be in JSON format (default = respiraTox_settings.json)", metavar="FILE")
 
     # handle settings
     (options, args) = parser.parse_args()
@@ -713,7 +713,7 @@ if __name__ == '__main__':
     settingsInstance = respiraToxSettings(options.settings_filename)
     settings = settingsInstance.getSettings()
     
-    setup(settings)
+    rest_app  = setup(settings)
 
 ## curl test commands:
 
