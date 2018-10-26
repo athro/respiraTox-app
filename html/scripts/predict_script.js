@@ -62,8 +62,8 @@ var respiraTox_request_ID     = -1;
 var respiraTox_request_result = -1;
 var respiraTox_request_data   = {};
 
-var base_URL = "http://127.0.0.1:5000/compound/"
-
+//var base_URL = "http://127.0.0.1:5000/compound/"
+var base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
 // tools
 
 function getAllFuncs(obj) {
