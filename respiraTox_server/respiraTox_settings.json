@@ -7,7 +7,8 @@
 	"default_parameters": ["-reset", "-nosplash", "-application", "-consoleLog", "org.knime.product.KNIME_BATCH_APPLICATION"],
 	"workflow_name": "knime_respiraTox_predict_json",
 	"model_name": "CURRENTLY-NOT-USED",
-	"workflow_dir": "/home/respirat/knime-workspace-karwath",
+        "workflow_dir_old": "/home/respirat/knime-workspace-karwath",
+	"workflow_dir": "/home/respirat/knime-workspace",
 	"json_dir": "respiraTox_predict_json",
 	"infile_name_stem": "Compound_{}_in.json",
 	"outfile_name_stem": "Compound_{}_out.json"

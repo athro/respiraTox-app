@@ -236,10 +236,10 @@ function send_for_prediction_service(cas_number,smiles){
 
 function renderNeighbour(neighbour) {
     let irritation_row_class = "table-success";
-    if (neighbour["resp_irritation"] == "1") {
+    if (neighbour["compound_endpoint_no_irritation"] == "0") {
 	irritation_row_class = "table-danger";
     }
-    return '\t<tr class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["selected smiles"]+'</td>\n\t</tr>';
+    return '\t<tr class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
 }
 
 function renderResultTable(neighbours) {

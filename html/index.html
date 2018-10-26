@@ -46,10 +46,10 @@
 	  <li class="nav-item">
 	    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_aboutMenu">About</a>
 	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_JSMEEditor">JSME Editor</a>
-	  </li>
-	  
+	  <!-- <li class="nav-item"> -->
+	  <!--   <a class="nav-link" data-toggle="modal" data-target="#respiraTox_JSMEEditor">JSME Editor</a> -->
+	  <!-- </li> -->
+	 
 	  <li class="nav-item">
 	    <a class="nav-link" data-toggle="tab" href="#contact_page_id">Contact</a>
 	  </li>
@@ -94,13 +94,13 @@
 	<input id="cas_number_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="cas_number_label" aria-describedby="cas_input_id"></input>
       </div>
 
-      <small id="smiles_helptext" class="text-muted"><br/>Select what structure format to use and paste or enter compound</small> 
-      <div class="input-group mb-3"> 
-      	<div class="input-group-prepend"> 
-      	  <span class="input-group-text" id="smiles_input_desc"><object width="75">SMILES</object></span> 
-      	</div> 
-      	<input id="smiles_input_id" type="text" class="form-control" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="smiles_label" aria-describedby="smiles_input_desc"></input> -->
-      </div> 
+      <!-- <small id="smiles_helptext" class="text-muted"><br/>Select what structure format to use and paste or enter compound</small>  -->
+      <!-- <div class="input-group mb-3">  -->
+      <!-- 	<div class="input-group-prepend">  -->
+      <!-- 	  <span class="input-group-text" id="smiles_input_desc"><object width="75">SMILES</object></span>  -->
+      <!-- 	</div>  -->
+      <!-- 	<input id="smiles_input_id" type="text" class="form-control" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="smiles_label" aria-describedby="smiles_input_desc"></input> -\-> -->
+      <!-- </div>  -->
 
       <small id="smiles_helptext" class="text-muted"><br/>Select structure format and enter or upload compound structure</small>
       <div class="input-group mb-3">
@@ -192,9 +192,11 @@
         <thead>
           <tr>
             <th style="width:5%" class="table_col_id">Rank</th>
+            <th style="width:15%" class="table_col_cas">Name</th>
             <th style="width:15%" class="table_col_cas">CAS</th>
-            <th style="width:5%" class="table_col_distance">Distance</th>
-            <th style="width:75%" class="table_col_smiles">SMILES</th>
+            <th style="width:5%" class="table_col_distance">Similarity</th>
+            <th style="width:25%" class="table_col_smiles">SMILES</th>
+            <th style="width:50%" class="table_col_smiles">Database Reference</th>
           </tr>
         </thead>
 	<tbody id="neighbour_table_body_id">
