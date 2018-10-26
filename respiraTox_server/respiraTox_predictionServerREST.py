@@ -695,7 +695,12 @@ def setup(settings):
 
     api.add_resource(Compound,"/compound/<string:compound_id>")
     api.add_resource(Compounds,"/compound/")
-    app.run(debug=True)
+    app.run(
+        host=settings['IP'],
+        port=settings['port'],
+        # debug=eval(settings['debug'])
+        debug=True
+        )
 
 
 rest_app = None
