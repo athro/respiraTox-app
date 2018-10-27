@@ -258,7 +258,8 @@ compounds = [
             "SP3 Character": 0.07142857142857142,
             "Rotatable Bonds Count (non terminal)": 3
         }
-    }
+    }   
+    
     ]
 
 
