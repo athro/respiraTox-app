@@ -362,7 +362,7 @@ function renderResultTableNew(neighbours) {
 
 	// database refs
 	td = document.createElement('td');
-	td.innerHTML = neighbour["compound_endpoint_source"];
+	td.innerHTML = neighbour["compound_source"];
 	tr.appendChild(td);
 
 
@@ -379,7 +379,7 @@ function renderNeighbour(neighbour,counter) {
 	irritation_row_class = "table-danger";
 	irritation_row_color = "red";
     }
-    return '\t<tr id="table_row_'+counter+' style="color: '+irritation_row_color+';" class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
+    return '\t<tr id="table_row_'+counter+' style="color: '+irritation_row_color+';" class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_source"]+'</td>\n\t</tr>';
     // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
     // return returnVal;
 
@@ -400,16 +400,18 @@ function renderResultTable(neighbours) {
     
 }    
 
-function renderPredictionResult(predictionResult) {
+function renderPredictionResult(predictionResult,appdomain) {
     console.log("renderPredictionResult");
     let prediction_result_int = parseFloat(predictionResult).toFixed(1)
     let prediction_color = prediction_colors.white;
+    let applicabilitydomain_display_area_var = document.getElementById('applicabilitydomain_display_area_id');
     if (prediction_result_int >= 0.0) {
 	if (prediction_result_int > 0.0) {
 	    prediction_color = prediction_colors.red;
 	} else {
 	    prediction_color = prediction_colors.green;
 	}
+	applicabilitydomain_display_area_var.innerHTML = appdomain; 
     }
     prediction_display_area_var.style.setProperty("background-color",prediction_color);
     console.log("prediction_color",prediction_color);
@@ -429,17 +431,20 @@ function analyseResponse(response) {
 	respiraTox_request_status = status;
 	respiraTox_request_ID = response["compound_id"];
 	hideElement(table_var);
-	renderPredictionResult(-1);
+	renderPredictionResult(-1,-1);
 	alert_message('Job is running<br/>Compound ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
     }
     // job finished
     else if (status == 11) {
 	job_running = false;
 	respiraTox_request_status = status;
-	respiraTox_request_result = response["Prediction (resp_irritation)"]
+	respiraTox_request_result = response["Prediction (resp_irritation)"];
+
+	let appdomain =  response["calculated_data"]["Prediction"];
+	console.log('appdomain:'+appdomain);
 	respiraTox_request_data   = response["calculated_data"]
 	renderResultTable(response["calculated_data"]["neighbours"]["neighbours"][0])
-	renderPredictionResult(respiraTox_request_result);
+	renderPredictionResult(respiraTox_request_result,appdomain);
 
 	alert_message('Job has finished<br/>Compound ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
 
@@ -457,7 +462,7 @@ function analyseResponse(response) {
 	hideElement(table_var);
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
-	renderPredictionResult(-1);
+	renderPredictionResult(-1,-1);
     }
     console.log('Status is:' + status);
     console.log('Job running flag is: '+job_running);

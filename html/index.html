@@ -177,17 +177,22 @@
       <div class="canvas_class">
 	<canvas id="smiles_canvas" width="250" height="150"></canvas>
       </div>
-      <small id="prediction_helptext" class="text-muted"><br/>Prediction</small>
-      <div class="d-flex p-3 bg-white text-black" >
+      <small id="applicabilitydomain_helptext" class="text-muted"><br/>Applicability Domain</small>
+      <div style="width: 150px; height: 80px; background-color: white;">
+	<div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
+	<div class="mh-100" id="applicabilitydomain_display_area_id" style="width: 150px; height: 50px; background-color: white;"></div>
+
+      </div>
+      <small id="prediction_helptext" class="text-muted"><br/>Prediction</small>      <div class="d-flex p-3 bg-white text-black" >
       <div style="width: 50px; height: 80px; background-color: white;">
       <div class="mh-100" style="width: 15px; height: 15px; background-color: white;"></div>
       <div class="mh-100" id="prediction_display_area_id" style="width: 50px; height: 50px; background-color: white;"></div>
       </div>
       <div class="d-flex p-3 bg-white text-muted" >
         <div style="width: 50px; height: 80px; background-color: white;">
-	<small><div class="mh-100" style="text-align: center; height: 4px; width: 60px; background-color: white"></div></small>
-	<small><div class="mh-100" style="text-align: center; height: 20px; width: 60px; background-color: rgba(195,230,203,1.0);">not irritating</div></small>
-	<small><div class="mh-100" style="text-align: center; height: 20px; width: 60px; background-color: rgba(245,198,203,1.0);">irritating</div></small>
+	<small><div class="mh-100" style="text-align: center; height: 4px; width: 80px; background-color: white"></div></small>
+	<small><div class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(195,230,203,1.0);">non-irritating</div></small>
+	<small><div class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(245,198,203,1.0);">irritating</div></small>
 	</div>
       </div>
          <!-- <div class="p-2 bg-light" width=300 id="pred_flex">1</div> -->
@@ -289,7 +294,7 @@
 	    <!-- </button> -->
 	  </div>
 	  <div class="modal-body">
-	    The respiraTox prediction service has been implemented by Matthias Wehr and Andreas Karwath. The Github project can be found here.
+	    The respiraTox prediction service has been implemented by Matthias Wehr and Andreas Karwath. The Github project can be found here: <a href="https://github.com/athro/respiraTox-app">https://github.com/athro/respiraTox-app</a>
 	  </div>
 	  <div class="modal-footer">
 	    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -321,9 +326,12 @@
 
 
   
-    <div>Icons made by <a href="https://www.flaticon.com/authors/rami-mcmin" title="Rami McMin">Rami McMin</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+    <small id="links" class="text-muted">
+      <div>Icons made by <a href="https://www.flaticon.com/authors/rami-mcmin" title="Rami McMin">Rami McMin</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
     <div>B. Bienfait and P. Ertl, <a href="https://jcheminf.biomedcentral.com/articles/10.1186/1758-2946-5-24">JSME: a free molecule editor in JavaScript</a>, J. Cheminformatics 5:24 (2013)</div>
-  <!-- https://www.flaticon.com/packs/justicons/3 -->
+    <div><a href="http://doc.gdb.tools/smilesDrawer/">Smiles Drawer</a> by Reynolds Lab.</div>
+    </small>
+    <!-- https://www.flaticon.com/packs/justicons/3 -->
   </body>
 </html>
 
