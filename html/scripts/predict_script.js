@@ -66,8 +66,9 @@ var respiraTox_request_result = -1;
 var respiraTox_request_data   = {};
 
 //var base_URL = "http://127.0.0.1:5000/compound/"
+// let convert_URL = "http://127.0.0.1:5555/smiles/"
 // let base_URL = "http://127.0.0.1:5555/compound/"
-let convert_URL = "http://127.0.0.1:5555/smiles/"
+let convert_URL = "https://respiratox.item.fraunhofer.de/rest/smiles/"
 let base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
 // tools
 
