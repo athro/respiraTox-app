@@ -66,9 +66,9 @@ var respiraTox_request_result = -1;
 var respiraTox_request_data   = {};
 
 //var base_URL = "http://127.0.0.1:5000/compound/"
-let base_URL = "http://127.0.0.1:5555/compound/"
+// let base_URL = "http://127.0.0.1:5555/compound/"
 let convert_URL = "http://127.0.0.1:5555/smiles/"
-// var base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
+let base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
 // tools
 
 function getAllFuncs(obj) {
@@ -374,10 +374,12 @@ function renderResultTableNew(neighbours) {
 
 function renderNeighbour(neighbour,counter) {
     let irritation_row_class = "table-success";
+    let irritation_row_color = "green";
     if (neighbour["compound_endpoint_no_irritation"] == "0") {
 	irritation_row_class = "table-danger";
+	irritation_row_color = "red";
     }
-    return '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
+    return '\t<tr id="table_row_'+counter+' style="color: '+irritation_row_color+';" class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
     // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
     // return returnVal;
 
