@@ -10,6 +10,15 @@ from flask_restful import Api,Resource, reqparse
 from pprint import pprint
 from optparse import OptionParser
 
+
+# import openbabel python module for SMILES to MOL convertion
+openbabel = False
+try:
+    import pybel
+    openbabel = True
+except:
+    pass
+
 debug       = False
 
 
@@ -380,9 +389,38 @@ class respiraToxSettings:
         }
     
         
+class Converter(Resource):
 
+    def _convert(self,smiles_string):
+        conversion_error = True
+        return_value = smiles_string
+        if openbabel:
+            try:
+                mol_to_convert = pybel.readstring("smi",smiles_string)
+                return_value = mol_to_convert.write('mol')
+                conversion_error = False
+            except Exception as e:
+                print('smiles_string:{}'.format(smiles_string))
+                print(e)
+                pass
 
+        return return_value
     
+    # converts a SMILES string via openbabel using simple get
+    def get(self,smiles_string):
+        return self._convert(smiles_string)
+            
+    # converts a SMILES string via openbabel using simple get
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("smiles_string")
+        args = parser.parse_args()
+        return self._convert(args['smiles_string'])
+
+        
+        return self._convert(smiles_string)
+            
+                
 class Compounds(Resource):
 
     # returns the list of saved compounds
@@ -696,6 +734,9 @@ def setup(settings):
 
     api.add_resource(Compound,"/compound/<string:compound_id>")
     api.add_resource(Compounds,"/compound/")
+    # api.add_resource(Converter,"/converter/<string:smiles_string>")
+    api.add_resource(Converter,"/smiles/")
+    
     app.run(
         host=settings['IP'],
         port=settings['port'],

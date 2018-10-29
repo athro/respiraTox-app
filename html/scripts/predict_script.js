@@ -1,3 +1,6 @@
+let job_running = false;
+let use_smiles_drawer_table = false;
+
 //let smiles_input_var = document.getElementById("smiles_input_id");
 let cas_number_input_var = document.getElementById("cas_number_input_id");
 
@@ -64,6 +67,7 @@ var respiraTox_request_data   = {};
 
 //var base_URL = "http://127.0.0.1:5000/compound/"
 let base_URL = "http://127.0.0.1:5555/compound/"
+let convert_URL = "http://127.0.0.1:5555/smiles/"
 // var base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
 // tools
 
@@ -184,7 +188,38 @@ function select_compound_format(compound_format){
 	let current_smiles = compound_input_var.value;
 
 	// // not possible currently to set via SMILES - have to provide in the pyhthon REST interface
-	// if (current_smiles != '') {
+	// try to use converter functionality of the REST server
+
+
+	// use external : https://cactus.nci.nih.gov/chemical/structure/CCC(C)CC/file?format=jme
+	// https://cactus.nci.nih.gov/chemical/structure
+	// https://cactus.nci.nih.gov/chemical/structure/"structure identifier"/"representation"
+
+	
+	if (current_smiles != '') {
+	    smiles_encoded = encodeURI(current_smiles);
+	    console.log("smiles_encoded:"+smiles_encoded);
+	    submit_data = {"smiles_string":smiles_encoded};
+	    let converted_smiles = '';
+	    // $.post(convert_URL,submit_data,
+	    // 	   function(data,status){
+	    // 	       console.log("Data: " + data);
+	    // 	       converted_smiles = data;
+	    // 	       console.log("Status: " + status);
+	    // 	   });
+	    
+	    $.ajax({
+		type: "POST",
+		url: convert_URL,
+		async: false,
+		data: submit_data,
+		success: function(response) { converted_smiles = response; }
+	    });
+  
+
+	    console.log("converted_smiles:"+converted_smiles);
+
+	    
 	//     let jsme_editor_applet = document.getElementById("jsmeApplet");
 
 	//     console.log('setting existing smiles: '+current_smiles);
@@ -195,15 +230,31 @@ function select_compound_format(compound_format){
 	//     var mol_data = Kekule.IO.saveFormatData(mol_from_smiles, 'mol');
 	//     console.log('mol_data:'+mol_data);
 
-	    
-	//     jsmeApplet.readGenericMolecularInput(current_smiles);
-	//     //console.log('jsme_editor_applet: '+jsme_editor_applet);
+	    console.log('jsme visible 1?'+jsmeApplet.isVisible());
+	    console.log('jsme smiles 1?'+jsmeApplet.smiles());
+	    jsmeApplet.readMolFile(converted_smiles);
+	    compound_as_jme = jsmeApplet.jmeFile()
+	    console.log('jsme compound_as_jme 1?'+compound_as_jme);
+	    jsmeApplet.readMolecule(compound_as_jme);
+            $("#respiraTox_JSMEEditor").modal();
+	    // console.log('jsme smiles 2?'+jsmeApplet.smiles());
+	    // jsmeApplet.readMolFile(converted_smiles);
+	    // jsmeApplet.repaint();
+	    // jsmeApplet.deferredRepaint();
+	    // console.log('jsme visible 2?'+jsmeApplet.isVisible());
+
+	    // jsmeApplet.readGenericMolecularInput(converted_smiles);
+	    //console.log('jsme_editor_applet: '+jsme_editor_applet);
 	//     // jsmeApplet.readMolecule(current_smiles); // or document.JME.readMolecule(jme);
 	//     //getAllFuncs(jsme_editor_applet);
-	// }
+	} else {
+            $("#respiraTox_JSMEEditor").modal();
+	    jsmeApplet.repaint();
+	    jsmeApplet.deferredRepaint();
 
+	}
 	// let compound_input_editor_modal = $("#respiraTox_JSMEEditor");
-        $("#respiraTox_JSMEEditor").modal();
+
 	compound_format_selected_var + "SMILES";
 	hideElement(compound_input_var_text);
 	hideElement(compound_input_var_button);
@@ -230,27 +281,121 @@ function send_for_prediction_service(cas_number,smiles){
     submit_data = {"cas_number":cas_number, "selected_smiles":smiles};
     // submit_URL  = 'http://127.0.0.1:5000/compound/';
     sendRequest(base_URL,submit_data);
-    console.log("call sent (ded)");
+    console.log("call sent ");
+    // set that job is running
+    job_running = true;
+    // schedule the first invocation:
+    setTimeout(myPeriodicMethod, 1000);
+
     let respiraTox_alert_var = document.getElementById("smiles_submit_button_id");
 
 }
 
-function renderNeighbour(neighbour) {
+function myPeriodicMethod() {
+    if (job_running) {
+	refresh_prediction();
+	setTimeout(myPeriodicMethod, 1000);
+    }
+}
+
+function renderResultTableNew(neighbours) {
+    console.log("renderResultTableNew:");
+    table_body_var.innerHTML = '';
+
+    for (var i = 0; i < neighbours.length; i++){
+	neighbour = neighbours[i];
+	var irritation_row_class = "table-success";
+	if (neighbour["compound_endpoint_no_irritation"] == "0") {
+	    irritation_row_class = "table-danger";
+	}
+	var tr = document.createElement('tr');
+	tr.setAttribute('class',irritation_row_class);
+	// rank
+	var th = document.createElement('th');
+	th.innerHTML = neighbour["rank"];
+	tr.appendChild(th);
+	
+	// compound_name
+	var td = document.createElement('td');
+	td.innerHTML = neighbour["compound_name"];
+	tr.appendChild(td);
+
+	// compound_cas_number
+	td = document.createElement('td');
+	td.innerHTML = neighbour["compound_cas_number"];
+	tr.appendChild(td);
+
+	// similarity
+	td = document.createElement('td');
+	td.innerHTML = parseFloat(neighbour["Tanimoto"]).toFixed(2);
+	tr.appendChild(td);
+
+	// smiles
+	td = document.createElement('td');
+	td.innerHTML = neighbour["compound_structure_smiles"];
+	tr.appendChild(td);
+
+	
+
+	// if (use_smiles_drawer_table) {
+	//     try {
+	// 	let canvas = document.createElement('canvas');
+	// 	canvas.setAttribute('id', 'canvas_nn_' + i);
+	// 	canvas.setAttribute('width', '75');
+	// 	canvas.setAttribute('height', '75');
+	// 	canvas.setAttribute('alt', neighbour["compound_structure_smiles"]);
+	// 	SmilesDrawer.parse(neighbour["compound_structure_smiles"], function(tree) {
+	// 	    smilesDrawer.draw(tree, 'canvas_nn_' + i, 'light', false);
+	// 	});
+	// 	tr.appendChild(canvas);
+	// 	// canvas
+	// 	td = document.createElement('td');
+	// 	// td.innerHTML = canvas;
+	// 	// tr.appendChild(td);
+	// 	console.log('canvas = '+canvas);
+	//     } catch (exception) {
+	// 	console.log('exception occurred:');
+        //     }
+	// }
+
+	
+
+	// database refs
+	td = document.createElement('td');
+	td.innerHTML = neighbour["compound_endpoint_source"];
+	tr.appendChild(td);
+
+
+	
+	table_body_var.appendChild(tr)
+    };
+    
+}
+
+function renderNeighbour(neighbour,counter) {
     let irritation_row_class = "table-success";
     if (neighbour["compound_endpoint_no_irritation"] == "0") {
 	irritation_row_class = "table-danger";
     }
-    return '\t<tr class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
+    return '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
+    // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
+    // return returnVal;
+
+
+    
 }
 
 function renderResultTable(neighbours) {
     console.log("renderResultTable:");
     let inner_html = "";
-
     for (var i = 0; i < neighbours.length; i++){
-	inner_html = inner_html + renderNeighbour(neighbours[i]);
-    }
+	inner_html = inner_html + renderNeighbour(neighbours[i],i);
+    };
     table_body_var.innerHTML = inner_html;
+    $(document).ready(function() {
+        $('#neighbour_table_id').DataTable();
+    } );
+    
 }    
 
 function renderPredictionResult(predictionResult) {
@@ -278,6 +423,7 @@ function analyseResponse(response) {
 
     // job running
     if (status == 10) {  
+	job_running = true;
 	respiraTox_request_status = status;
 	respiraTox_request_ID = response["compound_id"];
 	hideElement(table_var);
@@ -286,6 +432,7 @@ function analyseResponse(response) {
     }
     // job finished
     else if (status == 11) {
+	job_running = false;
 	respiraTox_request_status = status;
 	respiraTox_request_result = response["Prediction (resp_irritation)"]
 	respiraTox_request_data   = response["calculated_data"]
@@ -299,6 +446,7 @@ function analyseResponse(response) {
 	disableElement(smiles_refresh_button_var);
     }
     else if (status == 15) {
+	job_running = false;
 	respiraTox_request_ID = -1;
 	respiraTox_request_status = -1;
 	respiraTox_request_result = -1
@@ -310,6 +458,8 @@ function analyseResponse(response) {
 	renderPredictionResult(-1);
     }
     console.log('Status is:' + status);
+    console.log('Job running flag is: '+job_running);
+
 }
 
 
