@@ -1,5 +1,5 @@
 let job_running = false;
-let use_smiles_drawer_table = false;
+let use_smiles_drawer_table = true;
 
 //let smiles_input_var = document.getElementById("smiles_input_id");
 let cas_number_input_var = document.getElementById("cas_number_input_id");
@@ -30,11 +30,13 @@ let table_body_var = document.getElementById("neighbour_table_body_id");
 let table_var = document.getElementById("neighbour_table_id");
 let prediction_display_area_var = document.getElementById("prediction_display_area_id");
 
-let prediction_colors = {
+let local_color_scheme = {
     red: "rgba(245,198,203,1.0)",
     green: "rgba(195,230,203,1.0)",
     white: "rgba(255,255,255,1.0)",
-    black: "rgba(0,0,0,1.0)"
+    black: "rgba(0,0,0,1.0)",
+    reliable_green: "rgba(195,240,213,1.0)",
+    reliable_red: "rgba(255,198,213,1.0)",
 }
     
 
@@ -43,8 +45,17 @@ let smiles_canvas_options = {
     height:150
 };
 
-// Initialize the drawer
+// Initialize the drawers
 let smiles_drawer = new SmilesDrawer.Drawer(smiles_canvas_options);
+
+
+let smiles_drawer_table_options = {
+    width: 200,
+    height: 100,
+    bondLength: 3,
+    overlapResolutionIterations: 2
+};
+let smiles_drawer_table = new SmilesDrawer.Drawer(smiles_drawer_table_options);
 
 // JSME Editor
 
@@ -66,10 +77,10 @@ var respiraTox_request_result = -1;
 var respiraTox_request_data   = {};
 
 //var base_URL = "http://127.0.0.1:5000/compound/"
-// let convert_URL = "http://127.0.0.1:5555/smiles/"
-// let base_URL = "http://127.0.0.1:5555/compound/"
-let convert_URL = "https://respiratox.item.fraunhofer.de/rest/smiles/"
-let base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
+let convert_URL = "http://127.0.0.1:5555/smiles/"
+let base_URL = "http://127.0.0.1:5555/compound/"
+// let convert_URL = "https://respiratox.item.fraunhofer.de/rest/smiles/"
+// let base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
 // tools
 
 function getAllFuncs(obj) {
@@ -299,18 +310,28 @@ function myPeriodicMethod() {
     }
 }
 
+function drawSmiles() {
+    SmilesDrawer.apply();
+}
+
 function renderResultTableNew(neighbours) {
     console.log("renderResultTableNew:");
     table_body_var.innerHTML = '';
+    showElement(table_var);
 
     for (var i = 0; i < neighbours.length; i++){
 	neighbour = neighbours[i];
 	var irritation_row_class = "table-success";
-	if (neighbour["compound_endpoint_no_irritation"] == "0") {
+	if (neighbour["no_irritation"] == "0") {
 	    irritation_row_class = "table-danger";
 	}
 	var tr = document.createElement('tr');
 	tr.setAttribute('class',irritation_row_class);
+	tr.setAttribute('id','tr_id_'+i);
+
+	table_body_var.appendChild(tr)
+
+	
 	// rank
 	var th = document.createElement('th');
 	th.innerHTML = neighbour["rank"];
@@ -318,12 +339,12 @@ function renderResultTableNew(neighbours) {
 	
 	// compound_name
 	var td = document.createElement('td');
-	td.innerHTML = neighbour["compound_name"];
+	td.innerHTML = neighbour["chemical_name"];
 	tr.appendChild(td);
 
 	// compound_cas_number
 	td = document.createElement('td');
-	td.innerHTML = neighbour["compound_cas_number"];
+	td.innerHTML = neighbour["cas_number"];
 	tr.appendChild(td);
 
 	// similarity
@@ -331,57 +352,123 @@ function renderResultTableNew(neighbours) {
 	td.innerHTML = parseFloat(neighbour["Tanimoto"]).toFixed(2);
 	tr.appendChild(td);
 
-	// smiles
-	td = document.createElement('td');
-	td.innerHTML = neighbour["compound_structure_smiles"];
-	tr.appendChild(td);
+	// either smiles of the molecule in hgraphical representation 
+	if (use_smiles_drawer_table) {
+	    try {
+		td = document.createElement('td');
 
-	
+		// canvas
+		let canvas_element = document.createElement('canvas');
+		var canvas_element_id = 'canvas_nn_'+i;
 
-	// if (use_smiles_drawer_table) {
-	//     try {
-	// 	let canvas = document.createElement('canvas');
-	// 	canvas.setAttribute('id', 'canvas_nn_' + i);
-	// 	canvas.setAttribute('width', '75');
-	// 	canvas.setAttribute('height', '75');
-	// 	canvas.setAttribute('alt', neighbour["compound_structure_smiles"]);
-	// 	SmilesDrawer.parse(neighbour["compound_structure_smiles"], function(tree) {
-	// 	    smilesDrawer.draw(tree, 'canvas_nn_' + i, 'light', false);
-	// 	});
-	// 	tr.appendChild(canvas);
-	// 	// canvas
-	// 	td = document.createElement('td');
-	// 	// td.innerHTML = canvas;
-	// 	// tr.appendChild(td);
-	// 	console.log('canvas = '+canvas);
-	//     } catch (exception) {
-	// 	console.log('exception occurred:');
-        //     }
-	// }
+		canvas_element.setAttribute('id', canvas_element_id);
+		// canvas_element.setAttribute('width', '75');
+		// canvas_element.setAttribute('height', '75');
+		canvas_element.setAttribute('alt', neighbour["smiles"]);
+		// canvas_element.setAttribute('data-smiles', "CCCCCCC");
 
-	
+		// var ctx = canvas_element.getContext("2d");
+		// ctx.fillStyle = 'green';
+		// ctx.fillRect(5, 5, 15, 15);
+
+		td.appendChild(canvas_element);
+		tr.appendChild(td);
+
+		// console.log('canvas.id = '+canvas_element.id);
+		// console.log('canvas as element:'+Object.values(canvas_element));
+
+		// var element_smiles = neighbour["smiles"];
+		// console.log(canvas_element_id+'.id:'+canvas_element.id);
+		// console.log(canvas_element_id+'.canvas_element:'+canvas_element);
+		// console.log(canvas_element_id+'.neighbour:'+Object.values(neighbour));
+		// console.log(canvas_element_id+'.smiles:'+element_smiles);
+		SmilesDrawer.parse(neighbour["smiles"], function(tree) {
+		    // console.log(canvas_element_id+'.tree1:'+Object.keys(tree));
+		    // console.log(canvas_element_id+'.tree1:'+Object.values(tree));
+		    smiles_drawer_table.draw(tree,canvas_element, 'light', false);
+		    // console.log(canvas_element_id+'.tree2:'+tree);
+		});
+		// console.log(canvas_element_id+'.smiles_drawer_table:'+Object.keys(smiles_drawer_table));
+		
+
+	    } catch (exception) {
+		console.log('exception occurred:');
+            }
+	} else {
+	    // smiles
+	    td = document.createElement('td');
+	    td.innerHTML = neighbour["smiles"];
+	    tr.appendChild(td);
+	}
 
 	// database refs
 	td = document.createElement('td');
-	td.innerHTML = neighbour["compound_source"];
+	td.innerHTML = neighbour["source"];
 	tr.appendChild(td);
 
-
+	// irritation information
+	td = document.createElement('td');
+	tr.appendChild(td);
+	table = document.createElement('table');
+	td.appendChild(table);
+	tr = document.createElement('tr');
+	table.appendChild(tr);
 	
-	table_body_var.appendChild(tr)
+	
+	
+	
     };
+    console.log('use_smiles_drawer_table = '+use_smiles_drawer_table);
+
+   
+    // assume that the canvas elements are created
+    if (use_smiles_drawer_table) {
+    	// for (var i = 0; i < neighbours.length; i++){
+    	//     neighbour = neighbours[i];
+    	//     var canvas_element_id = 'canvas_nn_'+i;
+    	//     var canvas_element = document.getElementById(canvas_element_id);
+    	//     var element_smiles = neighbour["smiles"];
+
+
+        //     // debug
+	//     var ctx = canvas_element.getContext("2d");
+	//     ctx.fillStyle = 'blue';
+	//     ctx.fillRect(10, 10, 20, 20);
+	    
+    	//     console.log(canvas_element_id+'.id:'+canvas_element.id);
+    	//     // console.log(canvas_element_id+'.canvas_element:'+canvas_element);
+    	//     // // console.log(canvas_element_id+'.neighbour:'+Object.values(neighbour));
+    	//     // console.log(canvas_element_id+'.smiles:'+element_smiles);
+
+    	//     SmilesDrawer.parse("CCCC", function(tree) {
+    	//     	smiles_drawer_table.draw(tree, 'canvas_nn_'+i, 'light', false);
+    	//     }, function (err) {
+	//     	console.log(err);
+	//     });
+
+            // SmilesDrawer.parse('C1CCCCC1', function (tree) {
+	    // 	smilesDrawer.draw(tree, 'output-canvas', 'light', false);
+	    // }, function (err) {
+	    // 	console.log(err);
+	    // }
+    	    // console.log(canvas_element_id+'.smiles_drawer_table:'+Object.keys(smiles_drawer_table));
+
+    	// };
+    }
+    //SmilesDrawer.apply();
     
 }
 
 function renderNeighbour(neighbour,counter) {
+    console.log('renderNeighbour. Neighbour = '+neighbour+'    counter:'+counter);
     let irritation_row_class = "table-success";
     let irritation_row_color = "green";
-    if (neighbour["compound_endpoint_no_irritation"] == "0") {
+    if (neighbour["no_irritation"] == "0") {
 	irritation_row_class = "table-danger";
 	irritation_row_color = "red";
     }
-    return '\t<tr id="table_row_'+counter+' style="color: '+irritation_row_color+';" class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["compound_structure_smiles"]+'</th>\n\t\t<td>'+neighbour["compound_source"]+'</td>\n\t</tr>';
-    // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["compound_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["compound_endpoint_source"]+'</td>\n\t</tr>';
+    return '\t<tr id="table_row_'+counter+' style="color: '+irritation_row_color+';" class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["chemical_name"]+'</th>\n\t\t<td>'+neighbour["cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["smiles"]+'</th>\n\t\t<td>'+neighbour["source"]+'</td>\n\t</tr>';
+    // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["chemical_name"]+'</th>\n\t\t<td>'+neighbour["cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["source"]+'</td>\n\t</tr>';
     // return returnVal;
 
 
@@ -390,6 +477,7 @@ function renderNeighbour(neighbour,counter) {
 
 function renderResultTable(neighbours) {
     console.log("renderResultTable:");
+    console.log('neighbours = '+neighbours)
     let inner_html = "";
     for (var i = 0; i < neighbours.length; i++){
 	inner_html = inner_html + renderNeighbour(neighbours[i],i);
@@ -404,20 +492,27 @@ function renderResultTable(neighbours) {
 function renderPredictionResult(predictionResult,appdomain) {
     console.log("renderPredictionResult");
     let prediction_result_int = parseFloat(predictionResult).toFixed(1)
-    let prediction_color = prediction_colors.white;
+    let prediction_color = local_color_scheme.white;
     let applicabilitydomain_display_area_var = document.getElementById('applicabilitydomain_display_area_id');
     if (prediction_result_int >= 0.0) {
 	if (prediction_result_int > 0.0) {
-	    prediction_color = prediction_colors.red;
+	    prediction_color = local_color_scheme.red;
 	} else {
-	    prediction_color = prediction_colors.green;
+	    prediction_color = local_color_scheme.green;
 	}
-	applicabilitydomain_display_area_var.innerHTML = appdomain; 
     }
     prediction_display_area_var.style.setProperty("background-color",prediction_color);
-    console.log("prediction_color",prediction_color);
-    console.log(prediction_display_area_var.style.getPropertyValue("background-color"));
-    //prediction_display_area_var.style.setProperty("background-color","rgba(0,0,203,1.0)");
+    
+    // deal with AppDomain
+
+    applicabilitydomain_display_area_var.innerHTML = appdomain;
+    let applicabilitydomain_color = local_color_scheme.white;
+    if (appdomain == 'reliable') {
+    	applicabilitydomain_color = local_color_scheme.reliable_green; 
+    } else if (appdomain == 'unreliable') {
+    	applicabilitydomain_color = local_color_scheme.reliable_red; 
+    }
+    applicabilitydomain_display_area_var.style.setProperty("background-color",applicabilitydomain_color);
 }
 
 
@@ -432,8 +527,8 @@ function analyseResponse(response) {
 	respiraTox_request_status = status;
 	respiraTox_request_ID = response["compound_id"];
 	hideElement(table_var);
-	renderPredictionResult(-1,-1);
-	alert_message('Job is running<br/>Compound ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
+	renderPredictionResult(-1,'');
+	alert_message('Job is running<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
     }
     // job finished
     else if (status == 11) {
@@ -444,12 +539,11 @@ function analyseResponse(response) {
 	let appdomain =  response["calculated_data"]["Prediction"];
 	console.log('appdomain:'+appdomain);
 	respiraTox_request_data   = response["calculated_data"]
-	renderResultTable(response["calculated_data"]["neighbours"]["neighbours"][0])
+	renderResultTableNew(response["calculated_data"]["neighbours"]["neighbours"][0])
 	renderPredictionResult(respiraTox_request_result,appdomain);
 
-	alert_message('Job has finished<br/>Compound ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
+	alert_message('Job has finished<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
 
-	showElement(table_var);
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
     }
@@ -463,7 +557,7 @@ function analyseResponse(response) {
 	hideElement(table_var);
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
-	renderPredictionResult(-1,-1);
+	renderPredictionResult(-1,'');
     }
     console.log('Status is:' + status);
     console.log('Job running flag is: '+job_running);
@@ -550,9 +644,10 @@ compound_input_var.addEventListener("input",function() {
     console.log("compound_input_var:"+compound_input_var.value);
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
     SmilesDrawer.parse(compound_input_var.value, function(tree) {
-        // Draw to the canvas
-        smiles_drawer.draw(tree,"smiles_canvas", "light", false);
+	// Draw to the canvas
+	smiles_drawer.draw(tree,"smiles_canvas", "light", false);
     });
 });
 
-	    
+
+

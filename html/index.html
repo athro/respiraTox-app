@@ -7,13 +7,33 @@
 	  
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- webbased alone version  -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.min.css">
+    <link rel="stylesheet" href="https://milligram.github.io/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://unpkg.com/smiles-drawer@1.0.10/dist/smiles-drawer.min.js"></script>
+    <!-- <script src="https://unpkg.com/smiles-drawer@1.0.2/dist/smiles-drawer.min.js"></script> -->
+    <script type="text/javascript" language="javascript" src="scripts/jsme/jsme.nocache.js"></script>
+    <script type="text/javascript" language="javascript" src="scripts/kekule/kekule.min.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/smiles-drawer@1.0.2/dist/smiles-drawer.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"> -->
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script> -->
+    <!-- <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script> -->
 
     <!-- stand alone version  -->
     <!-- <link rel="stylesheet" href="scripts/bootstrap/4.1.3/css/bootstrap.min.css"> -->
@@ -35,7 +55,8 @@
 
 
       <script>
-      //this function will be called after the JavaScriptApplet code has been loaded.
+	//this function will be called after the JavaScriptApplet code has been loaded.
+	// ak - which ??
       function jsmeOnLoad() {
           jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px"); 
       }   
@@ -178,15 +199,24 @@
 	<canvas id="smiles_canvas" width="250" height="150"></canvas>
       </div>
       <small id="applicabilitydomain_helptext" class="text-muted"><br/>Applicability Domain</small>
-      <div style="width: 150px; height: 80px; background-color: white;">
+      <div class="d-flex p-3 bg-white text-black" >
+        <div style="width: 150px; height: 80px; background-color: white;">
 	<div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
-	<div class="mh-100" id="applicabilitydomain_display_area_id" style="width: 150px; height: 50px; background-color: white;"></div>
+	<div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
+	  <div class="d-flex p-3 bg-white text-muted" >
+	    <div style="width: 50px; height: 80px; background-color: white;">
+	      <small><div id="applicabilitydomain_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(255, 255, 255,1.0);"></div></small>
+	    </div>
+	  </div>
+	</div>
+      </div>
 
       </div>
-      <small id="prediction_helptext" class="text-muted"><br/>Prediction</small>      <div class="d-flex p-3 bg-white text-black" >
-      <div style="width: 50px; height: 80px; background-color: white;">
-      <div class="mh-100" style="width: 15px; height: 15px; background-color: white;"></div>
-      <div class="mh-100" id="prediction_display_area_id" style="width: 50px; height: 50px; background-color: white;"></div>
+      <small id="prediction_helptext" class="text-muted"><br/>Prediction</small>
+      <div class="d-flex p-3 bg-white text-black" >
+         <div style="width: 50px; height: 80px; background-color: white;">
+         <div class="mh-100" style="width: 15px; height: 15px; background-color: white;"></div>
+         <div class="mh-100" id="prediction_display_area_id" style="width: 50px; height: 50px; background-color: white;"></div>
       </div>
       <div class="d-flex p-3 bg-white text-muted" >
         <div style="width: 50px; height: 80px; background-color: white;">
@@ -202,6 +232,7 @@
       <div class="input-group-prepend">
 	<button id="smiles_submit_button_id"  type="button" class="btn btn-primary" onclick="return submit_for_prediction()" >Submit for Prediction</button>
 	<button id="smiles_refresh_button_id" type="button" class="btn btn-primary"  onclick="refresh_prediction()" disabled>Refresh Jobs Status</button>
+	
     </div>
   </form>
   </div>
@@ -211,43 +242,54 @@
 	  <caption>Neighbours</caption>
         <thead>
           <tr>
-            <th style="width:5%" class="table_col_id">Rank</th>
-            <th style="width:15%" class="table_col_cas">Name</th>
-            <th style="width:15%" class="table_col_cas">CAS</th>
+            <th style="width:3%" class="table_col_id">Rank</th>
+            <th style="width:10%" class="table_col_cas">Compound Name</th>
+            <th style="width:12%" class="table_col_cas">CAS</th>
             <th style="width:5%" class="table_col_distance">Similarity</th>
-            <th style="width:25%" class="table_col_smiles">SMILES</th>
-            <th style="width:50%" class="table_col_ref">Database Reference</th>
+            <th style="width:30%" class="table_col_smiles">Compound</th>
+            <th style="width:30%" class="table_col_ref">Database Reference</th>
+            <th style="width:15%" class="table_col_ref">Irritation</th>
           </tr>
         </thead>
 	<tbody id="neighbour_table_body_id">
-	  <!-- <tr class="table-success"> -->
-	  <!--   <th scope="row">1</th> -->
-	  <!--   <td>Chemical1</td> -->
-	  <!--   <td>CAS123</td> -->
-	  <!--   <td>0.99</td> -->
-	  <!--   <td><canvas id="canvas_nn_3" width="75" height="75" style="width: 75px; height: 75px"></td> -->
-	  <!--   <\!-- <canvas id="smiles_canvas" width="250" height="150"></canvas> -\-> -->
-	  <!--   <td>DB1</td> -->
-	  <!-- </tr> -->
-	  <!-- <tr class="table-danger"> -->
-	  <!--   <th scope="row">2</th> -->
-	  <!--   <td>Chemical2</td> -->
-	  <!--   <td>CAS123</td> -->
-	  <!--   <td>0.8</td> -->
-	  <!--   <td><canvas id="canvas_nn_2" width="75" height="75" style="width: 75px; height: 75px"></td> -->
-	  <!--   <td>DB1</td> -->
-	  <!-- </tr> -->
+	  <tr class="table-success">
+	    <th scope="row">1</th>
+	    <td>Chemical1</td>
+	    <td>CAS123</td>
+	    <td>0.99</td>
+	    <td><canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas></td>
+	    <td>DB1</td>
+	    <td><table><tr>
+		  <td style="width: 30px; height: 30px; background-color: red;"></td>
+		  <td style="width: 30px; height: 30px; background-color: green;"></td>
+		  <td style="width: 30px; height: 30px; background-color: red;"></td>
+	    </tr></table></td>
+	  </tr>
+	  <tr class="table-danger">
+	    <th scope="row">2</th>
+	    <td>Chemical2</td>
+	    <td>CAS123</td>
+	    <td>0.8</td>
+	    <td><canvas id="canvas_nn_1" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CC[C@H]1CCC[C@H](O[C@H]2CC[C@@H]([C@@H](C)O2)N(C)C)[C@@H](C)C(=O)C2=C[C@H]3[C@@H]4C[C@@H](C[C@H]4C=C[C@H]3[C@@H]2CC(=O)O1)O[C@@H]1O[C@@H](C)[C@H](OC)[C@@H](OC)[C@H]1OC"></canvas></td>
+	    <td>DB1</td>
+	    <td><table><tr>
+		  <td style="width: 30px; height: 30px; background-color: green;"></td>
+		  <td style="width: 30px; height: 30px; background-color: green;"></td>
+		  <td style="width: 30px; height: 30px; background-color: red;"></td>
+	    </tr></table></td>
+
+	  </tr>
 	</tbody>
       </table>
     </div>
+    <script>
+        SmilesDrawer.apply({'height':100,'width':280});
+    </script>
+
 
 
    
   
-    <script src="https://unpkg.com/smiles-drawer@1.0.2/dist/smiles-drawer.min.js"></script>
-    <!-- <script type="text/javascript" language="javascript" src="scripts/jsme/jsme.nocache.js"></script> -->
-    <script type="text/javascript" language="javascript" src="scripts/jsme/jsme.nocache.js"></script>
-    <script type="text/javascript" language="javascript" src="scripts/kekule/kekule.min.js"></script>
     
   
     
