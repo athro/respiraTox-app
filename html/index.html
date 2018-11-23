@@ -246,53 +246,49 @@
             <th style="width:10%" class="table_col_cas">Compound Name</th>
             <th style="width:12%" class="table_col_cas">CAS</th>
             <th style="width:5%" class="table_col_distance">Similarity</th>
-            <th style="width:30%" class="table_col_smiles">Compound</th>
-            <th style="width:30%" class="table_col_ref">Database Reference</th>
-            <th style="width:15%" class="table_col_ref">Irritation</th>
+            <th style="width:35%" class="table_col_smiles">Compound</th>
+            <th style="width:20%" class="table_col_ref">Database Reference</th>
+	    <th style="width:15%" class="table_col_ref">Irritation <table><tr>
+	      <td style="width: 30px; height: 15px;"><small><a href="#" data-toggle="tooltip" title="Sensory Irritation">SI</small></td>
+	      <td style="width: 30px; height: 15px;"><small><a href="#" data-toggle="tooltip" title="Tissue Damage">TD</small></td>
+	      <td style="width: 30px; height: 15px;"><small><a href="#" data-toggle="tooltip" title="No Irritation">NI</small></td>
+	    </tr></table></th>
           </tr>
         </thead>
 	<tbody id="neighbour_table_body_id">
-	  <tr class="table-success">
-	    <th scope="row">1</th>
-	    <td>Chemical1</td>
-	    <td>CAS123</td>
-	    <td>0.99</td>
-	    <td><canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas></td>
-	    <td>DB1</td>
-	    <td><table><tr>
-		  <td style="width: 30px; height: 30px; background-color: red;"></td>
-		  <td style="width: 30px; height: 30px; background-color: green;"></td>
-		  <td style="width: 30px; height: 30px; background-color: red;"></td>
-	    </tr></table></td>
-	  </tr>
-	  <tr class="table-danger">
-	    <th scope="row">2</th>
-	    <td>Chemical2</td>
-	    <td>CAS123</td>
-	    <td>0.8</td>
-	    <td><canvas id="canvas_nn_1" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CC[C@H]1CCC[C@H](O[C@H]2CC[C@@H]([C@@H](C)O2)N(C)C)[C@@H](C)C(=O)C2=C[C@H]3[C@@H]4C[C@@H](C[C@H]4C=C[C@H]3[C@@H]2CC(=O)O1)O[C@@H]1O[C@@H](C)[C@H](OC)[C@@H](OC)[C@H]1OC"></canvas></td>
-	    <td>DB1</td>
-	    <td><table><tr>
-		  <td style="width: 30px; height: 30px; background-color: green;"></td>
-		  <td style="width: 30px; height: 30px; background-color: green;"></td>
-		  <td style="width: 30px; height: 30px; background-color: red;"></td>
-	    </tr></table></td>
+	  <!-- <tr class="table-success"> -->
+	  <!--   <th scope="row">1</th> -->
+	  <!--   <td>Chemical1</td> -->
+	  <!--   <td>CAS123</td> -->
+	  <!--   <td>0.99</td> -->
+	  <!--   <td><canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas></td> -->
+	  <!--   <td>DB1</td> -->
+	  <!--   <td><table><tr> -->
+	  <!-- 	  <td style="width: 30px; height: 30px; background-color: red;"></td> -->
+	  <!-- 	  <td style="width: 30px; height: 30px; background-color: green;"></td> -->
+	  <!-- 	  <td style="width: 30px; height: 30px; background-color: red;"></td> -->
+	  <!--   </tr></table></td> -->
+	  <!-- </tr> -->
+	  <!-- <tr class="table-danger"> -->
+	  <!--   <th scope="row">2</th> -->
+	  <!--   <td>Chemical2</td> -->
+	  <!--   <td>CAS123</td> -->
+	  <!--   <td>0.8</td> -->
+	  <!--   <td><canvas id="canvas_nn_1" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CC[C@H]1CCC[C@H](O[C@H]2CC[C@@H]([C@@H](C)O2)N(C)C)[C@@H](C)C(=O)C2=C[C@H]3[C@@H]4C[C@@H](C[C@H]4C=C[C@H]3[C@@H]2CC(=O)O1)O[C@@H]1O[C@@H](C)[C@H](OC)[C@@H](OC)[C@H]1OC"></canvas></td> -->
+	  <!--   <td>DB1</td> -->
+	  <!--   <td><table><tr> -->
+	  <!-- 	  <td style="width: 30px; height: 30px; background-color: green;"></td> -->
+	  <!-- 	  <td style="width: 30px; height: 30px; background-color: green;"></td> -->
+	  <!-- 	  <td style="width: 30px; height: 30px; background-color: red;"></td> -->
+	  <!--   </tr></table></td> -->
 
-	  </tr>
+	  <!-- </tr> -->
 	</tbody>
       </table>
     </div>
     <script>
         SmilesDrawer.apply({'height':100,'width':280});
     </script>
-
-
-
-   
-  
-    
-  
-    
 
     <script type="text/javascript" language="javascript" src="scripts/predict_script.js"></script>
 

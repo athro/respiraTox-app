@@ -37,6 +37,8 @@ let local_color_scheme = {
     black: "rgba(0,0,0,1.0)",
     reliable_green: "rgba(195,240,213,1.0)",
     reliable_red: "rgba(255,198,213,1.0)",
+    irritation_true: "rgba(234,197,210,1.0)",
+    irritation_false: "rgba(197,209,234,1.0)",
 }
     
 
@@ -52,8 +54,8 @@ let smiles_drawer = new SmilesDrawer.Drawer(smiles_canvas_options);
 let smiles_drawer_table_options = {
     width: 200,
     height: 100,
-    bondLength: 3,
-    overlapResolutionIterations: 2
+    // bondLength: 3,
+    // overlapResolutionIterations: 2
 };
 let smiles_drawer_table = new SmilesDrawer.Drawer(smiles_drawer_table_options);
 
@@ -414,6 +416,39 @@ function renderResultTableNew(neighbours) {
 	tr = document.createElement('tr');
 	table.appendChild(tr);
 	
+	var sensory_irritation_col = local_color_scheme.red;
+	var tissue_damage_col      = local_color_scheme.irritation_true;
+	var no_irritation_col      = local_color_scheme.irritation_true;
+	
+	if (neighbour['sensory_irritation'] == 1) {
+	    sensory_irritation_col = local_color_scheme.irritation_false;
+	}
+	if (neighbour[' tissue_damage'] == 1) {
+	    tissue_damage_col      = local_color_scheme.irritation_false;
+	}
+	if (neighbour['no_irritation'] == 1) {
+	    no_irritation_col      = local_color_scheme.irritation_false;
+	}
+
+	
+	td_si = document.createElement('td');
+	td_si.style.setProperty("background-color",sensory_irritation_col);
+	td_si.style.setProperty("width",'30px');
+	td_si.style.setProperty("height",'30px');
+	tr.appendChild(td_si);
+
+	td_td = document.createElement('td');
+	td_td.style.setProperty("background-color",tissue_damage_col);
+	td_td.style.setProperty("width",'30px');
+	td_td.style.setProperty("height",'30px');
+	tr.appendChild(td_td);
+
+	td_ni = document.createElement('td');
+	td_ni.style.setProperty("background-color",no_irritation_col);
+	td_ni.style.setProperty("width",'30px');
+	td_ni.style.setProperty("height",'30px');
+	tr.appendChild(td_ni);
+
 	
 	
 	
