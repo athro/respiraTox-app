@@ -312,6 +312,7 @@ function myPeriodicMethod() {
     }
 }
 
+// not used. Just used the general SmilesDrawer apply function to generate all canvas elements conatining data-smiles
 function drawSmiles() {
     SmilesDrawer.apply();
 }
@@ -411,49 +412,38 @@ function renderResultTableNew(neighbours) {
 	// irritation information
 	td = document.createElement('td');
 	tr.appendChild(td);
-	table = document.createElement('table');
-	td.appendChild(table);
-	tr = document.createElement('tr');
-	table.appendChild(tr);
+
+	// default is a switched off LED
+	var sensory_irritation_elementStyle = 'led';
+	var tissue_damage_elementStyle      = 'led';
+	var no_irritation_elementStyle      = 'led';
 	
-	var sensory_irritation_col = local_color_scheme.red;
-	var tissue_damage_col      = local_color_scheme.irritation_true;
-	var no_irritation_col      = local_color_scheme.irritation_true;
-	
-	if (neighbour['sensory_irritation'] == 1) {
-	    sensory_irritation_col = local_color_scheme.irritation_false;
+	if (neighbour['sensory_irritation'] == 0) {
+	    sensory_irritation_elementStyle = 'led-red-off';
 	}
-	if (neighbour[' tissue_damage'] == 1) {
-	    tissue_damage_col      = local_color_scheme.irritation_false;
+	if (neighbour[' tissue_damage'] == 0) {
+	    tissue_damage_elementStyle      = 'led-red-off';
 	}
 	if (neighbour['no_irritation'] == 1) {
-	    no_irritation_col      = local_color_scheme.irritation_false;
+	    no_irritation_elementStyle      = 'led-green-on';
 	}
 
-	
-	td_si = document.createElement('td');
-	td_si.style.setProperty("background-color",sensory_irritation_col);
-	td_si.style.setProperty("width",'30px');
-	td_si.style.setProperty("height",'30px');
-	tr.appendChild(td_si);
+	// create led element for sens irritation
+	led_si = document.createElement('span');
+	led_si.className = sensory_irritation_elementStyle;
+	td.appendChild(led_si);
 
-	td_td = document.createElement('td');
-	td_td.style.setProperty("background-color",tissue_damage_col);
-	td_td.style.setProperty("width",'30px');
-	td_td.style.setProperty("height",'30px');
-	tr.appendChild(td_td);
+	// required a separator
+	separator = document.createElement('span');
+	separator.innerHTML = '&nbsp;';
+	td.appendChild(separator);
 
-	td_ni = document.createElement('td');
-	td_ni.style.setProperty("background-color",no_irritation_col);
-	td_ni.style.setProperty("width",'30px');
-	td_ni.style.setProperty("height",'30px');
-	tr.appendChild(td_ni);
-
-	
-	
-	
+	// create led element for tissue_damage
+	led_td = document.createElement('span');
+	led_td.className = tissue_damage_elementStyle;
+	td.appendChild(led_td);
     };
-    console.log('use_smiles_drawer_table = '+use_smiles_drawer_table);
+    // console.log('use_smiles_drawer_table = '+use_smiles_drawer_table);
 
    
     // assume that the canvas elements are created
@@ -572,7 +562,7 @@ function analyseResponse(response) {
 	respiraTox_request_result = response["Prediction (resp_irritation)"];
 
 	let appdomain =  response["calculated_data"]["Prediction"];
-	console.log('appdomain:'+appdomain);
+	// console.log('appdomain:'+appdomain);
 	respiraTox_request_data   = response["calculated_data"]
 	renderResultTableNew(response["calculated_data"]["neighbours"]["neighbours"][0])
 	renderPredictionResult(respiraTox_request_result,appdomain);

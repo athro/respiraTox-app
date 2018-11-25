@@ -1,0 +1,148 @@
+
+caption { 
+    display: table-caption;
+    caption-side: top;
+    text-align: middle;
+}
+
+
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+td, th {
+    border-bottom: 0.1rem solid #000;
+    padding: 0em 0em;
+    text-align: center;
+    background-color: inherit;
+}
+
+
+/* https://codepen.io/fskirschbaum/pen/MYJNaj */
+
+
+.led-box {
+  height: 20px;
+  width: 20px;
+  margin: 10px 0;
+  float: left;
+}
+
+.led {
+  margin: 0 auto;
+  width: 12px;
+  min-width: 12px;
+  display:  inline-block;
+  height: 12px;
+  background-color: #a8a8a8;
+  border-radius: 33%;
+  box-shadow: inset #444 0 -1px 4px, rgba(255, 255 255, 0.1) 0 1px 3px;
+  /* box-shadow: rgba(0, 0, 0, 0.0) 0 -1px 7px 1px, inset #444 0 -1px 4px, rgba(128, 128, 128, 0.5) 0 2px 6px; */
+}
+
+.led-on {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #ffffff;
+  border-radius: 33%;
+  box-shadow: inset #888 0 -1px 4px, rgba(255, 255 255, 0.1) 0 1px 3px;
+  /* box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #888 0 -1px 4px, rgba(255, 255, 255, 0.5) 0 2px 6px; */
+}
+
+
+.led[data-type='on'] {
+  background-color: #dc3545;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #888 0 -1px 4px, rgba(255, 255, 255, 0.5) 0 2px 6px;
+}
+.led[data-type='off'] {
+  background-color: #a8a8a8;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #444 0 -1px 4px, rgba(128, 128, 128, 0.5) 0 2px 6px;
+}
+
+
+.led-red-on {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #fc4545;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 4px, rgba(255, 0, 0, 0.5) 0 2px 6px;
+}
+
+.led-red-off {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #8c1525;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 4px, rgba(200, 0, 0, 0.5) 0 2px 6px;
+}
+
+
+.led-yellow-on {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #ffc107;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 4px, #ffc107 0 2px 6px;
+}
+
+.led-yellow-off {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #aa8102;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 4px, #aa8102 0 2px 6px;
+}
+
+
+.led-green-on {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #28f745;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 3px, #28f745 0 2px 6px;
+}
+
+.led-green-off {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #087715;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 3px, #087715 0 2px 6px;
+}
+
+
+.led-blue-on {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #009bff;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #00f 0 -1px 4px, #007bff 0 2px 6px;
+}
+
+.led-blue-off {
+  margin: 0 auto;
+  width: 12px;
+  height: 12px;
+  display:  inline-block;
+  background-color: #003baa;
+  border-radius: 33%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #006 0 -1px 4px, #003baa 0 2px 6px;
+}
+

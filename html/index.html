@@ -6,15 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	  
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+    </style>
     <!-- webbased alone version  -->
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://milligram.github.io/styles/main.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.min.css">
-    <link rel="stylesheet" href="https://milligram.github.io/styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -43,15 +46,13 @@
 
 
 
-     <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet">
+     <!-- <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet"> -->
      <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
-     <style>
-      caption { 
-       display: table-caption;
-       caption-side: top;
-       text-align: top;
-       }
-     </style>
+<!-- <script type="text/javascript" language="javascript" src="scripts/predict_script.js"></script> -->
+     <link rel="stylesheet" href="css/predict_css.css">
+
+     <script>
+     </script>
 
 
       <script>
@@ -237,6 +238,47 @@
   </form>
   </div>
 
+  <!-- <div class="containerLED"> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-green-on"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-green-off"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-red-off"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-red-on"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-yellow-off"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-yellow-on"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-blue-off"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-blue-on"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led" data-type:"on"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led" data-type:"off"></div> -->
+  <!-- </div> -->
+  <!-- <div class="led-box"> -->
+  <!-- <div class="led-on"></div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+
+
   <div class="container">
     <table class="table table-sm table-hover table-striped table-bordered" id="neighbour_table_id" style="display:bulk" style="width:100%">
 	  <caption>Neighbours</caption>
@@ -248,27 +290,36 @@
             <th style="width:5%" class="table_col_distance">Similarity</th>
             <th style="width:35%" class="table_col_smiles">Compound</th>
             <th style="width:20%" class="table_col_ref">Database Reference</th>
-	    <th style="width:15%" class="table_col_ref">Irritation <table><tr>
-	      <td style="width: 30px; height: 15px;"><small><a href="#" data-toggle="tooltip" title="Sensory Irritation">SI</small></td>
-	      <td style="width: 30px; height: 15px;"><small><a href="#" data-toggle="tooltip" title="Tissue Damage">TD</small></td>
-	      <td style="width: 30px; height: 15px;"><small><a href="#" data-toggle="tooltip" title="No Irritation">NI</small></td>
-	    </tr></table></th>
+	    <th style="width:5%" class="table_col_ref">Irritation
+	      <span><small><a data-toggle="tooltip" title="Sensory Irritation">SI</small></span>
+	      <span><small><a data-toggle="tooltip" title="Tissue Damage">TD</small></span>
+	    <!-- <th style="width:5%" class="table_col_ref">Irritation <table style="background-color:red"><tr> -->
+	    <!--   <td style="width:50%; background-color:transparent"><small><a data-toggle="tooltip" title="Sensory Irritation">SI</small></td> -->
+	    <!--   <td style="width:50%; background-color:inherit"><small><a data-toggle="tooltip" title="Tissue Damage">TD</small></td> -->
+	    <!-- </tr></table></th> -->
           </tr>
         </thead>
 	<tbody id="neighbour_table_body_id">
-	  <!-- <tr class="table-success"> -->
-	  <!--   <th scope="row">1</th> -->
-	  <!--   <td>Chemical1</td> -->
-	  <!--   <td>CAS123</td> -->
-	  <!--   <td>0.99</td> -->
-	  <!--   <td><canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas></td> -->
-	  <!--   <td>DB1</td> -->
-	  <!--   <td><table><tr> -->
-	  <!-- 	  <td style="width: 30px; height: 30px; background-color: red;"></td> -->
-	  <!-- 	  <td style="width: 30px; height: 30px; background-color: green;"></td> -->
-	  <!-- 	  <td style="width: 30px; height: 30px; background-color: red;"></td> -->
-	  <!--   </tr></table></td> -->
-	  <!-- </tr> -->
+	  <tr class="table-success">
+	    <th scope="row">1</th> 
+	    <td>Chemical1</td>
+	    <td>CAS123</td>
+	    <td>0.99</td>
+	    <td><canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas></td>
+	    <td>DB1</td>
+	    <!-- <td> -->
+	    <!--   <div class="led"></div> -->
+	    <!--   <div class="led">L2</div> -->
+	    <!-- </td> -->
+	    <td>
+	      <span class="led"></span>
+	      <span class="led-green-on"></span>
+	    </td>
+	    <!-- <td><table><tr> -->
+	    <!--   <td style="width: 12px; height: 12px;"><div class="led"></div></td> -->
+	    <!--   <td style="width: 12px; height: 12px;"><div class="led-green-on"></div></td> -->
+	    <!-- </tr></table></td>  -->
+	  </tr> 
 	  <!-- <tr class="table-danger"> -->
 	  <!--   <th scope="row">2</th> -->
 	  <!--   <td>Chemical2</td> -->
