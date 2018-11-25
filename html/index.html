@@ -200,8 +200,7 @@
     
     <!-- Fingerprint type selection -->
     <div class="input-group mb-3">
-      <small id="fingerprint_type_helptext"
-      class="text-muted"><br/>Select the desired fingerprint type to be used (default is PubChem)</small>
+      <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is PubChem)</small>
       <div class="input-group mb-3">
 	  <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint</object></button>
@@ -333,68 +332,64 @@
 
     <!-- Modal respiraTox Compound Information -->
     <div class="modal fade" id="respiraTox_compound_information" tabindex="-1" role="dialog" aria-labelledby="respiraTox_compound_information_title_aria" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document" id="respiraTox_compound_information_modal_dialog">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document" id="respiraTox_compound_information_modal_dialog">
         <div class="modal-content" id="respiraTox_compound_information_modal_content">
 	  <div class="modal-header"  id="respiraTox_compound_information_modal_header">
 	    <h5 class="modal-title">Compound Information:</h5><h5>#cas_number#</h5>
 	  </div>
 	  <div class="modal-body" id="compound_information_modal_body">
-	  <div id="compound_information_container_id" style="text-align: center">
-	    <table>
-	      <tbody>
-		<tr>
-		  <table>
-		    <tbody>
-		      <tr>
-			<td>
-			<div><small class="text-muted"><br/>Structure</small></div>
-			<div class="canvas_class" id="ci_canvas_id" width="250" height="150" data-smiles="#smiles#">CANVAS</canvas></td>
-			<td>
-			<div><small class="text-muted"><br/>Name:</small><span>#chemical_name#</span></div>
-			<div><small class="text-muted"><br/>CAS:</small><span>#cas_number#</span></div>
-			</td>
-		      </tr>
-		    </tbody>
-		  </table>
-		  <td>#cas_number#</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		</tr>
-		<tr>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		</tr>
-		<tr>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		  <td>&nbsp;</td>
-		</tr>
-	      </tbody>
-	    </table>
-	  </div>
-	  </div>
+	  <div class="container-fluid">
+	    <div>Compound</div>
+	    <div class="row">
+	      <div class="col-6">
+	        <div><small class="text-muted">Structure</small></div>
+		<div><small>#smiles#</small></div>
+	      </div>
+	      <div class="col-1">
+	        <div><small class="text-muted">Name:</small></div>
+		<div><small class="text-muted">CAS:</small></div>
+	      </div>
+	      <div class="col-5">
+	        <div align="right"><small>#chemical_name#</small></div>
+		<div align="right"><small>#cas_number#</small></div>
+	      </div>
+	      </div>
+	      <small><div class="text-muted"></div></small>
+	      <div class="mh-100" style="height: 4px;"></div>
+	      <div>RDKit</div>
+	      <!-- <div class="text-muted">RDKit</div> -->
+	      <!-- <div class="col-sm"> -->
+	        <div class="row">          
+		  <div class="col-4">
+		    <div><small class="text-muted">SlogP:</small></div>
+		    <div><small class="text-muted">SMR:</small></div>
+		    <div><small class="text-muted">LipinskiHBA:</small></div>
+		    <div><small class="text-muted">LipinskiHBD:</small></div>
+		  </div>
+		  <div class="col-2">
+		    <div align="right"><small>#RDKit_SlogP#</small></div>
+		    <div align="right"><small>#RDKit_SMR#</small></div>
+		    <div align="right"><small>#RDKit_NumLipinskiHBA#</small></div>
+		    <div align="right"><small>#RDKit_NumLipinskiHBD#</small></div>
+		  </div>
+		  <div class="col-4">
+		    <div><small class="text-muted">MV:</small></div>
+		    <div><small class="text-muted">LabuteASA:</small></div>
+		    <div><small class="text-muted">FractionCSP3:</small></div>
+		    <div><small class="text-muted">HallKierAlpha:</small></div>
+		  </div>
+		  <div class="col-2">
+		    <div align="right"><small>#RDKit_ExactMW#</small></div>
+		    <div align="right"><small>#RDKit_LabuteASA#</small></div>
+		    <div align="right"><small>#RDKit_FractionCSP3#</small></div>
+		    <div align="right"><small>#RDKit_HallKierAlpha#</small></div>
+		  </div>
+		</div>
+	     <!-- </div> -->
+	   </div>
+	   </div>
+	   </div>
+
 	  <div class="modal-footer" id="compound_information_modal_footer">
 	    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
 	  </div>

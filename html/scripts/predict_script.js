@@ -80,7 +80,7 @@ var respiraTox_request_neighbours   = [];
 var respiraTox_compound_information_modal_header_var = document.getElementById("respiraTox_compound_information_modal_header");
 var respiraTox_compound_information_modal_header_html = " "+respiraTox_compound_information_modal_header_var.innerHTML;
 
-var compound_information_modal_var  = document.getElementById("compound_information_container_id");    
+var compound_information_modal_var  = document.getElementById("compound_information_modal_body");    
 var compound_information_modal_html = " "+compound_information_modal_var.innerHTML;
 
 
@@ -468,21 +468,64 @@ function find_and_print_object(object_name) {
     console.log(object_name+' = '+object_var);
 }
 
-// to dynamically replace strings in innerHTNL for the display modal
-function do_replacement_mapping(the_string,the_mapping_array) {
-    var arrayLength = the_mapping_array.length;
-    for (counter=0; counter<arrayLength; counter++) {
-	from_string_map = the_mapping_array[counter][0];
-	to_string_map = the_mapping_array[counter][1];
-	the_string = the_string.replace(/from_string_map/g,to_string_map);
-    }
-    return the_string;
+// this function id from https://stackoverflow.com/questions/21068439/javascript-what-is-the-opposite-of-isnan
+function isNumeric(num) {
+  return !isNaN(parseFloat(num)) && isFinite(num);
 }
+// cuts, trims integer - float - strings
+function formater(x,base=10,round=2,cut=12) {
+    var parsed = parseInt(x, 10);
+    if (parsed == x) {
+	// integer
+	// console.log('Integer:  '+x+'  :  '+parsed);
+	return parsed;
+    }
+    else {
+	parsed = parseFloat(x);
+	
+      	if (x - parsed < 0.5) {
+	    // float
+            parsed = parsed.toFixed(round);
+	    // console.log('Float:  '+x+'  :  '+parsed);
+	    return parsed;
+        }
+      	else {
+	    // string
+	    //parsed = " "+x
+	    parsed = x.substring(0,cut+3);
+	    if (x.length > cut+3) {
+		parsed = x.substring(0,cut)+'...';
+	    }
+	    // console.log('String:  '+x+'  :  '+parsed);
+	    return parsed;
+        }
+    }
+}
+
+
+// // to dynamically replace strings in innerHTNL for the display modal
+// function do_replacement_mapping(the_string,the_mapping_array) {
+//     var arrayLength = the_mapping_array.length;
+//     for (counter=0; counter<arrayLength; counter++) {
+// 	from_string_map = the_mapping_array[counter][0];
+// 	to_string_map = the_mapping_array[counter][1];
+// 	if (from_string_map != 'cas_number') {
+// 	    the_string = the_string.replace(/from_string_map/g,formater(to_string_map,10,2,40));
+// 	} else {
+// 	    the_string = the_string.replace(/from_string_map/g,to_string_map);
+// 	}
+//     }
+//     return the_string;
+// }
 
 // dynamically generate mappi
 function do_replacement_by_data(the_string, the_neighbour_data) {
     for (var property_name in the_neighbour_data) {
-	the_string = the_string.replace("#"+property_name+"#",the_neighbour_data[property_name]);
+	if (property_name != 'cas_number') {
+	    the_string = the_string.replace("#"+property_name+"#",formater(the_neighbour_data[property_name],10,2,28));
+	} else {
+	    the_string = the_string.replace("#"+property_name+"#",the_neighbour_data[property_name]);
+	}
     }
     return the_string;
     
