@@ -17,13 +17,13 @@ let compound_input_editor_modal = document.getElementById("respiraTox_JSMEEditor
 
 
 
-// let fingerprint_type_button_var = document.getElementById("fingerprint_type_button_id");
-// let fingerprint_type_selected_var = fingerprint_type_button_var.innerHTML;
-// let fingerprint_type_var = document.getElementById("fingerprint_type_id");
+let fingerprint_type_button_var   = document.getElementById("fingerprint_type_button_id");
+let fingerprint_type_var          = document.getElementById("fingerprint_type_id");
+let fingerprint_type_selected_var = fingerprint_type_button_var.value;
 
 
-let distance_method_button_var = document.getElementById("distance_method_button_id");
-let distance_method_var = document.getElementById("distance_method_id");
+let distance_method_button_var   = document.getElementById("distance_method_button_id");
+let distance_method_var          = document.getElementById("distance_method_id");
 let distance_method_selected_var = distance_method_var.value;
 
 let table_body_var = document.getElementById("neighbour_table_body_id");
@@ -69,14 +69,20 @@ let smiles_drawer_table = new SmilesDrawer.Drawer(smiles_drawer_table_options);
 let jsme_editor_applet = document.getElementById("jsmeApplet");
 
 
-
-
-
 // for current JSON result
-var respiraTox_request_status = 0;
-var respiraTox_request_ID     = -1;
-var respiraTox_request_result = -1;
-var respiraTox_request_data   = {};
+var respiraTox_request_status       = 0;
+var respiraTox_request_ID           = -1;
+var respiraTox_request_result       = -1;
+var respiraTox_request_data         = {};
+var respiraTox_request_neighbours   = [];
+
+// html to be replaced dynamically (taken from index.html)
+var respiraTox_compound_information_modal_header_var = document.getElementById("respiraTox_compound_information_modal_header");
+var respiraTox_compound_information_modal_header_html = " "+respiraTox_compound_information_modal_header_var.innerHTML;
+
+var compound_information_modal_var  = document.getElementById("compound_information_container_id");    
+var compound_information_modal_html = " "+compound_information_modal_var.innerHTML;
+
 
 //var base_URL = "http://127.0.0.1:5000/compound/"
 let convert_URL = "http://127.0.0.1:5555/smiles/"
@@ -136,7 +142,11 @@ function toggleElement(the_element,the_html="none") {
     }
 }
 
-function select_fingerprint_type(fingerprint_type){
+function select_fingerprint_type(selected_fingerprint_type){
+    console.log('distance method = '+selected_fingerprint_type); 
+    fingerprint_type_var.value = selected_fingerprint_type;
+    fingerprint_type_var.innerHTML = selected_fingerprint_type;
+    fingerprint_type_selected_var = selected_fingerprint_type;
     
 }
 
@@ -282,7 +292,7 @@ function select_compound_format(compound_format){
     
 }
 
-function send_for_prediction_service(cas_number,smiles){
+function send_for_prediction_service(cas_number,smiles,fingerprint_type,distance_method){
     cas_number_encoded = encodeURI(cas_number);
     smiles_encoded = encodeURI(smiles);
     console.log("cas_number_encoded:"+cas_number_encoded);
@@ -292,7 +302,13 @@ function send_for_prediction_service(cas_number,smiles){
     console.log("call send");
     // send(cas_number_encoded,smiles_encoded);
     // userAction();
-    submit_data = {"cas_number":cas_number, "selected_smiles":smiles};
+    submit_data = {"cas_number":cas_number,
+		   "compound_id":cas_number,
+		   "selected_smiles":smiles,
+		   "compound_structure_smiles":smiles,
+		   "fingerprint_type":fingerprint_type,
+		   "distance_method":distance_method,
+		  };
     // submit_URL  = 'http://127.0.0.1:5000/compound/';
     sendRequest(base_URL,submit_data);
     console.log("call sent ");
@@ -331,6 +347,7 @@ function renderResultTableNew(neighbours) {
 	var tr = document.createElement('tr');
 	tr.setAttribute('class',irritation_row_class);
 	tr.setAttribute('id','tr_id_'+i);
+	tr.setAttribute('onclick','return activate_compound_information('+i+')');
 
 	table_body_var.appendChild(tr)
 
@@ -419,10 +436,10 @@ function renderResultTableNew(neighbours) {
 	var no_irritation_elementStyle      = 'led';
 	
 	if (neighbour['sensory_irritation'] == 0) {
-	    sensory_irritation_elementStyle = 'led-red-off';
+	    sensory_irritation_elementStyle = 'led-red-on';
 	}
 	if (neighbour[' tissue_damage'] == 0) {
-	    tissue_damage_elementStyle      = 'led-red-off';
+	    tissue_damage_elementStyle      = 'led-red-on';
 	}
 	if (neighbour['no_irritation'] == 1) {
 	    no_irritation_elementStyle      = 'led-green-on';
@@ -444,45 +461,77 @@ function renderResultTableNew(neighbours) {
 	td.appendChild(led_td);
     };
     // console.log('use_smiles_drawer_table = '+use_smiles_drawer_table);
+}
 
-   
-    // assume that the canvas elements are created
-    if (use_smiles_drawer_table) {
-    	// for (var i = 0; i < neighbours.length; i++){
-    	//     neighbour = neighbours[i];
-    	//     var canvas_element_id = 'canvas_nn_'+i;
-    	//     var canvas_element = document.getElementById(canvas_element_id);
-    	//     var element_smiles = neighbour["smiles"];
+function find_and_print_object(object_name) {
+    let object_var = document.getElementById(object_name);
+    console.log(object_name+' = '+object_var);
+}
 
-
-        //     // debug
-	//     var ctx = canvas_element.getContext("2d");
-	//     ctx.fillStyle = 'blue';
-	//     ctx.fillRect(10, 10, 20, 20);
-	    
-    	//     console.log(canvas_element_id+'.id:'+canvas_element.id);
-    	//     // console.log(canvas_element_id+'.canvas_element:'+canvas_element);
-    	//     // // console.log(canvas_element_id+'.neighbour:'+Object.values(neighbour));
-    	//     // console.log(canvas_element_id+'.smiles:'+element_smiles);
-
-    	//     SmilesDrawer.parse("CCCC", function(tree) {
-    	//     	smiles_drawer_table.draw(tree, 'canvas_nn_'+i, 'light', false);
-    	//     }, function (err) {
-	//     	console.log(err);
-	//     });
-
-            // SmilesDrawer.parse('C1CCCCC1', function (tree) {
-	    // 	smilesDrawer.draw(tree, 'output-canvas', 'light', false);
-	    // }, function (err) {
-	    // 	console.log(err);
-	    // }
-    	    // console.log(canvas_element_id+'.smiles_drawer_table:'+Object.keys(smiles_drawer_table));
-
-    	// };
+// to dynamically replace strings in innerHTNL for the display modal
+function do_replacement_mapping(the_string,the_mapping_array) {
+    var arrayLength = the_mapping_array.length;
+    for (counter=0; counter<arrayLength; counter++) {
+	from_string_map = the_mapping_array[counter][0];
+	to_string_map = the_mapping_array[counter][1];
+	the_string = the_string.replace(/from_string_map/g,to_string_map);
     }
-    //SmilesDrawer.apply();
+    return the_string;
+}
+
+// dynamically generate mappi
+function do_replacement_by_data(the_string, the_neighbour_data) {
+    for (var property_name in the_neighbour_data) {
+	the_string = the_string.replace("#"+property_name+"#",the_neighbour_data[property_name]);
+    }
+    return the_string;
     
 }
+
+function activate_compound_information(neighbour_number) {
+    console.log('neighbour_number = '+neighbour_number);
+
+    // allow for display of test data directly from HTML (neighbour_number = -1)
+    if (neighbour_number>= 0) {
+	neighbour_data = respiraTox_request_neighbours[neighbour_number];
+	if (neighbour_data['chemical_name'] == undefined) {
+	    neighbour_data['chemical_name'] = 'undefined';
+	}
+    
+	respiraTox_compound_information_modal_header_html_here = respiraTox_compound_information_modal_header_html;
+	// set back to HTML
+	respiraTox_compound_information_modal_header_html_here = do_replacement_by_data(respiraTox_compound_information_modal_header_html_here,neighbour_data)
+	respiraTox_compound_information_modal_header_var.innerHTML = respiraTox_compound_information_modal_header_html_here;
+
+    
+	compound_information_modal_html_here = compound_information_modal_html;
+	// do the string replacements
+    
+	// compound_information_modal_html_here = compound_information_modal_html_here.replace("#COMPOUND_ID#", "Neighbour = "+neighbour_number);
+	compound_information_modal_html_here = do_replacement_by_data(compound_information_modal_html_here,neighbour_data)
+
+	// set back to HTML
+	compound_information_modal_var.innerHTML = compound_information_modal_html_here
+
+	$('#respiraTox_compound_information').modal('show');
+	console.log(compound_information_modal_var.innerHTML);
+	SmilesDrawer.parse(neighbour_data['smiles'], function(tree) {
+	    // Draw to the canvas
+	    smiles_drawer.draw(tree,"ci_canvas_id", "light", false);
+	});
+    }
+    else {
+	$('#respiraTox_compound_information').modal('show');
+	SmilesDrawer.parse('CCCCCCCC', function(tree) {
+	    // Draw to the canvas
+	    smiles_drawer.draw(tree,"ci_canvas_id", "light", false);
+	});
+	console.log(compound_information_modal_var.innerHTML);
+    }
+	
+    // show the modal
+}
+
 
 function renderNeighbour(neighbour,counter) {
     console.log('renderNeighbour. Neighbour = '+neighbour+'    counter:'+counter);
@@ -496,8 +545,6 @@ function renderNeighbour(neighbour,counter) {
     // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["chemical_name"]+'</th>\n\t\t<td>'+neighbour["cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["source"]+'</td>\n\t</tr>';
     // return returnVal;
 
-
-    
 }
 
 function renderResultTable(neighbours) {
@@ -564,7 +611,9 @@ function analyseResponse(response) {
 	let appdomain =  response["calculated_data"]["Prediction"];
 	// console.log('appdomain:'+appdomain);
 	respiraTox_request_data   = response["calculated_data"]
-	renderResultTableNew(response["calculated_data"]["neighbours"]["neighbours"][0])
+	respiraTox_request_neighbours   = response["calculated_data"]["neighbours"]["neighbours"][0]
+
+	renderResultTableNew(respiraTox_request_neighbours)
 	renderPredictionResult(respiraTox_request_result,appdomain);
 
 	alert_message('Job has finished<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
@@ -578,6 +627,7 @@ function analyseResponse(response) {
 	respiraTox_request_status = -1;
 	respiraTox_request_result = -1
 	respiraTox_request_data   = {}
+	respiraTox_request_neighbours   = [];
 	alert_message("Job did not finish<br/>Resetting system");
 	hideElement(table_var);
 	enableElement(smiles_submit_button_var);
@@ -592,7 +642,7 @@ function analyseResponse(response) {
 
 function fetchResult(submit_URL) {
     fetch(submit_URL).then(res => res.json())
-	.then(response => {console.log('Success(fetchResults):', JSON.stringify(response));analyseResponse(response)})
+	.then(response => {/*console.log('Success(fetchResults):', JSON.stringify(response));*/analyseResponse(response)})
 	.catch(error => {console.error('Error(fetchResults):', error)});
 }
 
@@ -626,7 +676,7 @@ function do_dummy_job(){
 }
 
 function refresh_prediction(){
-    console.log("refresh_prediction")
+    // console.log("refresh_prediction")
     if (respiraTox_request_ID >= 0) {
 	console.log("respiraTox_request_ID:"+respiraTox_request_ID)
 	submit_URL = base_URL+respiraTox_request_ID;
@@ -640,6 +690,7 @@ function submit_for_prediction(respiraTox_alert_id){
     console.log("someRealNumber:"+someRealNumber);
     let compound_input_value = compound_input_var.value;
     let cas_number_input_value = cas_number_input_var.value;
+    let fingerprint_type_var_value = distance_method_var.value;
     let distance_method_var_value = distance_method_var.value;
     let error_message = "";
     // cas number should be not null
@@ -655,9 +706,11 @@ function submit_for_prediction(respiraTox_alert_id){
 	alert_message(error_message);
 	return false
     }
-    console.log("compound_input_value (prediction):" + compound_input_value);
-    console.log("cas_number_input_var (prediction):" + cas_number_input_value);
-    send_for_prediction_service(cas_number_input_value,compound_input_value);
+    console.log("compound_input_value (prediction):         " + compound_input_value);
+    console.log("cas_number_input_var (prediction):         " + cas_number_input_value);
+    console.log("fingerprint_type_selected_var (prediction):" + fingerprint_type_var_value);
+    console.log("distance_method_selected_var (prediction): " + distance_method_var_value);
+    send_for_prediction_service(cas_number_input_value,compound_input_value,fingerprint_type_var_value,distance_method_var_value);
     disableElement(smiles_submit_button_var);
     enableElement(smiles_refresh_button_var);
     hideElement(table_var);
