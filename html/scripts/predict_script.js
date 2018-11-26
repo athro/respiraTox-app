@@ -435,10 +435,10 @@ function renderResultTableNew(neighbours) {
 	var tissue_damage_elementStyle      = 'led';
 	var no_irritation_elementStyle      = 'led';
 	
-	if (neighbour['sensory_irritation'] == 0) {
+	if (neighbour['sensory_irritation'] == 1) {
 	    sensory_irritation_elementStyle = 'led-red-on';
 	}
-	if (neighbour[' tissue_damage'] == 0) {
+	if (neighbour['tissue_damage'] == 1) {
 	    tissue_damage_elementStyle      = 'led-red-on';
 	}
 	if (neighbour['no_irritation'] == 1) {
