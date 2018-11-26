@@ -312,6 +312,7 @@ class Job:
         self.starttime = time.time()
         self.lastcheck = self.starttime
         self.current_running_time = self.lastcheck-self.starttime
+        print('Job(cmds)',cmds)
         self.process   = subprocess.Popen(cmds, shell=False)
         self.status    = self.process.poll()
         self.status_string = "running"
@@ -378,7 +379,7 @@ class respiraToxSettings:
             'IP':'127.0.0.1',
             'knime':{
                 'application':'/Applications/KNIME 3.5.2.app/Contents/MacOS/Knime',
-                'default_parameters':['-reset', '-nosplash', '-application', '-consoleLog', 'org.knime.product.KNIME_BATCH_APPLICATION'],
+                'default_parameters':['-reset', '-nosplash', '--launcher.suppressErrors', '-application', 'org.knime.product.KNIME_BATCH_APPLICATION'],
                 'workflow_name':'knime_respiraTox_predict_json',
                 'model_name':'CURRENTLY-NOT-USED',
                 'workflow_dir':'/Users/karwath/knime-workspace',

@@ -338,8 +338,9 @@ function renderResultTableNew(neighbours) {
 
     for (var i = 0; i < neighbours.length; i++){
 	neighbour = neighbours[i];
+	console.log(neighbour);
 	var irritation_row_class = "table-success";
-	if (neighbour["no_irritation"] == "0") {
+	if (neighbour["compound_endpoint_no_irritation"] == "0") {
 	    irritation_row_class = "table-danger";
 	}
 	var tr = document.createElement('tr');
@@ -357,7 +358,7 @@ function renderResultTableNew(neighbours) {
 	
 	// compound_name
 	var td = document.createElement('td');
-	td.innerHTML = neighbour["chemical_name"];
+	td.innerHTML = neighbour["compound_name"];
 	tr.appendChild(td);
 
 	// compound_compound_id
@@ -382,7 +383,7 @@ function renderResultTableNew(neighbours) {
 		canvas_element.setAttribute('id', canvas_element_id);
 		// canvas_element.setAttribute('width', '75');
 		// canvas_element.setAttribute('height', '75');
-		canvas_element.setAttribute('alt', neighbour["smiles"]);
+		canvas_element.setAttribute('alt', neighbour["compound_structure_smiles"]);
 		// canvas_element.setAttribute('data-smiles', "CCCCCCC");
 
 		// var ctx = canvas_element.getContext("2d");
@@ -400,7 +401,7 @@ function renderResultTableNew(neighbours) {
 		// console.log(canvas_element_id+'.canvas_element:'+canvas_element);
 		// console.log(canvas_element_id+'.neighbour:'+Object.values(neighbour));
 		// console.log(canvas_element_id+'.smiles:'+element_smiles);
-		SmilesDrawer.parse(neighbour["smiles"], function(tree) {
+		SmilesDrawer.parse(neighbour["compound_structure_smiles"], function(tree) {
 		    // console.log(canvas_element_id+'.tree1:'+Object.keys(tree));
 		    // console.log(canvas_element_id+'.tree1:'+Object.values(tree));
 		    smiles_drawer_table.draw(tree,canvas_element, 'light', false);
@@ -415,13 +416,13 @@ function renderResultTableNew(neighbours) {
 	} else {
 	    // smiles
 	    td = document.createElement('td');
-	    td.innerHTML = neighbour["smiles"];
+	    td.innerHTML = neighbour["compound_structure_smiles"];
 	    tr.appendChild(td);
 	}
 
 	// database refs
 	td = document.createElement('td');
-	td.innerHTML = neighbour["source"];
+	td.innerHTML = neighbour["compound_source"];
 	tr.appendChild(td);
 
 	// irritation information
@@ -433,13 +434,13 @@ function renderResultTableNew(neighbours) {
 	var tissue_damage_elementStyle      = 'led';
 	var no_irritation_elementStyle      = 'led';
 	
-	if (neighbour['sensory_irritation'] == 1) {
+	if (neighbour['compound_endpoint_sensory_irritation'] == 1) {
 	    sensory_irritation_elementStyle = 'led-red-on';
 	}
-	if (neighbour['tissue_damage'] == 1) {
+	if (neighbour['compound_endpoint_tissue_damage'] == 1) {
 	    tissue_damage_elementStyle      = 'led-red-on';
 	}
-	if (neighbour['no_irritation'] == 1) {
+	if (neighbour['compound_endpoint_no_irritation'] == 1) {
 	    no_irritation_elementStyle      = 'led-green-on';
 	}
 
@@ -490,7 +491,14 @@ function formater(x,base=10,round=2,cut=12) {
       	else {
 	    // string
 	    //parsed = " "+x
-	    parsed = x.substring(0,cut+3);
+	    try {
+		parsed = x.substring(0,cut+3);
+	    }
+	    catch(error) {
+		console.error('Formatter Error: returning "NOT SET"');
+		console.error(error);
+		return "NOT SET";
+	    }
 	    if (x.length > cut+3) {
 		parsed = x.substring(0,cut)+'...';
 	    }

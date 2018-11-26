@@ -4,7 +4,7 @@
     "knime":
     {
 	"application": "/Applications/KNIME 3.6.1.app/Contents/MacOS/Knime",
-	"default_parameters": ["-reset", "-nosplash", "-application", "-consoleLog", "org.knime.product.KNIME_BATCH_APPLICATION"],
+	"default_parameters": ["-reset", "-nosplash", "--launcher.suppressErrors", "-application", "org.knime.product.KNIME_BATCH_APPLICATION"],
 	"workflow_name": "knime_respiraTox_predict_json_devel",
 	"model_name": "CURRENTLY-NOT-USED",
 	"workflow_dir": "/Users/karwath/knime-workspace",
