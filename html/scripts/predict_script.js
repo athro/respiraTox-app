@@ -2,7 +2,7 @@ let job_running = false;
 let use_smiles_drawer_table = true;
 
 //let smiles_input_var = document.getElementById("smiles_input_id");
-let cas_number_input_var = document.getElementById("cas_number_input_id");
+let compound_id_input_var = document.getElementById("compound_id_input_id");
 
 let smiles_submit_button_var = document.getElementById("smiles_submit_button_id");
 let smiles_refresh_button_var = document.getElementById("smiles_refresh_button_id");
@@ -292,20 +292,18 @@ function select_compound_format(compound_format){
     
 }
 
-function send_for_prediction_service(cas_number,smiles,fingerprint_type,distance_method){
-    cas_number_encoded = encodeURI(cas_number);
+function send_for_prediction_service(compound_id,smiles,fingerprint_type,distance_method){
+    compound_id_encoded = encodeURI(compound_id);
     smiles_encoded = encodeURI(smiles);
-    console.log("cas_number_encoded:"+cas_number_encoded);
+    console.log("compound_id_encoded:"+compound_id_encoded);
     console.log("smiles_encoded:"+smiles_encoded);
     // let xhttp = new XMLHttpRequest();
     // console.log("xhttp:"+xhttp);
     console.log("call send");
-    // send(cas_number_encoded,smiles_encoded);
+    // send(compound_id_encoded,smiles_encoded);
     // userAction();
-    submit_data = {"cas_number":cas_number,
-		   "compound_id":cas_number,
-		   "selected_smiles":smiles,
-		   "compound_structure_smiles":smiles,
+    submit_data = {"compound_id":compound_id, // new variable name
+		   "compound_structure_smiles":smiles, // new variable name
 		   "fingerprint_type":fingerprint_type,
 		   "distance_method":distance_method,
 		  };
@@ -362,9 +360,9 @@ function renderResultTableNew(neighbours) {
 	td.innerHTML = neighbour["chemical_name"];
 	tr.appendChild(td);
 
-	// compound_cas_number
+	// compound_compound_id
 	td = document.createElement('td');
-	td.innerHTML = neighbour["cas_number"];
+	td.innerHTML = neighbour["compound_cas_number"];
 	tr.appendChild(td);
 
 	// similarity
@@ -509,7 +507,7 @@ function formater(x,base=10,round=2,cut=12) {
 //     for (counter=0; counter<arrayLength; counter++) {
 // 	from_string_map = the_mapping_array[counter][0];
 // 	to_string_map = the_mapping_array[counter][1];
-// 	if (from_string_map != 'cas_number') {
+// 	if (from_string_map != 'compound_cas_number') {
 // 	    the_string = the_string.replace(/from_string_map/g,formater(to_string_map,10,2,40));
 // 	} else {
 // 	    the_string = the_string.replace(/from_string_map/g,to_string_map);
@@ -521,7 +519,7 @@ function formater(x,base=10,round=2,cut=12) {
 // dynamically generate mappi
 function do_replacement_by_data(the_string, the_neighbour_data) {
     for (var property_name in the_neighbour_data) {
-	if (property_name != 'cas_number') {
+	if (property_name != 'compound_cas_number') {
 	    the_string = the_string.replace("#"+property_name+"#",formater(the_neighbour_data[property_name],10,2,28));
 	} else {
 	    the_string = the_string.replace("#"+property_name+"#",the_neighbour_data[property_name]);
@@ -584,8 +582,8 @@ function renderNeighbour(neighbour,counter) {
 	irritation_row_class = "table-danger";
 	irritation_row_color = "red";
     }
-    return '\t<tr id="table_row_'+counter+' style="color: '+irritation_row_color+';" class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["chemical_name"]+'</th>\n\t\t<td>'+neighbour["cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["smiles"]+'</th>\n\t\t<td>'+neighbour["source"]+'</td>\n\t</tr>';
-    // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["chemical_name"]+'</th>\n\t\t<td>'+neighbour["cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["source"]+'</td>\n\t</tr>';
+    return '\t<tr id="table_row_'+counter+' style="color: '+irritation_row_color+';" class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["chemical_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td>'+neighbour["smiles"]+'</th>\n\t\t<td>'+neighbour["source"]+'</td>\n\t</tr>';
+    // returnVal = '\t<tr id="table_row_'+counter+' class="'+irritation_row_class+'">\n\t\t<th scope="row">'+neighbour["rank"]+'</th>\n\t\t<td>'+neighbour["chemical_name"]+'</th>\n\t\t<td>'+neighbour["compound_cas_number"]+'</td>\n\t\t<td>'+parseFloat(neighbour["Tanimoto"]).toFixed(2)+'</td>\n\t\t<td id="neighbour_canvas_'+counter+'" width="150" height="150"></canvas></th>\n\t\t<td>'+neighbour["source"]+'</td>\n\t</tr>';
     // return returnVal;
 
 }
@@ -640,7 +638,7 @@ function analyseResponse(response) {
     if (status == 10) {  
 	job_running = true;
 	respiraTox_request_status = status;
-	respiraTox_request_ID = response["compound_id"];
+	respiraTox_request_ID = response["job_id"];
 	hideElement(table_var);
 	renderPredictionResult(-1,'');
 	alert_message('Job is running<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
@@ -649,7 +647,7 @@ function analyseResponse(response) {
     else if (status == 11) {
 	job_running = false;
 	respiraTox_request_status = status;
-	respiraTox_request_result = response["Prediction (resp_irritation)"];
+	respiraTox_request_result = response["Prediction (endpoint)"];
 
 	let appdomain =  response["calculated_data"]["Prediction"];
 	// console.log('appdomain:'+appdomain);
@@ -732,14 +730,14 @@ function submit_for_prediction(respiraTox_alert_id){
     let someRealNumber = parseFloat(someNumber).toFixed(2);
     console.log("someRealNumber:"+someRealNumber);
     let compound_input_value = compound_input_var.value;
-    let cas_number_input_value = cas_number_input_var.value;
+    let compound_id_input_value = compound_id_input_var.value;
     let fingerprint_type_var_value = distance_method_var.value;
     let distance_method_var_value = distance_method_var.value;
     let error_message = "";
-    // cas number should be not null
-    if (!cas_number_input_value){
-	console.log("cas_number_input_var (prediction) was empty:");
-	error_message = error_message + "Please fill the CAS Number field!<br/>";
+    // compound ID number should be not null
+    if (!compound_id_input_value){
+	console.log("compound_id_input_var (prediction) was empty:");
+	error_message = error_message + "Please fill the Compound ID Number field!<br/>";
     }
     if (!compound_input_value){
 	console.log("compound_input_value (prediction) was empty:");
@@ -750,10 +748,10 @@ function submit_for_prediction(respiraTox_alert_id){
 	return false
     }
     console.log("compound_input_value (prediction):         " + compound_input_value);
-    console.log("cas_number_input_var (prediction):         " + cas_number_input_value);
+    console.log("compound_id_input_var (prediction):         " + compound_id_input_value);
     console.log("fingerprint_type_selected_var (prediction):" + fingerprint_type_var_value);
     console.log("distance_method_selected_var (prediction): " + distance_method_var_value);
-    send_for_prediction_service(cas_number_input_value,compound_input_value,fingerprint_type_var_value,distance_method_var_value);
+    send_for_prediction_service(compound_id_input_value,compound_input_value,fingerprint_type_var_value,distance_method_var_value);
     disableElement(smiles_submit_button_var);
     enableElement(smiles_refresh_button_var);
     hideElement(table_var);

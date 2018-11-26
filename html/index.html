@@ -126,12 +126,12 @@
   <div class="container">
   <form class="form-horizontal" >
     <div class="form-group">
-      <small id="cas_number_helptext" class="text-muted"><br/>Enter an arbitray ID (CAS or no CAS)</small>
+      <small id="compound_id_helptext" class="text-muted"><br/>Enter an arbitray ID (CAS or no CAS)</small>
       <div class="input-group mb-3">
 	<div class="input-group-prepend">
-	  <span class="input-group-text" id="cas_input_id"><object width="75">CAS</object></span>
+	  <span class="input-group-text" id="compound_id_input_id"><object width="75">CompoundID</object></span>
 	</div>
-	<input id="cas_number_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="cas_number_label" aria-describedby="cas_input_id"></input>
+	<input id="compound_id_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="compound_id_label" aria-describedby="compound_id_input_id"></input>
       </div>
 
       <!-- <small id="smiles_helptext" class="text-muted"><br/>Select what structure format to use and paste or enter compound</small>  -->
@@ -268,7 +268,7 @@
         <thead>
           <tr>
             <th style="width:3%" class="table_col_id">Rank</th>
-            <th style="width:10%" class="table_col_cas">Compound Name</th>
+            <th style="width:10%" class="table_col_compound_name">Compound Name</th>
             <th style="width:12%" class="table_col_cas">CAS</th>
             <th style="width:5%" class="table_col_distance">Similarity</th>
             <th style="width:35%" class="table_col_smiles">Compound</th>
@@ -335,7 +335,7 @@
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document" id="respiraTox_compound_information_modal_dialog">
         <div class="modal-content" id="respiraTox_compound_information_modal_content">
 	  <div class="modal-header"  id="respiraTox_compound_information_modal_header">
-	    <h5 class="modal-title">Compound Information:</h5><h5>#cas_number#</h5>
+	    <h5 class="modal-title">Compound Information:</h5><h5>#compound_cas_number#</h5>
 	  </div>
 	  <div class="modal-body" id="compound_information_modal_body">
 	  <div class="container-fluid">
@@ -353,7 +353,7 @@
 	      </div>
 	      <div class="col-4">
 	        <div align="right"><small>#chemical_name#</small></div>
-		<div align="right"><small>#cas_number#</small></div>
+		<div align="right"><small>#compound_cas_number#</small></div>
 		<div align="right"><small>#sensory_irritation#</small></div>
 		<div align="right"><small>#tissue_damage#</small></div>
 	      </div>

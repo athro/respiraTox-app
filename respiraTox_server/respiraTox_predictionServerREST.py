@@ -90,30 +90,30 @@ settings = None
 
 compounds = [
     {
-        "compound_id":"1",
-        "cas_number":"J1",
-        "selected_smiles":"CC(=O)C1=CC=CC=C1",
-        "Prediction (resp_irritation)":"",
+        "job_id":"1",
+        "compound_id":"J1",
+        "compound_structure_smiles":"CC(=O)C1=CC=CC=C1",
+        "Prediction (endpoint)":"",
         "status":"preset",
         "thread":None
     },
     {
-        "compound_id":"2",
-        "cas_number":"J2",
-        "selected_smiles":"CC(=C)C1=CC=CC=C1",
-        "Prediction (resp_irritation)":"",
+        "job_id":"2",
+        "compound_id":"J2",
+        "compound_structure_smiles":"CC(=C)C1=CC=CC=C1",
+        "Prediction (endpoint)":"",
         "status":"preset",
         "thread":None        
     },
     {
-        "compound_id": "3",
-        "cas_number": "22",
-        "selected_smiles": "c1ccccc1CCc2ccccc2",
-        "Prediction (resp_irritation)": "1",
+        "job_id": "3",
+        "compound_id": "22",
+        "compound_structure_smiles": "c1ccccc1CCc2ccccc2",
+        "Prediction (endpoint)": "1",
         "status":"preset",
         "thread":None,        
         "calculated_data": {
-            "cas_number": "22",
+            "compound_cas_number": "22",
             "Molecule (RDKit Mol)": "C(Cc1ccccc1)c1ccccc1",
             "SlogP": 3.4718000000000018,
             "SMR": 60.29200000000004,
@@ -286,23 +286,23 @@ def save_compound(compound_hash,exclude=['thread']):
             # job should be finished, now get the result
             new_hash['thread'] = {"status":"{}".format(running_status),"running_time":"{:.2f}".format(running_time)}
             compound_hash["status"] = STATUS.COLLECTING_JOB
-            results_collected = _collectJob(compound_hash["compound_id"],compound_hash["cas_number"],compound_hash["selected_smiles"])
+            results_collected = _collectJob(compound_hash["job_id"],compound_hash["compound_id"],compound_hash["compound_structure_smiles"])
             if results_collected and results_collected['value']:
                 # assuming one single compound prediction
                 results = results_collected['value'][0]
-                resp_irritation = results["Prediction (resp_irritation)"]
+                resp_irritation = results["Prediction (endpoint)"]
                 keys = list(results.keys())
-                keys.remove("Prediction (resp_irritation)")
+                keys.remove("Prediction (endpoint)")
                 compound_hash["calculated_data"] = {k: results[k] for k in keys}
-                compound_hash["Prediction (resp_irritation)"] = resp_irritation
+                compound_hash["Prediction (endpoint)"] = resp_irritation
                 compound_hash["status"] = STATUS.RUN_JOB_END
             else:
                 compound_hash["calculated_data"] = {}
-                compound_hash["Prediction (resp_irritation)"] = -1
+                compound_hash["Prediction (endpoint)"] = -1
                 compound_hash["status"] = STATUS.COLLECTING_JOB_ERROR
                 
             new_hash["calculated_data"] = compound_hash["calculated_data"]
-            new_hash["Prediction (resp_irritation)"] = compound_hash["Prediction (resp_irritation)"]
+            new_hash["Prediction (endpoint)"] = compound_hash["Prediction (endpoint)"]
     [setHash(new_hash,compound_key,compound_hash[compound_key]) for compound_key in compound_hash.keys() if compound_key not in exclude]
     return new_hash
     
@@ -431,22 +431,22 @@ class Compounds(Resource):
     def post(self):
         # creates a new compound and prediction
         parser = reqparse.RequestParser()
-        parser.add_argument("selected_smiles")
-        parser.add_argument("cas_number")
+        parser.add_argument("compound_structure_smiles")
+        parser.add_argument("compound_id")
         args = parser.parse_args()
-        #print('\nDebug:\n\t{}\n\t{}\n'.format(args["cas_number"],args["selected_smiles"]))
-        compound_id = len(compounds)+1
+        #print('\nDebug:\n\t{}\n\t{}\n'.format(args["compound_id"],args["compound_structure_smiles"]))
+        job_id = len(compounds)+1
         
         compound = {
-            "compound_id":str(compound_id),
-            "cas_number":args["cas_number"],
-            "selected_smiles":args["selected_smiles"],
-            "Prediction (resp_irritation)":None,
+            "job_id":str(job_id),
+            "compound_id":args["compound_id"],
+            "compound_structure_smiles":args["compound_structure_smiles"],
+            "Prediction (endpoint)":None,
             "status":None,
             "thread":None
             }
 
-        compound_results = _runKnime(compound["compound_id"],compound["cas_number"],compound["selected_smiles"])
+        compound_results = _runKnime(compound["job_id"],compound["compound_id"],compound["compound_structure_smiles"])
         #pprint(compound_results)
         compound['status'] = compound_results["status"]
         compound['thread'] = compound_results["thread"]
@@ -454,12 +454,12 @@ class Compounds(Resource):
         # # try:
         # # only assumes a single compound being run
         # compound_result = compound_results['data'][0]
-        # compound["Prediction (resp_irritation)"] = compound_result["Prediction (resp_irritation)"]
+        # compound["Prediction (endpoint)"] = compound_result["Prediction (endpoint)"]
         # keys = list(compound_result.keys())
-        # keys.remove("Prediction (resp_irritation)")
+        # keys.remove("Prediction (endpoint)")
         # compound["calculated_data"] = {k: compound_result[k] for k in keys}
         # # except:
-        # #     compound["Prediction (resp_irritation)"] = compound_results["summary"]
+        # #     compound["Prediction (endpoint)"] = compound_results["summary"]
         # #     pass
 
         compounds.append(compound)
@@ -474,16 +474,16 @@ class Compound(Resource):
 
     def _getArgs(self):
         parser = reqparse.RequestParser()
-        parser.add_argument("selected_smiles")
-        parser.add_argument("cas_number")
+        parser.add_argument("compound_structure_smiles")
+        parser.add_argument("compound_id")
         args = parser.parse_args()
         return args
     
     # get existing compound
-    def get(self, compound_id):
+    def get(self, job_id):
         global compounds
         for compound in compounds:
-            if compound_id == compound["compound_id"]:
+            if job_id == compound["job_id"]:
                 return_compound = save_compound(compound)
                 return_code = 202
                 if return_compound["status"] == STATUS.RUN_JOB_END:
@@ -493,62 +493,62 @@ class Compound(Resource):
         return "Compound not found", 404
 
     # create new compound
-    def post(self, compound_id):
+    def post(self, job_id):
         global compounds
         parser = reqparse.RequestParser()
-        parser.add_argument("selected_smiles")
-        parser.add_argument("cas_number")
+        parser.add_argument("compound_structure_smiles")
+        parser.add_argument("compound_id")
         args = parser.parse_args()
 
         for compound in compounds:
-            if compound_id == compound["compound_id"]:
-                return "Compound with compound_id <<{}>> already exists".format(compound_id), 400
+            if job_id == compound["job_id"]:
+                return "Compound with job_id <<{}>> already exists".format(job_id), 400
         
         compound = {
-            "compound_id":str(compound_id),
-            "cas_number":args["cas_number"],
-            "selected_smiles":args["selected_smiles"],
-            "Prediction (resp_irritation)":None
+            "job_id":str(job_id),
+            "compound_id":args["compound_id"],
+            "compound_structure_smiles":args["compound_structure_smiles"],
+            "Prediction (endpoint)":None
             }
 
-        compound_result = _runKnime(compound["compound_id"],compound["cas_number"],compound["selected_smiles"])
+        compound_result = _runKnime(compound["job_id"],compound["compound_id"],compound["compound_structure_smiles"])
         
         compounds.append(compound)
         return save_compound(compound),202
 
     # update existing compound if exsists or create new one otherwise
     
-    def put(self, compound_id):
+    def put(self, job_id):
         global compounds
         parser = reqparse.ResquestParser()
-        parser.add_argument("cas_number")
-        parser.add_argument("selected_smiles")
+        parser.add_argument("compound_id")
+        parser.add_argument("compound_structure_smiles")
         args = parser.parse_args()
 
         for compound in compounds:
-            if compound_id == compound["compound_id"]:
-                compound["selected_smiles"] =args["selected_smiles"],
-                compound["cas_number"] =args["cas_number"],
+            if job_id == compound["job_id"]:
+                compound["compound_structure_smiles"] =args["compound_structure_smiles"],
+                compound["compound_id"] =args["compound_id"],
                 return save_compound(compound), 200
 
-        # create new compound, as previous compound_id was not found
+        # create new compound, as previous job_id was not found
         compound = {
-            "compound_id":str(compound_id),
-            "cas_number":args["cas_number"],
-            "selected_smiles":args["selected_smiles"],
-            "Prediction (resp_irritation)":None
+            "job_id":str(job_id),
+            "compound_id":args["compound_id"],
+            "compound_structure_smiles":args["compound_structure_smiles"],
+            "Prediction (endpoint)":None
             }
         
         compounds.append(compound)
         return save_compound(compound),201
 
     
-    def delete(self, compound_id):
+    def delete(self, job_id):
         global compounds
-        compounds = [compound for compound in compounds if compound["compound_id"] != compound_id]
-        return "Deleted compound with compound_id=<<{}>>".format(compound_id), 200
+        compounds = [compound for compound in compounds if compound["job_id"] != job_id]
+        return "Deleted compound with job_id=<<{}>>".format(job_id), 200
 
-def _setupJob(compound_id,cas_number,selected_smiles,results=None):
+def _setupJob(job_id,compound_id,compound_structure_smiles,results=None):
     if not results:
         results = {
             'status':STATUS.JOBFILE_CREATION,
@@ -561,8 +561,8 @@ def _setupJob(compound_id,cas_number,selected_smiles,results=None):
     knime_json_dir     = '{}{}{}'.format(settings['knime']['workflow_dir'],os.path.sep,settings['knime']['json_dir'])
     knime_workflow_dir = '{}{}{}'.format(settings['knime']['workflow_dir'],os.path.sep,settings['knime']['workflow_name'])
 
-    inputJSON = '{{"entries":[{{"cas_number":"{}","selected smiles":"{}"}}]}}'.format(cas_number,selected_smiles)
-    inputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['infile_name_stem'].format(compound_id))
+    inputJSON = '{{"entries":[{{"compound_id":"{}","compound_structure_smiles":"{}"}}]}}'.format(compound_id,compound_structure_smiles)
+    inputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['infile_name_stem'].format(job_id))
 
     try:
         with open(inputJSON_filename,'w') as fh:
@@ -574,7 +574,7 @@ def _setupJob(compound_id,cas_number,selected_smiles,results=None):
         pass
 
     # try and create empty result file - check if possible
-    outputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['outfile_name_stem'].format(compound_id))
+    outputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['outfile_name_stem'].format(job_id))
     try:
         with open(outputJSON_filename,'w') as fh:
             fh.writelines(['',])
@@ -589,7 +589,7 @@ def _setupJob(compound_id,cas_number,selected_smiles,results=None):
         
     return results
     
-def _runJob(compound_id,cas_number,selected_smiles,results=None):
+def _runJob(job_id,compound_id,compound_structure_smiles,results=None):
     if not results:
         results = {
             'status':STATUS.RUN_JOB,
@@ -604,8 +604,8 @@ def _runJob(compound_id,cas_number,selected_smiles,results=None):
     knime_json_dir     = '{}{}{}'.format(settings['knime']['workflow_dir'],os.path.sep,settings['knime']['json_dir'])
     knime_workflow_dir = '{}{}{}'.format(settings['knime']['workflow_dir'],os.path.sep,settings['knime']['workflow_name'])
 
-    inputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['infile_name_stem'].format(compound_id))
-    outputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['outfile_name_stem'].format(compound_id))
+    inputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['infile_name_stem'].format(job_id))
+    outputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['outfile_name_stem'].format(job_id))
     outputJSON = None
    
     cmds = [
@@ -637,7 +637,7 @@ def _runJob(compound_id,cas_number,selected_smiles,results=None):
     return results
 
 
-def _collectJob(compound_id,cas_number,selected_smiles,results=None):
+def _collectJob(job_id,compound_id,compound_structure_smiles,results=None):
     if not results:
         results = {
             'status':STATUS.COLLECTING_JOB,
@@ -650,7 +650,7 @@ def _collectJob(compound_id,cas_number,selected_smiles,results=None):
     # ugly, ugly, ugly
     global settings
     knime_json_dir     = '{}{}{}'.format(settings['knime']['workflow_dir'],os.path.sep,settings['knime']['json_dir'])
-    outputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['outfile_name_stem'].format(compound_id))
+    outputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['outfile_name_stem'].format(job_id))
     outputJSON = None
 
     result_data = None
@@ -672,7 +672,7 @@ def _collectJob(compound_id,cas_number,selected_smiles,results=None):
     return results
     
     
-def _runKnime(compound_id,cas_number,selected_smiles):
+def _runKnime(job_id,compound_id,compound_structure_smiles):
     # only works for a single compound - currently
 
     results = {
@@ -680,11 +680,11 @@ def _runKnime(compound_id,cas_number,selected_smiles):
         'value':None,
         'thread':None
         }
-    results = _setupJob(compound_id,cas_number,selected_smiles,results=results)
+    results = _setupJob(job_id,compound_id,compound_structure_smiles,results=results)
     if results['status'] == STATUS.JOBFILE_CREATION_END:
-        results = _runJob(compound_id,cas_number,selected_smiles,results=results)
+        results = _runJob(job_id,compound_id,compound_structure_smiles,results=results)
         # if results['status'] == STATUS.RUN_JOB_PROCESSING:
-        #     results = _collectJob(compound_id,cas_number,selected_smiles,results=results)
+        #     results = _collectJob(job_id,compound_id,compound_structure_smiles,results=results)
 
     # if results['status'] not in STATUS_ERRORS:
     #     results['summary'] = 'success'
@@ -732,7 +732,7 @@ def setup(settings):
 
     api = Api(app)
 
-    api.add_resource(Compound,"/compound/<string:compound_id>")
+    api.add_resource(Compound,"/compound/<string:job_id>")
     api.add_resource(Compounds,"/compound/")
     # api.add_resource(Converter,"/converter/<string:smiles_string>")
     api.add_resource(Converter,"/smiles/")
@@ -769,4 +769,4 @@ if __name__ == '__main__':
 
 
 # POST
-# curl --data "cas_number=J21&selected_smiles=c1ccccccc1CCCc2cccccc2"  "http://127.0.0.1:5000/compound/3"
+# curl --data "compound_id=J21&compound_structure_smiles=c1ccccccc1CCCc2cccccc2"  "http://127.0.0.1:5000/compound/3"
