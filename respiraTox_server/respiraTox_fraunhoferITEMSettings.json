@@ -5,7 +5,7 @@
     {
 	"application": "/home/respirat/knime_3.6.1/knime",
 	"default_parameters": ["-reset", "-nosplash", "--launcher.suppressErrors", "-application", "org.knime.product.KNIME_BATCH_APPLICATION"],
-	"workflow_name": "knime_respiraTox_predict_json",
+	"workflow_name": "knime_respiraTox_predict_json_devel",
 	"model_name": "CURRENTLY-NOT-USED",
 	"workflow_dir": "/home/respirat/knime-workspace",
 	"json_dir": "respiraTox_predict_json",
