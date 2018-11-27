@@ -29,7 +29,7 @@ let distance_method_selected_var = distance_method_var.value;
 
 let table_body_var = document.getElementById("neighbour_table_body_id");
 let table_var = document.getElementById("neighbour_table_id");
-let  = document.getElementById("prediction_display_area_id");
+let prediction_display_area_var = document.getElementById("prediction_display_area_id");
 
 let local_color_scheme = {
     red: "rgba(245,198,203,1.0)",
@@ -782,10 +782,10 @@ function submit_for_prediction(respiraTox_alert_id){
 	alert_message(error_message);
 	return false
     }
-    console.log("compound_input_value (prediction):         " + compound_input_value);
-    console.log("compound_id_input_var (prediction):         " + compound_id_input_value);
-    console.log("fingerprint_type_selected_var (prediction):" + fingerprint_type_var_value);
-    console.log("distance_method_selected_var (prediction): " + distance_method_var_value);
+    // console.log("compound_input_value (prediction):         " + compound_input_value);
+    // console.log("compound_id_input_var (prediction):         " + compound_id_input_value);
+    // console.log("fingerprint_type_selected_var (prediction):" + fingerprint_type_var_value);
+    // console.log("distance_method_selected_var (prediction): " + distance_method_var_value);
     send_for_prediction_service(compound_id_input_value,compound_input_value,fingerprint_type_var_value,distance_method_var_value);
     disableElement(smiles_submit_button_var);
     enableElement(smiles_refresh_button_var);
