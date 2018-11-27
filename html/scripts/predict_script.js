@@ -88,7 +88,7 @@ var compound_information_modal_html = " "+compound_information_modal_var.innerHT
 let convert_URL = "http://127.0.0.1:5555/smiles/"
 let base_URL = "http://127.0.0.1:5555/compound/"
 // let convert_URL = "https://respiratox.item.fraunhofer.de/rest/smiles/"
-// let base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
+base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
 // tools
 
 function getAllFuncs(obj) {
