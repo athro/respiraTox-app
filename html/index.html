@@ -88,7 +88,7 @@
       </ul>
       </nav>
 
-      <button type="button" class="btn input-group-text" ><object id="compound_information_button_id" data-toggle="modal" data-target="#respiraTox_compound_information">Display Compound Information Modal</object></button>
+      <!-- <button type="button" class="btn input-group-text" ><object id="compound_information_button_id" data-toggle="modal" data-target="#respiraTox_compound_information">Display Compound Information Modal</object></button> -->
 
       
       <div class="tab-content">
@@ -126,13 +126,6 @@
   <div class="container">
   <form class="form-horizontal" >
     <div class="form-group">
-      <small id="compound_id_helptext" class="text-muted"><br/>Enter an arbitray ID (CAS or no CAS)</small>
-      <div class="input-group mb-3">
-	<div class="input-group-prepend">
-	  <span class="input-group-text" id="compound_id_input_text"><object width="75">CompoundID</object></span>
-	</div>
-	<input id="compound_id_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="compound_id_label" aria-describedby="compound_id_input_id"></input>
-      </div>
 
       <!-- <small id="smiles_helptext" class="text-muted"><br/>Select what structure format to use and paste or enter compound</small>  -->
       <!-- <div class="input-group mb-3">  -->
@@ -161,7 +154,16 @@
       </div>
       </div>
 
-    <!-- <div class="input-group mb-3"> -->
+      <small id="compound_id_helptext" class="text-muted"><br/>Enter an optinional name or ID (e.g. a CAS number))</small>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="compound_id_input_text"><object width="75">Name</object></span>
+        </div>
+        <input id="compound_id_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="compound_id_label" ari\
+a-describedby="compound_id_input_id"></input>
+      </div>
+
+      <!-- <div class="input-group mb-3"> -->
     <!--   <small id="fingerprint_type_helptext" class="text-muted"><br/>Select fingerprint type for similarity matching</small> -->
     <!--   <div class="input-group mb-3"> -->
     <!--     <div class="input-group-prepend"> -->
@@ -180,13 +182,13 @@
     <!-- Distance calculation -->
     <div class="input-group mb-3">
       <small id="distance_method_helptext"
-      class="text-muted"><br/>Select distance/similarity measure (default: Tanimoto)</small>
+      class="text-muted"><br/>Select similarity calculation method (default: Tanimoto)</small>
       <div class="input-group mb-3">
 	  <span class="btn-group" id="basic-addon3">
-	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="60">Distance</object></button>
+	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="60">Similarity</object></button>
 	    <div class="dropdown-menu">
 	      <a class="dropdown-item" onclick="return select_distance_method('Tanimoto')">Tanimoto</a>
-	      <a class="dropdown-item" onclick="return select_distance_method ('Manhattan')">Manhattan</a>
+	      <a class="dropdown-item" onclick="return select_distance_method ('Manhattan')" disabled>Manhattan</a>
 	      <a class="dropdown-item" onclick="return select_distance_method ('Chebyshev')">Chebyshev</a>
 	      <a class="dropdown-item" onclick="return select_distance_method ('Levenstein')">Levenstein</a>
 	    </div>
@@ -206,7 +208,7 @@
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint</object></button>
 	    <div class="dropdown-menu">
 	      <a class="dropdown-item" onclick="return select_fingerprint_type('PubChem')">PubChem</a>
-	      <a class="dropdown-item" onclick="return select_fingerprint_type('ECFP-1024')">ECFP-1024</a>
+	      <!-- <a class="dropdown-item" onclick="return select_fingerprint_type('ECFP-1024')">ECFP-1024</a> -->
 	      <a class="dropdown-item" onclick="return select_fingerprint_type('ECFP-2048')">ECFP-2048</a>
 	    </div>
 	    <fieldset disabled>
