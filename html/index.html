@@ -175,7 +175,7 @@
 
 	    <!-- Fingerprint type selection -->
             <div class="input-group mb-3">
-                <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default: PubChem)</small>
+                <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is PubChem)</small>
                 <div class="input-group mb-3">
                     <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint</object></button>
@@ -275,6 +275,21 @@
                             <!-- </tr></table></th> -->
                     </tr>
                 </thead>
+                <tbody id="neighbour_table_body_id">
+                    <tr class="table-success" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
 
                     <!-- </tr> -->
                 </tbody>
