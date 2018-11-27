@@ -1,5 +1,6 @@
-let job_running = false;
+let job_running             = false;
 let use_smiles_drawer_table = true;
+let use_alert_modal         = true;
 
 //let smiles_input_var = document.getElementById("smiles_input_id");
 let compound_id_input_var = document.getElementById("compound_id_input_id");
@@ -28,7 +29,7 @@ let distance_method_selected_var = distance_method_var.value;
 
 let table_body_var = document.getElementById("neighbour_table_body_id");
 let table_var = document.getElementById("neighbour_table_id");
-let prediction_display_area_var = document.getElementById("prediction_display_area_id");
+let  = document.getElementById("prediction_display_area_id");
 
 let local_color_scheme = {
     red: "rgba(245,198,203,1.0)",
@@ -83,6 +84,15 @@ var respiraTox_compound_information_modal_header_html = " "+respiraTox_compound_
 var compound_information_modal_var  = document.getElementById("compound_information_modal_body");    
 var compound_information_modal_html = " "+compound_information_modal_var.innerHTML;
 
+// new alert modal (try)
+respiraTox_alertMessageModal
+var alert_modal_var  = document.getElementById("respiraTox_alertMessageModal");    
+var alert_modal_title_var  = document.getElementById("respiraTox_alertMessageModalTitle_id");    
+var alert_modal_body_var  = document.getElementById("respiraTox_alertMessageModalBody_id");    
+var alert_modal_footer_var  = document.getElementById("respiraTox_alertMessageModalTitle_id");    
+
+
+
 
 //var base_URL = "http://127.0.0.1:5000/compound/"
 let convert_URL = "http://127.0.0.1:5555/smiles/"
@@ -103,6 +113,9 @@ function getAllFuncs(obj) {
     });
 }
 
+function alert_modal(message) {
+    
+}
 
 
 function alert_message(message) {
@@ -436,11 +449,20 @@ function renderResultTableNew(neighbours) {
 	
 	if (neighbour['compound_endpoint_sensory_irritation'] == 1) {
 	    sensory_irritation_elementStyle = 'led-red-on';
+	} else if (neighbour['compound_endpoint_sensory_irritation'] == 0) {
+	    sensory_irritation_elementStyle = 'led-green-on';
 	}
+
 	if (neighbour['compound_endpoint_tissue_damage'] == 1) {
 	    tissue_damage_elementStyle      = 'led-red-on';
+	} else if (neighbour['compound_endpoint_tissue_damage'] == 0) {
+	    tissue_damage_elementStyle      = 'led-green-on';
 	}
+
+	
 	if (neighbour['compound_endpoint_no_irritation'] == 1) {
+	    no_irritation_elementStyle      = 'led-green-on';
+	} else if (neighbour['compound_endpoint_no_irritation'] == 0) {
 	    no_irritation_elementStyle      = 'led-green-on';
 	}
 
@@ -495,9 +517,9 @@ function formater(x,base=10,round=2,cut=12) {
 		parsed = x.substring(0,cut+3);
 	    }
 	    catch(error) {
-		console.error('Formatter Error: returning "NOT SET"');
+		console.error('Formatter Error: returning "NO DATA"');
 		console.error(error);
-		return "NOT SET";
+		return "NO DATA";
 	    }
 	    if (x.length > cut+3) {
 		parsed = x.substring(0,cut)+'...';
@@ -611,19 +633,24 @@ function renderResultTable(neighbours) {
 }    
 
 function renderPredictionResult(predictionResult,appdomain) {
+    // predictionResult == 1 - irritation : 0 - no irritation
+    // appdomain: reliable vs 
     console.log("renderPredictionResult");
     let prediction_result_int = parseFloat(predictionResult).toFixed(1)
     let prediction_color = local_color_scheme.white;
+    let prediction_label = 'unknown';
     let applicabilitydomain_display_area_var = document.getElementById('applicabilitydomain_display_area_id');
     if (prediction_result_int >= 0.0) {
 	if (prediction_result_int > 0.0) {
-	    prediction_color = local_color_scheme.red;
-	} else {
 	    prediction_color = local_color_scheme.green;
+	    prediction_label = '<small>nonirritant</small>';
+	} else {
+	    prediction_color = local_color_scheme.red;
+	    prediction_label = '<small>irritant</small>';
 	}
     }
     prediction_display_area_var.style.setProperty("background-color",prediction_color);
-    
+    prediction_display_area_var.innerHTML = prediction_label
     // deal with AppDomain
 
     applicabilitydomain_display_area_var.innerHTML = appdomain;
@@ -743,10 +770,10 @@ function submit_for_prediction(respiraTox_alert_id){
     let distance_method_var_value = distance_method_var.value;
     let error_message = "";
     // compound ID number should be not null
-    if (!compound_id_input_value){
-	console.log("compound_id_input_var (prediction) was empty:");
-	error_message = error_message + "Please fill the Compound ID Number field!<br/>";
-    }
+    // if (!compound_id_input_value){
+    // 	console.log("compound_id_input_var (prediction) was empty:");
+    // 	error_message = error_message + "Please fill the Compound ID Number field!<br/>";
+    // }
     if (!compound_input_value){
 	console.log("compound_input_value (prediction) was empty:");
 	error_message = error_message + "A valid compound structure is required!<br/>";
