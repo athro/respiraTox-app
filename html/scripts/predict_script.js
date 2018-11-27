@@ -664,10 +664,10 @@ function renderPredictionResult(predictionResult,appdomain) {
     let applicabilitydomain_display_area_var = document.getElementById('applicabilitydomain_display_area_id');
     if (prediction_result_int >= 0.0) {
 	if (prediction_result_int > 0.0) {
-	    prediction_color = local_color_scheme.green;
+	    prediction_color = local_color_scheme.reliable_green;
 	    prediction_label = 'nonirritant';
 	} else {
-	    prediction_color = local_color_scheme.red;
+	    prediction_color = local_color_scheme.reliable_red;
 	    prediction_label = 'irritant';
 	}
     }
@@ -746,7 +746,7 @@ function analyseResponse(response) {
 	respiraTox_request_result = -1
 	respiraTox_request_data   = {}
 	respiraTox_request_neighbours   = [];
-	alert_message("Job did not finish<br/>Resetting system");
+	alert_message("Job did not finish<br/>Resetting system job variables");
 	hideElement(table_var);
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
@@ -818,7 +818,11 @@ function submit_for_prediction(respiraTox_alert_id){
     // }
     if (!compound_input_value){
 	console.log("compound_input_value (prediction) was empty:");
-	error_message = error_message + "A valid compound structure is required!<br/>";
+	error_message = error_message + "Empty compound structure!<br/>";
+    }
+    if (!check_if_valid_smiles(compound_input_value)) {
+	console.log("Illegal SMILES sting:");
+	error_message = error_message + "The SMILES sting is not valid!<br/>";
     }
     if(error_message){
 	alert_message(error_message);
@@ -839,7 +843,8 @@ function submit_for_prediction(respiraTox_alert_id){
 compound_input_var.addEventListener("input",function() {
     console.log("compound_input_var:"+compound_input_var.value);
     // Clean the actual text input
-    
+    compound_input_var.value = compound_input_var.value.replace(/[^A-Za-z0-9@\.\+\-\?!\(\)\[\]\{\}/\\=#\$:\*]/g,'');
+
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
     SmilesDrawer.parse(compound_input_var.value, function(tree) {
 	// Draw to the canvas
@@ -847,14 +852,13 @@ compound_input_var.addEventListener("input",function() {
     });
 });
 
-function testTable() {
-    var datatable = $('#neighbour_table_id').DataTable();
-}
-
-
-
-function clean_everything() {
+function clean_table() {
     var datatable = $('#neighbour_table_id').DataTable();
     datatable.clear();
     datatable.draw();
+    hideElement(table_var);
+}
+
+function check_if_valid_smiles(potential_smiles_string) {
+    return potential_smiles_string.trim().match(/^([^J][0-9BCOHNSOPrIFla@+\-\[\]\(\)\\\/%=#$,.~;&!]{6,})$/ig);
 }
