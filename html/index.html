@@ -1,10 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html>
-  <head>
+
+<head>
     <title>respiraTox Editor</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	  
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 
@@ -28,117 +29,90 @@
     <script type="text/javascript" language="javascript" src="scripts/jsme/jsme.nocache.js"></script>
     <script type="text/javascript" language="javascript" src="scripts/kekule/kekule.min.js"></script>
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> -->
-    <!-- <script src="https://unpkg.com/smiles-drawer@1.0.2/dist/smiles-drawer.min.js"></script> -->
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> -->
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"> -->
+    <link rel="stylesheet" href="css/predict_css.css">
 
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script> -->
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script> -->
-    <!-- <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script> -->
-
-    <!-- stand alone version  -->
-    <!-- <link rel="stylesheet" href="scripts/bootstrap/4.1.3/css/bootstrap.min.css"> -->
-    <!-- <script src="scripts/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
-    <!-- <script src="scripts/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script> -->
-    <!-- <script src="scripts/bootstrap/4.1.3/js/bootstrap.min.js"></script> -->
-
-
-
-     <!-- <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet"> -->
-     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
-<!-- <script type="text/javascript" language="javascript" src="scripts/predict_script.js"></script> -->
-     <link rel="stylesheet" href="css/predict_css.css">
-
-     <script>
-     </script>
-
-
-      <script>
-	//this function will be called after the JavaScriptApplet code has been loaded.
-	// ak - which ??
-      function jsmeOnLoad() {
-          jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px"); 
-      }   
-      </script>
-     </head>
-	      
-  <body>
-    <div class="container mt-3">
-      
-      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-	<ul class="navbar-nav">
-	  <li class="nav-item">
-	  <a class="nav-link" data-toggle="modal" data-target="#respiraTox_homeMenu">respiraTox</a>
-	  </li>
-	  <li class="nav-item" >
-	    <a class="nav-link" data-toggle="tab" href="#predict_page_id">Predict Compound</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_aboutMenu">About</a>
-	  </li>
-	  <!-- <li class="nav-item"> -->
-	  <!--   <a class="nav-link" data-toggle="modal" data-target="#respiraTox_JSMEEditor">JSME Editor</a> -->
-	  <!-- </li> -->
-	 
-	  <li class="nav-item">
-	    <a class="nav-link" data-toggle="tab" href="#contact_page_id">Contact</a>
-	  </li>
-      </ul>
-      </nav>
-
-      <!-- <button type="button" class="btn input-group-text" ><object id="compound_information_button_id" data-toggle="modal" data-target="#respiraTox_compound_information">Display Compound Information Modal</object></button> -->
-
-      
-      <div class="tab-content">
-	
-	<div id="respiraTox_page_id" class="container tab-pane"><br>
-	  <h3>The respiraTox Project</h3>
-	  <br>
-	  <p>Some text about the project</p>
-	</div>
-
-	
-	<div id="about_page_id" class="container tab-pane fade"><br>
-	  <h3>About this service</h3>
-	  <p>This web page and corresponding server</p>
-	</div>
-      </div>
-      
-    </div>
-    
- 	<div id="predict_page_id" class="container tab-pane"><br>
-	  <h3>Predict a Compound</h3>
-	</div>
-	<div class="container">
-	<div>
-	<div class="alert alert-primary" role="alert" style="display:block; height: 100px;" id="respiraTox_alert_id">Job information will appear here</div>
-	</div>
-	</div>
-  
     <script>
-      $(document).ready(function(){
-          $('[data-toggle="tooltip"]').tooltip();
-      });
-     </script>
-	
-  <div class="container">
-  <form class="form-horizontal" >
-    <div class="form-group">
+    </script>
 
-      <!-- <small id="smiles_helptext" class="text-muted"><br/>Select what structure format to use and paste or enter compound</small>  -->
-      <!-- <div class="input-group mb-3">  -->
-      <!-- 	<div class="input-group-prepend">  -->
-      <!-- 	  <span class="input-group-text" id="smiles_input_desc"><object width="75">SMILES</object></span>  -->
-      <!-- 	</div>  -->
-      <!-- 	<input id="smiles_input_id" type="text" class="form-control" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="smiles_label" aria-describedby="smiles_input_desc"></input> -\-> -->
-      <!-- </div>  -->
+    <script>
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        // ak - which ??
+        function jsmeOnLoad() {
+            jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
+        }
+    </script>
+</head>
 
-      <small id="smiles_helptext" class="text-muted"><br/>Select structure format and enter or upload compound structure</small>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-	  <span class="btn-group" id="basic-addon3">
+<body>
+    <div class="container mt-3">
+
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_homeMenu">respiraTox</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#predict_page_id">Predict Compound</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_aboutMenu">About</a>
+                </li>
+                <!-- <li class="nav-item"> -->
+                <!--   <a class="nav-link" data-toggle="modal" data-target="#respiraTox_JSMEEditor">JSME Editor</a> -->
+                <!-- </li> -->
+
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#contact_page_id">Contact</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- <button type="button" class="btn input-group-text" ><object id="compound_information_button_id" data-toggle="modal" data-target="#respiraTox_compound_information">Display Compound Information Modal</object></button> -->
+
+        <div class="tab-content">
+
+            <div id="respiraTox_page_id" class="container tab-pane">
+                <br>
+                <h3>The respiraTox Project</h3>
+                <br>
+                <p>Some text about the project</p>
+            </div>
+
+            <div id="about_page_id" class="container tab-pane fade">
+                <br>
+                <h3>About this service</h3>
+                <p>This web page and corresponding server</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="predict_page_id" class="container tab-pane">
+        <br>
+        <h3>Predict a Compound</h3>
+    </div>
+    <div class="container">
+        <div>
+            <div class="alert alert-primary" role="alert" style="display:block; height: 100px;" id="respiraTox_alert_id">Job information will appear here</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form class="form-horizontal">
+            <div class="form-group">
+
+                <!-- <small id="smiles_helptext" class="text-muted"><br/>Select what structure format to use and paste or enter compound</small>  -->
+                <!-- <div class="input-group mb-3">  -->
+                <!-- 	<div class="input-group-prepend">  -->
+                <!-- 	  <span class="input-group-text" id="smiles_input_desc"><object width="75">SMILES</object></span>  -->
+                <!-- 	</div>  -->
+                <!-- 	<input id="smiles_input_id" type="text" class="form-control" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="smiles_label" aria-describedby="smiles_input_desc"></input> -\-> -->
+                <!-- </div>  -->
+
+                <small id="smiles_helptext" class="text-muted"><br/>Select structure format and enter or upload compound structure</small>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="compound_format_button_id" width="60">SMILES</object></button>
 	    <div class="dropdown-menu">
 	      <!-- <a class="dropdown-item" href="#">SMILES <img src="./icons/111163-justicons/svg/note-interface-symbol.svg" alt="copy&paste" height="16" width="20"> </a> -->
@@ -148,43 +122,42 @@
 	      <a class="dropdown-item" onclick="return select_compound_format('SDF')">SDF<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
 	    </div>
 	  </span>
-	</div>
-	<input id="compound_input_id_text" type="text" class="form-control" style="display:block"  value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
-	<button id="compound_input_id_button" type="button" class="btn alert-primary" style="display:none" value="" aria-label="compound_button_label" aria-describedby="compound_button_label">Upload</button>
-      </div>
-      </div>
+                    </div>
+                    <input id="compound_input_id_text" type="text" class="form-control" style="display:block" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
+                    <button id="compound_input_id_button" type="button" class="btn alert-primary" style="display:none" value="" aria-label="compound_button_label" aria-describedby="compound_button_label">Upload</button>
+                </div>
+            </div>
 
-      <small id="compound_id_helptext" class="text-muted"><br/>Enter an optinional name or ID (e.g. a CAS number))</small>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="compound_id_input_text"><object width="75">Name</object></span>
-        </div>
-        <input id="compound_id_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="compound_id_label" ari\
-a-describedby="compound_id_input_id"></input>
-      </div>
+            <small id="compound_id_helptext" class="text-muted"><br/>Enter an optinional name or ID (e.g. a CAS number))</small>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="compound_id_input_text"><object width="75">Name</object></span>
+                </div>
+                <input id="compound_id_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="compound_id_label" ari\ a-describedby="compound_id_input_id"></input>
+            </div>
 
-      <!-- <div class="input-group mb-3"> -->
-    <!--   <small id="fingerprint_type_helptext" class="text-muted"><br/>Select fingerprint type for similarity matching</small> -->
-    <!--   <div class="input-group mb-3"> -->
-    <!--     <div class="input-group-prepend"> -->
-    <!-- 	  <span class="btn-group" id="basic-addon3"> -->
-    <!-- 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint Type</object></button> -->
-    <!-- 	    <div class="dropdown-menu"> -->
-    <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type('FP1 - 1024')">FP1 - 1024</a> -->
-    <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP2 - 2048')">FP2 - 2048</a> -->
-    <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP3 - 2048')">FP3 - 2048</a> -->
-    <!-- 	    </div> -->
-    <!-- 	  </span> -->
-    <!-- 	</div> -->
-	
-    <!-- </div> -->
+            <!-- <div class="input-group mb-3"> -->
+            <!--   <small id="fingerprint_type_helptext" class="text-muted"><br/>Select fingerprint type for similarity matching</small> -->
+            <!--   <div class="input-group mb-3"> -->
+            <!--     <div class="input-group-prepend"> -->
+            <!-- 	  <span class="btn-group" id="basic-addon3"> -->
+            <!-- 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint Type</object></button> -->
+            <!-- 	    <div class="dropdown-menu"> -->
+            <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type('FP1 - 1024')">FP1 - 1024</a> -->
+            <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP2 - 2048')">FP2 - 2048</a> -->
+            <!-- 	      <a class="dropdown-item" onclick="return select_fingerprint_type ('FP3 - 2048')">FP3 - 2048</a> -->
+            <!-- 	    </div> -->
+            <!-- 	  </span> -->
+            <!-- 	</div> -->
 
-    <!-- Distance calculation -->
-    <div class="input-group mb-3">
-      <small id="distance_method_helptext"
-      class="text-muted"><br/>Select similarity calculation method (default: Tanimoto)</small>
-      <div class="input-group mb-3">
-	  <span class="btn-group" id="basic-addon3">
+            <!-- </div> -->
+
+		  
+            <!-- Distance calculation -->
+            <div class="input-group mb-3">
+                <small id="distance_method_helptext" class="text-muted"><br/>Select similarity calculation method (default: Tanimoto)</small>
+                <div class="input-group mb-3">
+                    <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="60">Similarity</object></button>
 	    <div class="dropdown-menu">
 	      <a class="dropdown-item" onclick="return select_distance_method('Tanimoto')">Tanimoto</a>
@@ -196,15 +169,15 @@ a-describedby="compound_id_input_id"></input>
 	       <input id="distance_method_id" type="text" class="form-control" style="display:block"  value="Tanimoto" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
 	    </fieldset>
 	  </span>
-	</div>
-    </div>
+                </div>
+            </div>
 
-    
-    <!-- Fingerprint type selection -->
-    <div class="input-group mb-3">
-      <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is PubChem)</small>
-      <div class="input-group mb-3">
-	  <span class="btn-group" id="basic-addon3">
+
+	    <!-- Fingerprint type selection -->
+            <div class="input-group mb-3">
+                <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is PubChem)</small>
+                <div class="input-group mb-3">
+                    <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint</object></button>
 	    <div class="dropdown-menu">
 	      <a class="dropdown-item" onclick="return select_fingerprint_type('PubChem')">PubChem</a>
@@ -215,298 +188,365 @@ a-describedby="compound_id_input_id"></input>
 	       <input id="fingerprint_type_id" type="text" class="form-control" style="display:block"  value="PubChem" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
 	    </fieldset>
 	  </span>
-	</div>
-    </div>
+                </div>
+            </div>
+	    
+            <div class="input-group mb-3">
+                <small id="smiles_canvas_helptext" class="text-muted"><br/>Structure from input</small>
+                <div class="canvas_class">
+                    <canvas id="smiles_canvas" width="250" height="150"></canvas>
+                </div>
+                <small id="applicabilitydomain_helptext" class="text-muted"><br/>Applicability Domain</small>
+                <div class="d-flex p-3 bg-white text-black">
+                    <div style="width: 150px; height: 80px; background-color: white;">
+                        <div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
+                        <div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
+                            <div class="d-flex p-3 bg-white text-muted">
+                                <div style="width: 50px; height: 80px; background-color: white;">
+                                    <small><b><div id="applicabilitydomain_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: white;"></div></b></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-      
-    <div class="input-group mb-3">
-      <small id="smiles_canvas_helptext" class="text-muted"><br/>Structure from input</small>
-      <div class="canvas_class">
-	<canvas id="smiles_canvas" width="250" height="150"></canvas>
-      </div>
-      <small id="applicabilitydomain_helptext" class="text-muted"><br/>Applicability Domain</small>
-      <div class="d-flex p-3 bg-white text-black" >
-        <div style="width: 150px; height: 80px; background-color: white;">
-	<div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
-	<div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
-	  <div class="d-flex p-3 bg-white text-muted" >
-	    <div style="width: 50px; height: 80px; background-color: white;">
-	      <small><div id="applicabilitydomain_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(255, 255, 255,1.0);"></div></small>
-	    </div>
-	  </div>
-	</div>
-      </div>
-      </div>
+                <small id="prediction_helptext" class="text-muted"><br/>Prediction</small>
+                <div class="d-flex p-3 bg-white text-black">
+                    <div style="width: 150px; height: 80px; background-color: white;">
+                        <div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
+                        <div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
+                            <div class="d-flex p-3 bg-white text-muted">
+                                <div style="width: 50px; height: 80px; background-color: white;">
+                                    <small><b><div id="prediction_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color:white;"></div></b></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- <small id="prediction_helptext" class="text-muted"><br/>Prediction</small> -->
+                <!-- <div class="d-flex p-3 bg-white text-black"> -->
+                <!--     <div style="width: 50px; height: 80px; background-color: white;"> -->
+                <!--         <div class="mh-100" style="width: 15px; height: 15px; background-color: white;"></div> -->
+                <!--         <small><div id="prediction_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 50px; background-color: rgba(255, 255, 255,1.0);"></div></small> -->
+                <!--         <\!-- <div class="mh-100" id="prediction_display_area_id" style="width: 50px; height: 50px; background-color: white;"></div> -\-> -->
+                <!--     </div> -->
+                <!--     <div class="d-flex p-3 bg-white text-muted"> -->
+                <!--         <div style="width: 50px; height: 80px; background-color: white;"> -->
+                <!--             <small><div class="mh-100" style="text-align: center; height: 4px; width: 80px; background-color: white"></div></small> -->
+                <!--             <small><div class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(195,230,203,1.0);">nonirritant</div></small> -->
+                <!--             <small><div class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(245,198,203,1.0);">irritant</div></small> -->
+                <!--         </div> -->
+                <!--     </div> -->
+                <!--     <\!-- <div class="p-2 bg-light" width=300 id="pred_flex">1</div> -\-> -->
+                <!-- </div> -->
+		
+            </div>
+	    
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button>
+                    <button id="smiles_refresh_button_id" type="button" class="btn btn-primary" onclick="refresh_prediction()" disabled>Refresh Jobs Status</button>
 
-      
-      <small id="prediction_helptext" class="text-muted"><br/>Applicability Domain</small>
-      <div class="d-flex p-3 bg-white text-black">
-        <div style="width: 150px; height: 80px; background-color: white;">
-	    <div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
-	    <div class="mh-100" style="width: 150px; height: 50px; background-color: green;">
-	       <div class="d-flex p-3 bg-white text-muted">
-	          <div style="width: 50px; height: 80px; background-color: blue;">
-		     <small><div id="prediction_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(255, 255, 255,1.0);"></div></small>
-		  </div>
-	       </div>
-	    </div>
-	</div>
-      </div>
+                </div>
+        </form>
+        </div>
 
-      
-      <small id="prediction_helptext" class="text-muted"><br/>Prediction</small>
-      <div class="d-flex p-3 bg-white text-black" >
-         <div style="width: 50px; height: 80px; background-color: white;">
-         <div class="mh-100" style="width: 15px; height: 15px; background-color: white;"></div>
-	      <small><div id="prediction_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 50px; background-color: rgba(255, 255, 255,1.0);"></div></small>
-	      <!-- <div class="mh-100" id="prediction_display_area_id" style="width: 50px; height: 50px; background-color: white;"></div> -->
-      </div>
-      <div class="d-flex p-3 bg-white text-muted" >
-        <div style="width: 50px; height: 80px; background-color: white;">
-	<small><div class="mh-100" style="text-align: center; height: 4px; width: 80px; background-color: white"></div></small>
-	<small><div class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(195,230,203,1.0);">nonirritant</div></small>
-	<small><div class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: rgba(245,198,203,1.0);">irritant</div></small>
-	</div>
-      </div>
-         <!-- <div class="p-2 bg-light" width=300 id="pred_flex">1</div> -->
-      </div>
-    </div>
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-	<button id="smiles_submit_button_id"  type="button" class="btn btn-primary" onclick="return submit_for_prediction()" >Submit for Prediction</button>
-	<button id="smiles_refresh_button_id" type="button" class="btn btn-primary"  onclick="refresh_prediction()" disabled>Refresh Jobs Status</button>
-	
-    </div>
-  </form>
-  </div>
+	<button type="button" class="btn input-group-text" ><object id="dummy_button_id" onclick="clean_everything()">Dummy Test Button</object></button>
 
+	<div class="container">
+	  
+            <table class="table table-sm table-hover table-striped table-bordered" id="neighbour_table_id" style="display:bulk" style="width:100%">
+                <caption>Neighbours</caption>
+                <thead>
+                    <tr>
+                        <th style="width:3%" class="table_col_id">Rank</th>
+                        <th style="width:10%" class="table_col_compound_name">Compound Name</th>
+                        <th style="width:12%" class="table_col_cas">CAS</th>
+                        <th style="width:5%" class="table_col_distance">Similarity</th>
+                        <th style="width:35%" class="table_col_smiles">Compound</th>
+                        <th style="width:20%" class="table_col_ref">Database Reference</th>
+                        <th style="width:5%" class="table_col_ref">Irritation
+                            <span><small><a data-toggle="tooltip" title="Sensory Irritation">SI</small></span>
+                            <span><small><a data-toggle="tooltip" title="Tissue Damage">TD</small></span>
+                            <!-- <th style="width:5%" class="table_col_ref">Irritation <table style="background-color:red"><tr> -->
+                            <!--   <td style="width:50%; background-color:transparent"><small><a data-toggle="tooltip" title="Sensory Irritation">SI</small></td> -->
+                            <!--   <td style="width:50%; background-color:inherit"><small><a data-toggle="tooltip" title="Tissue Damage">TD</small></td> -->
+                            <!-- </tr></table></th> -->
+                    </tr>
+                </thead>
+                <tbody id="neighbour_table_body_id">
+                    <tr class="table-success" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
+                    <tr class="table-danger" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
+                    <tr class="table-success" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
+                    <tr class="table-danger" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
+                    <tr class="table-success" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
+                    <tr class="table-danger" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
+                    <tr class="table-success" onclick="return activate_compound_information(-1);">
+                        <th scope="row">1</th>
+                        <td>Chemical1</td>
+                        <td>CAS123</td>
+                        <td>0.99</td>
+                        <td>
+                            <canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas>
+                        </td>
+                        <td>DB1</td>
+                        <td>
+                            <span class="led"></span>
+                            <span class="led-green-on"></span>
+                        </td>
+                    </tr>
 
-  <div class="container">
-    <table class="table table-sm table-hover table-striped table-bordered" id="neighbour_table_id" style="display:bulk" style="width:100%">
-	  <caption>Neighbours</caption>
-        <thead>
-          <tr>
-            <th style="width:3%" class="table_col_id">Rank</th>
-            <th style="width:10%" class="table_col_compound_name">Compound Name</th>
-            <th style="width:12%" class="table_col_cas">CAS</th>
-            <th style="width:5%" class="table_col_distance">Similarity</th>
-            <th style="width:35%" class="table_col_smiles">Compound</th>
-            <th style="width:20%" class="table_col_ref">Database Reference</th>
-	    <th style="width:5%" class="table_col_ref">Irritation
-	      <span><small><a data-toggle="tooltip" title="Sensory Irritation">SI</small></span>
-	      <span><small><a data-toggle="tooltip" title="Tissue Damage">TD</small></span>
-	    <!-- <th style="width:5%" class="table_col_ref">Irritation <table style="background-color:red"><tr> -->
-	    <!--   <td style="width:50%; background-color:transparent"><small><a data-toggle="tooltip" title="Sensory Irritation">SI</small></td> -->
-	    <!--   <td style="width:50%; background-color:inherit"><small><a data-toggle="tooltip" title="Tissue Damage">TD</small></td> -->
-	    <!-- </tr></table></th> -->
-          </tr>
-        </thead>
-	<tbody id="neighbour_table_body_id">
-	  <tr class="table-success" onclick="return activate_compound_information(-1);SmilesDrawer.apply({'height':200,'width':200});
-">
-	    <th scope="row">1</th> 
-	    <td>Chemical1</td>
-	    <td>CAS123</td>
-	    <td>0.99</td>
-	    <td><canvas id="canvas_nn_0" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CCCCCCC"></canvas></td>
-	    <td>DB1</td>
-	    <!-- <td> -->
-	    <!--   <div class="led"></div> -->
-	    <!--   <div class="led">L2</div> -->
-	    <!-- </td> -->
-	    <td>
-	      <span class="led"></span>
-	      <span class="led-green-on"></span>
-	    </td>
-	    <!-- <td><table><tr> -->
-	    <!--   <td style="width: 12px; height: 12px;"><div class="led"></div></td> -->
-	    <!--   <td style="width: 12px; height: 12px;"><div class="led-green-on"></div></td> -->
-	    <!-- </tr></table></td>  -->
-	  </tr> 
-	  <!-- <tr class="table-danger"> -->
-	  <!--   <th scope="row">2</th> -->
-	  <!--   <td>Chemical2</td> -->
-	  <!--   <td>CAS123</td> -->
-	  <!--   <td>0.8</td> -->
-	  <!--   <td><canvas id="canvas_nn_1" width="200" height="100" style="width: 75px; height: 75px" data-smiles="CC[C@H]1CCC[C@H](O[C@H]2CC[C@@H]([C@@H](C)O2)N(C)C)[C@@H](C)C(=O)C2=C[C@H]3[C@@H]4C[C@@H](C[C@H]4C=C[C@H]3[C@@H]2CC(=O)O1)O[C@@H]1O[C@@H](C)[C@H](OC)[C@@H](OC)[C@H]1OC"></canvas></td> -->
-	  <!--   <td>DB1</td> -->
-	  <!--   <td><table><tr> -->
-	  <!-- 	  <td style="width: 30px; height: 30px; background-color: green;"></td> -->
-	  <!-- 	  <td style="width: 30px; height: 30px; background-color: green;"></td> -->
-	  <!-- 	  <td style="width: 30px; height: 30px; background-color: red;"></td> -->
-	  <!--   </tr></table></td> -->
+                    <!-- </tr> -->
+                </tbody>
+            </table>
+        </div>
+        <script>
+	    $(document).ready(function() {
+                  $('[data-toggle="tooltip"]').tooltip();
+                  $('#neighbour_table_id').DataTable();
+	    });
+        </script>
+        <script>
+            SmilesDrawer.apply({
+                'height': 100,
+                'width': 200
+            });
+        </script>
 
-	  <!-- </tr> -->
-	</tbody>
-      </table>
-    </div>
-    <script>
-        SmilesDrawer.apply({'height':200,'width':200});
-    </script>
-
-    <hr>
-    <address></address>
-    </hr>
+        <hr>
+        <address></address>
+        </hr>
     </div>
 
     <!-- Modal respiraTox Compound Information -->
     <div class="modal fade" id="respiraTox_compound_information" tabindex="-1" role="dialog" aria-labelledby="respiraTox_compound_information_title_aria" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document" id="respiraTox_compound_information_modal_dialog">
-        <div class="modal-content" id="respiraTox_compound_information_modal_content">
-	  <div class="modal-header"  id="respiraTox_compound_information_modal_header">
-	    <h5 class="modal-title">Compound Information:</h5><h5>#compound_cas_number#</h5>
-	  </div>
-	  <div class="modal-body" id="compound_information_modal_body">
-	  <div class="container-fluid">
-	    <div>Compound</div>
-	    <div class="row">
-	      <div class="col-6">
-	        <div><small class="text-muted">Structure</small></div>
-		<div><small>#compound_structure_smiles#</small></div>
-	      </div>
-	      <div class="col-2">
-	        <div><small class="text-muted">Name:</small></div>
-		<div><small class="text-muted">CAS:</small></div>
-		<div><small class="text-muted">Sensory Irr.:</small></div>
-		<div><small class="text-muted">Tissue Dam.:</small></div>
-	      </div>
-	      <div class="col-4">
-	        <div align="right"><small>#compound_name#</small></div>
-		<div align="right"><small>#compound_cas_number#</small></div>
-		<div align="right"><small>#compound_endpoint_sensory_irritation#</small></div>
-		<div align="right"><small>#compound_endpoint_tissue_damage#</small></div>
-	      </div>
-	      </div>
-	      <small><div class="text-muted"></div></small>
-	      <div class="mh-100" style="height: 4px;"></div>
-	      <div>RDKit</div>
-	      <!-- <div class="text-muted">RDKit</div> -->
-	      <!-- <div class="col-sm"> -->
-	        <div class="row">          
-		  <div class="col-4">
-		    <div><small class="text-muted">SlogP:</small></div>
-		    <div><small class="text-muted">SMR:</small></div>
-		    <div><small class="text-muted">LipinskiHBA:</small></div>
-		    <div><small class="text-muted">LipinskiHBD:</small></div>
-		  </div>
-		  <div class="col-2">
-		    <div align="right"><small>#RDKit_SlogP#</small></div>
-		    <div align="right"><small>#RDKit_SMR#</small></div>
-		    <div align="right"><small>#RDKit_NumLipinskiHBA#</small></div>
-		    <div align="right"><small>#RDKit_NumLipinskiHBD#</small></div>
-		  </div>
-		  <div class="col-4">
-		    <div><small class="text-muted">MW:</small></div>
-		    <div><small class="text-muted">LabuteASA:</small></div>
-		    <div><small class="text-muted">FractionCSP3:</small></div>
-		    <div><small class="text-muted">HallKierAlpha:</small></div>
-		  </div>
-		  <div class="col-2">
-		    <div align="right"><small>#RDKit_ExactMW#</small></div>
-		    <div align="right"><small>#RDKit_LabuteASA#</small></div>
-		    <div align="right"><small>#RDKit_FractionCSP3#</small></div>
-		    <div align="right"><small>#RDKit_HallKierAlpha#</small></div>
-		  </div>
-		</div>
-	     <!-- </div> -->
-	   </div>
-	   </div>
-	   </div>
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document" id="respiraTox_compound_information_modal_dialog">
+            <div class="modal-content" id="respiraTox_compound_information_modal_content">
+                <div class="modal-header" id="respiraTox_compound_information_modal_header">
+                    <h5 class="modal-title">Compound Information:</h5>
+                    <h5>#compound_cas_number#</h5>
+                </div>
+                <div class="modal-body" id="compound_information_modal_body">
+                    <div class="container-fluid">
+                        <div>Compound</div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div><small class="text-muted">Structure</small></div>
+                                <div><small>#compound_structure_smiles#</small></div>
+                            </div>
+                            <div class="col-2">
+                                <div><small class="text-muted">Name:</small></div>
+                                <div><small class="text-muted">CAS:</small></div>
+                                <div><small class="text-muted">Sensory Irr.:</small></div>
+                                <div><small class="text-muted">Tissue Dam.:</small></div>
+                            </div>
+                            <div class="col-4">
+                                <div align="right"><small>#compound_name#</small></div>
+                                <div align="right"><small>#compound_cas_number#</small></div>
+                                <div align="right"><small>#compound_endpoint_sensory_irritation#</small></div>
+                                <div align="right"><small>#compound_endpoint_tissue_damage#</small></div>
+                            </div>
+                        </div>
+                        <small><div class="text-muted"></div></small>
+                        <div class="mh-100" style="height: 4px;"></div>
+                        <div>RDKit</div>
+                        <!-- <div class="text-muted">RDKit</div> -->
+                        <!-- <div class="col-sm"> -->
+                        <div class="row">
+                            <div class="col-4">
+                                <div><small class="text-muted">SlogP:</small></div>
+                                <div><small class="text-muted">SMR:</small></div>
+                                <div><small class="text-muted">LipinskiHBA:</small></div>
+                                <div><small class="text-muted">LipinskiHBD:</small></div>
+                            </div>
+                            <div class="col-2">
+                                <div align="right"><small>#RDKit_SlogP#</small></div>
+                                <div align="right"><small>#RDKit_SMR#</small></div>
+                                <div align="right"><small>#RDKit_NumLipinskiHBA#</small></div>
+                                <div align="right"><small>#RDKit_NumLipinskiHBD#</small></div>
+                            </div>
+                            <div class="col-4">
+                                <div><small class="text-muted">MW:</small></div>
+                                <div><small class="text-muted">LabuteASA:</small></div>
+                                <div><small class="text-muted">FractionCSP3:</small></div>
+                                <div><small class="text-muted">HallKierAlpha:</small></div>
+                            </div>
+                            <div class="col-2">
+                                <div align="right"><small>#RDKit_ExactMW#</small></div>
+                                <div align="right"><small>#RDKit_LabuteASA#</small></div>
+                                <div align="right"><small>#RDKit_FractionCSP3#</small></div>
+                                <div align="right"><small>#RDKit_HallKierAlpha#</small></div>
+                            </div>
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
 
-	  <div class="modal-footer" id="compound_information_modal_footer">
-	    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-	  </div>
-	</div>
-      </div>
+            <div class="modal-footer" id="compound_information_modal_footer">
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            </div>
+        </div>
+    </div>
     </div>
 
-  
-
-    
     <!-- Modal respiraTox Home -->
     <div class="modal fade" id="respiraTox_homeMenu" tabindex="-1" role="dialog" aria-labelledby="respiraTox_homeMenuTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-	  <div class="modal-header">
-	    <h5 class="modal-title" id="respiraTox_homeMenuTitle_id">The respiraTox project</h5>
-	    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
-	    <!-- <span aria-hidden="true">&times;</span> -->
-	    <!-- </button> -->
-	  </div>
-	  <div class="modal-body">
-	    The respiraTox project is funded by the <a href="https://www.nc3rs.org.uk">NC3Rs</a> and suported by Shell. The project partners are Fraunhofer ITEM and the University of Birmingham. 
-	  </div>
-	  <div class="modal-footer">
-	    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-	  </div>
-	</div>
-      </div>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="respiraTox_homeMenuTitle_id">The respiraTox project</h5>
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+                    <!-- <span aria-hidden="true">&times;</span> -->
+                    <!-- </button> -->
+                </div>
+                <div class="modal-body">
+                    The respiraTox project is funded by the <a href="https://www.nc3rs.org.uk">NC3Rs</a> and suported by Shell. The project partners are Fraunhofer ITEM and the University of Birmingham.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal alert messaging -->
     <div class="modal fade" id="respiraTox_alertMessageModal" tabindex="-1" role="dialog" aria-labelledby="respiraTox_alertMessageModalTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-	  <div class="modal-header">
-	    <h5 class="modal-title" id="respiraTox_alertMessageModalTitle_id">Alert/Information</h5>
-	  </div>
-	  <div class="modal-body" id="respiraTox_alertMessageModalBody_id">
-	  </div>
-	  <div class="modal-footer" id="respiraTox_alertMessageModalFooter_id">
-	    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	  </div>
-	</div>
-      </div>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="respiraTox_alertMessageModalTitle_id">Alert/Information</h5>
+                </div>
+                <div class="modal-body" id="respiraTox_alertMessageModalBody_id">
+                </div>
+                <div class="modal-footer" id="respiraTox_alertMessageModalFooter_id">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-
-    
     <!-- Modal respiraTox About -->
     <div class="modal fade" id="respiraTox_aboutMenu" tabindex="-1" role="dialog" aria-labelledby="respiraTox_aboutMenuTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-	  <div class="modal-header">
-	    <h5 class="modal-title" id="respiraTox_aboutMenuTitle_id">The respiraTox prediction service</h5>
-	    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
-	    <!-- <span aria-hidden="true">&times;</span> -->
-	    <!-- </button> -->
-	  </div>
-	  <div class="modal-body">
-	    The respiraTox prediction service has been implemented by Matthias Wehr and Andreas Karwath. The Github project can be found here: <a href="https://github.com/athro/respiraTox-app">https://github.com/athro/respiraTox-app</a>
-	  </div>
-	  <div class="modal-footer">
-	    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-	  </div>
-	</div>
-      </div>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="respiraTox_aboutMenuTitle_id">The respiraTox prediction service</h5>
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+                    <!-- <span aria-hidden="true">&times;</span> -->
+                    <!-- </button> -->
+                </div>
+                <div class="modal-body">
+                    The respiraTox prediction service has been implemented by Matthias Wehr and Andreas Karwath. The Github project can be found here: <a href="https://github.com/athro/respiraTox-app">https://github.com/athro/respiraTox-app</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
     </div>
-    
+
     <!-- Modal respiraTox JSMEEditor -->
     <div class="modal fade" id="respiraTox_JSMEEditor" tabindex="-1" role="dialog" aria-labelledby="respiraTox_JSMEEditorTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-	  <div class="modal-header">
-	    <h5 class="modal-title" id="respiraTox_JSMEEditorTitle_id">JSME Editor to enter your compound</h5>
-	  </div>
-	  <div class="modal-body">
-	    <div id="jsme_container" style="text-align: center"></div>
-	  </div>
-	  <div class="modal-footer">
-	    <!-- <button type="button" onclick="alert(jsmeApplet.smiles())">Show SMILES</button> -->
-	    <button type="button" onclick="smiles_submitted_from_editor(jsmeApplet.smiles())"  class="btn btn-secondary" data-dismiss="modal">Save as SMILES</button>
-	    <button type="button" onclick="smiles_submission_from_editor_cancelled()" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-	    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-	  </div>
-	</div>
-      </div>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="respiraTox_JSMEEditorTitle_id">JSME Editor to enter your compound</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="jsme_container" style="text-align: center"></div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" onclick="alert(jsmeApplet.smiles())">Show SMILES</button> -->
+                    <button type="button" onclick="smiles_submitted_from_editor(jsmeApplet.smiles())" class="btn btn-secondary" data-dismiss="modal">Save as SMILES</button>
+                    <button type="button" onclick="smiles_submission_from_editor_cancelled()" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
     </div>
 
-
-
-  
     <small id="links" class="text-muted">
       <div>Icons made by <a href="https://www.flaticon.com/authors/rami-mcmin" title="Rami McMin">Rami McMin</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
     <div>B. Bienfait and P. Ertl, <a href="https://jcheminf.biomedcentral.com/articles/10.1186/1758-2946-5-24">JSME: a free molecule editor in JavaScript</a>, J. Cheminformatics 5:24 (2013)</div>
@@ -514,7 +554,6 @@ a-describedby="compound_id_input_id"></input>
     </small>
     <!-- https://www.flaticon.com/packs/justicons/3 -->
     <script type="text/javascript" language="javascript" src="scripts/predict_script.js"></script>
-  </body>
-</html>
+</body>
 
-      
+</html>

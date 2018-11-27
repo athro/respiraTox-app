@@ -92,13 +92,36 @@ var alert_modal_body_var  = document.getElementById("respiraTox_alertMessageModa
 var alert_modal_footer_var  = document.getElementById("respiraTox_alertMessageModalTitle_id");    
 
 
+// automatic switching, depending whether or not on server
 
+var window_protocol = window.location.protocol.replace(/:/g,'')
+var window_domain   = window.location.hostname;
+var window_port     = window.location.port;
 
-//var base_URL = "http://127.0.0.1:5000/compound/"
-let convert_URL = "http://127.0.0.1:5555/smiles/"
-let base_URL = "http://127.0.0.1:5555/compound/"
+// this is used to address the rest service
+let basic_domain = 'http://127.0.0.1:5555/';
+
+// if running on the fraunhofer server, adept 
+if (window_domain == 'respiratox.item.fraunhofer.de') {
+    basic_domain = 'https://respiratox.item.fraunhofer.de/rest/';
+}
+
+// define the rest entry points
+// let convert_URL = "http://127.0.0.1:5555/smiles/"
+// let base_URL = "http://127.0.0.1:5555/compound/"
 // let convert_URL = "https://respiratox.item.fraunhofer.de/rest/smiles/"
-base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
+// base_URL = "https://respiratox.item.fraunhofer.de/rest/compound/";
+let convert_URL = basic_domain+"smiles/"
+let base_URL = basic_domain+"compound/"
+console.log("window_protocol  : "+window_protocol);
+console.log("window_domain    : "+window_domain);
+console.log("window_port      : "+window_port);
+console.log("basic_domain     : "+basic_domain);
+console.log("convert_URL      : "+convert_URL);
+console.log("base_URL         : "+base_URL);
+
+
+
 // tools
 
 function getAllFuncs(obj) {
@@ -530,7 +553,6 @@ function formater(x,base=10,round=2,cut=12) {
     }
 }
 
-
 // // to dynamically replace strings in innerHTNL for the display modal
 // function do_replacement_mapping(the_string,the_mapping_array) {
 //     var arrayLength = the_mapping_array.length;
@@ -626,9 +648,9 @@ function renderResultTable(neighbours) {
 	inner_html = inner_html + renderNeighbour(neighbours[i],i);
     };
     table_body_var.innerHTML = inner_html;
-    $(document).ready(function() {
-        $('#neighbour_table_id').DataTable();
-    } );
+    // $(document).ready(function() {
+    //     $('#neighbour_table_id').DataTable();
+    // } );
     
 }    
 
@@ -638,15 +660,15 @@ function renderPredictionResult(predictionResult,appdomain) {
     console.log("renderPredictionResult");
     let prediction_result_int = parseFloat(predictionResult).toFixed(1)
     let prediction_color = local_color_scheme.white;
-    let prediction_label = 'unknown';
+    let prediction_label = '';
     let applicabilitydomain_display_area_var = document.getElementById('applicabilitydomain_display_area_id');
     if (prediction_result_int >= 0.0) {
 	if (prediction_result_int > 0.0) {
 	    prediction_color = local_color_scheme.green;
-	    prediction_label = '<small>nonirritant</small>';
+	    prediction_label = 'nonirritant';
 	} else {
 	    prediction_color = local_color_scheme.red;
-	    prediction_label = '<small>irritant</small>';
+	    prediction_label = 'irritant';
 	}
     }
     prediction_display_area_var.style.setProperty("background-color",prediction_color);
@@ -669,9 +691,12 @@ function analyseResponse(response) {
     let thread_status = response.thread.status;
     let thread_running_time = response.thread.running_time;
 
+    var datatable = $('#neighbour_table_id').DataTable();
+
     // job running
     if (status == 10) {  
 	job_running = true;
+
 	respiraTox_request_status = status;
 	respiraTox_request_ID = response["job_id"];
 	hideElement(table_var);
@@ -689,9 +714,26 @@ function analyseResponse(response) {
 	respiraTox_request_data   = response["calculated_data"]
 	respiraTox_request_neighbours   = response["calculated_data"]["neighbours"]["neighbours"][0]
 
+	// $('#neighbour_table_id').DataTable().clear();.destroy();
+        // datatable = $('#neighbour_table_id').DataTable();
+
+	datatable.clear();
+	datatable.destroy()
 	renderResultTableNew(respiraTox_request_neighbours)
 	renderPredictionResult(respiraTox_request_result,appdomain);
+	datatable = $('#neighbour_table_id').DataTable();
+	datatable.draw();
+	
+	// switch on DataTable Sorting, searching etc.
+	// if ($.fn.DataTable.isDataTable("#neighbour_table_id")) {
+	// }
+	console.log('datatable : '+datatable);
+	// datatable.destroy()
+        // datatable = $('#neighbour_table_id').DataTable();
+	// datatable.paint();
 
+
+	
 	alert_message('Job has finished<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
 
 	enableElement(smiles_submit_button_var);
@@ -796,6 +838,8 @@ function submit_for_prediction(respiraTox_alert_id){
 
 compound_input_var.addEventListener("input",function() {
     console.log("compound_input_var:"+compound_input_var.value);
+    // Clean the actual text input
+    
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
     SmilesDrawer.parse(compound_input_var.value, function(tree) {
 	// Draw to the canvas
@@ -803,5 +847,14 @@ compound_input_var.addEventListener("input",function() {
     });
 });
 
+function testTable() {
+    var datatable = $('#neighbour_table_id').DataTable();
+}
 
 
+
+function clean_everything() {
+    var datatable = $('#neighbour_table_id').DataTable();
+    datatable.clear();
+    datatable.draw();
+}
