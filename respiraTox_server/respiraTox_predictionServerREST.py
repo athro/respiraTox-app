@@ -22,6 +22,12 @@ except:
 debug       = False
 
 
+def saveGetDefault(the_hash,the_key,the_default=None):
+    try:
+        return the_hash[the_key]
+    except:
+        return the_default
+
 class STATUS(object):
     status_hash = {}
     debug = False
@@ -434,6 +440,15 @@ class Compounds(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("compound_structure_smiles")
         parser.add_argument("compound_id")
+        parser.add_argument("compound_substructure_filter")
+        parser.add_argument("compound_properties_anorganic")
+        parser.add_argument("compound_properties_organic")
+        parser.add_argument("compound_properties_acid")
+        parser.add_argument("compound_properties_base")
+        parser.add_argument("calculation_fingerprint_type")
+        parser.add_argument("calculation_distance_method")
+        parser.add_argument("calculation_model_id")
+        parser.add_argument("calculation_prediction_endpoint")
         args = parser.parse_args()
         #print('\nDebug:\n\t{}\n\t{}\n'.format(args["compound_id"],args["compound_structure_smiles"]))
         job_id = len(compounds)+1
@@ -442,12 +457,26 @@ class Compounds(Resource):
             "job_id":str(job_id),
             "compound_id":args["compound_id"],
             "compound_structure_smiles":args["compound_structure_smiles"],
+            "compound_substructure_filter":saveGetDefault(args,"compound_substructure_filter",'*'),
+		    "calculation_fingerprint_type":saveGetDefault(args,"calculation_fingerprint_type",'PubChem'),
+		    "calculation_distance_method":saveGetDefault(args,"calculation_distance_method",'Tanimoto'), 
+		    "calculation_model_id":saveGetDefault(args,"calculation_model_id",'default'), 
+		    "calculation_prediction_endpoint":saveGetDefault(args,"calculation_prediction_endpoint",'sensory_irritation'),
             "Prediction (endpoint)":None,
             "status":None,
             "thread":None
             }
 
-        compound_results = _runKnime(compound["job_id"],compound["compound_id"],compound["compound_structure_smiles"])
+        compound_results = _runKnime(
+            compound["job_id"],
+            compound["compound_id"],
+            compound["compound_structure_smiles"],
+            compound["compound_substructure_filter"],
+            compound["calculation_fingerprint_type"],
+            compound["calculation_distance_method"],
+            compound["calculation_model_id"],
+            compound["calculation_prediction_endpoint"],
+            )
         #pprint(compound_results)
         compound['status'] = compound_results["status"]
         compound['thread'] = compound_results["thread"]
@@ -499,7 +528,19 @@ class Compound(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("compound_structure_smiles")
         parser.add_argument("compound_id")
+        parser.add_argument("compound_substructure_filter")
+        parser.add_argument("compound_properties_anorganic")
+        parser.add_argument("compound_properties_organic")
+        parser.add_argument("compound_properties_acid")
+        parser.add_argument("compound_properties_base")
+        parser.add_argument("calculation_fingerprint_type")
+        parser.add_argument("calculation_distance_method")
+        parser.add_argument("calculation_model_id")
+        parser.add_argument("calculation_prediction_endpoint")
         args = parser.parse_args()
+        #print('\nDebug:\n\t{}\n\t{}\n'.format(args["compound_id"],args["compound_structure_smiles"]))
+        job_id = len(compounds)+1
+        
 
         for compound in compounds:
             if job_id == compound["job_id"]:
@@ -509,10 +550,26 @@ class Compound(Resource):
             "job_id":str(job_id),
             "compound_id":args["compound_id"],
             "compound_structure_smiles":args["compound_structure_smiles"],
-            "Prediction (endpoint)":None
+            "compound_substructure_filter":args["compound_substructure_filter"],
+		    "calculation_fingerprint_type":args["calculation_fingerprint_type"],
+		    "calculation_distance_method":args["calculation_distance_method"], 
+		    "calculation_model_id":args["calculation_model_id"], 
+		    "calculation_prediction_endpoint":args["calculation_prediction_endpoint"],
+            "Prediction (endpoint)":None,
+            "status":None,
+            "thread":None
             }
 
-        compound_result = _runKnime(compound["job_id"],compound["compound_id"],compound["compound_structure_smiles"])
+        compound_result = _runKnime(
+            compound["job_id"],
+            compound["compound_id"],
+            compound["compound_structure_smiles"],
+            compound["compound_substructure_filter"],
+            compound["calculation_fingerprint_type"],
+            compound["calculation_distance_method"],
+            compound["calculation_model_id"],
+            compound["calculation_prediction_endpoint"],
+            )
         
         compounds.append(compound)
         return save_compound(compound),202
@@ -549,7 +606,12 @@ class Compound(Resource):
         compounds = [compound for compound in compounds if compound["job_id"] != job_id]
         return "Deleted compound with job_id=<<{}>>".format(job_id), 200
 
-def _setupJob(job_id,compound_id,compound_structure_smiles,results=None):
+def _setupJob(job_id,compound_id,compound_structure_smiles,results=None,
+                  compound_substructure_filter='*',
+                  calculation_fingerprint_type='PubChem',
+                  calculation_distance_method='Tanimoto',
+                  calculation_model_id='default',
+                  calculation_prediction_endpoint='sensory_irritation'):
     if not results:
         results = {
             'status':STATUS.JOBFILE_CREATION,
@@ -562,7 +624,10 @@ def _setupJob(job_id,compound_id,compound_structure_smiles,results=None):
     knime_json_dir     = '{}{}{}'.format(settings['knime']['workflow_dir'],os.path.sep,settings['knime']['json_dir'])
     knime_workflow_dir = '{}{}{}'.format(settings['knime']['workflow_dir'],os.path.sep,settings['knime']['workflow_name'])
 
-    inputJSON = '{{"entries":[{{"compound_id":"{}","compound_structure_smiles":"{}"}}]}}'.format(compound_id,compound_structure_smiles)
+    # inputJSON = '{{"entries":[{{"compound_id":"{}","compound_structure_smiles":"{}"}}]}}'.format(compound_id,compound_structure_smiles)
+    inputJSON = '{{"entries":[{{"compound_id":"{}","compound_structure_smiles":"{}","compound_substructure_filter":"{}","compound_properties":{},"calculation_fingerprint_type":"{}","calculation_distance_method":"{}","calculation_model_id":"{}","calculation_prediction_endpoint":"{}"}}]}}'.format(compound_id,compound_structure_smiles,compound_substructure_filter,'{"anorganic":"1","organic":"0","acid":"0","base":"0"}',calculation_fingerprint_type,calculation_distance_method,calculation_model_id,calculation_prediction_endpoint)
+
+    
     inputJSON_filename = '{}{}{}'.format(knime_json_dir,os.path.sep,settings['knime']['infile_name_stem'].format(job_id))
 
     try:
@@ -673,7 +738,15 @@ def _collectJob(job_id,compound_id,compound_structure_smiles,results=None):
     return results
     
     
-def _runKnime(job_id,compound_id,compound_structure_smiles):
+def _runKnime(job_id,
+                  compound_id,
+                  compound_structure_smiles,
+                  compound_substructure_filter='*',
+                  calculation_fingerprint_type='PubChem',
+                  calculation_distance_method='Tanimoto',
+                  calculation_model_id='default',
+                  calculation_prediction_endpoint='sensory_irritation'
+                  ):
     # only works for a single compound - currently
 
     results = {
@@ -681,7 +754,13 @@ def _runKnime(job_id,compound_id,compound_structure_smiles):
         'value':None,
         'thread':None
         }
-    results = _setupJob(job_id,compound_id,compound_structure_smiles,results=results)
+    results = _setupJob(job_id,compound_id,compound_structure_smiles,results=results,
+                            compound_substructure_filter=compound_substructure_filter,
+                            calculation_fingerprint_type=calculation_fingerprint_type,
+                            calculation_distance_method=calculation_distance_method,
+                            calculation_model_id=calculation_model_id,
+                            calculation_prediction_endpoint=calculation_prediction_endpoint)
+    
     if results['status'] == STATUS.JOBFILE_CREATION_END:
         results = _runJob(job_id,compound_id,compound_structure_smiles,results=results)
         # if results['status'] == STATUS.RUN_JOB_PROCESSING:

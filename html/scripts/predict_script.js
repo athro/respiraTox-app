@@ -333,6 +333,8 @@ function send_for_prediction_service(compound_id,smiles,fingerprint_type,distanc
     smiles_encoded = encodeURI(smiles);
     console.log("compound_id_encoded:"+compound_id_encoded);
     console.log("smiles_encoded:"+smiles_encoded);
+    console.log("fingerprint_type:"+fingerprint_type);
+    console.log("distance_method:"+distance_method);
     // let xhttp = new XMLHttpRequest();
     // console.log("xhttp:"+xhttp);
     console.log("call send");
@@ -340,8 +342,8 @@ function send_for_prediction_service(compound_id,smiles,fingerprint_type,distanc
     // userAction();
     submit_data = {"compound_id":compound_id, // new variable name
 		   "compound_structure_smiles":smiles, // new variable name
-		   "fingerprint_type":fingerprint_type,
-		   "distance_method":distance_method,
+		   "calculation_fingerprint_type":fingerprint_type,
+		   "calculation_distance_method":distance_method,
 		  };
     // submit_URL  = 'http://127.0.0.1:5000/compound/';
     sendRequest(base_URL,submit_data);
@@ -404,7 +406,7 @@ function renderResultTableNew(neighbours) {
 
 	// similarity
 	td = document.createElement('td');
-	td.innerHTML = parseFloat(neighbour["Tanimoto"]).toFixed(2);
+	td.innerHTML = parseFloat(neighbour["compound_similarity_score"]).toFixed(2);
 	tr.appendChild(td);
 
 	// either smiles of the molecule in hgraphical representation 
@@ -808,7 +810,7 @@ function submit_for_prediction(respiraTox_alert_id){
     console.log("someRealNumber:"+someRealNumber);
     let compound_input_value = compound_input_var.value;
     let compound_id_input_value = compound_id_input_var.value;
-    let fingerprint_type_var_value = distance_method_var.value;
+    let fingerprint_type_var_value = fingerprint_type_var.value;
     let distance_method_var_value = distance_method_var.value;
     let error_message = "";
     // compound ID number should be not null

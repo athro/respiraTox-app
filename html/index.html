@@ -161,9 +161,11 @@
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="60">Similarity</object></button>
 	    <div class="dropdown-menu">
 	      <a class="dropdown-item" onclick="return select_distance_method('Tanimoto')">Tanimoto</a>
-	      <a class="dropdown-item" onclick="return select_distance_method ('Manhattan')" disabled>Manhattan</a>
-	      <a class="dropdown-item" onclick="return select_distance_method ('Chebyshev')">Chebyshev</a>
-	      <a class="dropdown-item" onclick="return select_distance_method ('Levenstein')">Levenstein</a>
+	      <a class="dropdown-item" onclick="return select_distance_method ('EuclidSub')" disabled>EuclidSub</a>
+	      <a class="dropdown-item" onclick="return select_distance_method ('Tversky')" disabled>Tversky</a>
+	      <!-- <a class="dropdown-item" onclick="return select_distance_method ('Manhattan')" disabled>Manhattan</a> -->
+	      <!-- <a class="dropdown-item" onclick="return select_distance_method ('Chebyshev')">Chebyshev</a> -->
+	      <!-- <a class="dropdown-item" onclick="return select_distance_method ('Levenstein')">Levenstein</a> -->
 	    </div>
 	    <fieldset disabled>
 	       <input id="distance_method_id" type="text" class="form-control" style="display:block"  value="Tanimoto" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
@@ -476,4 +478,5 @@
 
 </body>
 
+    
 </html>
