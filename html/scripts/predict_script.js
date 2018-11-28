@@ -703,7 +703,7 @@ function analyseResponse(response) {
 	respiraTox_request_ID = response["job_id"];
 	hideElement(table_var);
 	renderPredictionResult(-1,'');
-	alert_message('Job is running<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
+	alert_message('Job is running<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'" target="_blank">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
     }
     // job finished
     else if (status == 11) {
@@ -736,7 +736,7 @@ function analyseResponse(response) {
 
 
 	
-	alert_message('Job has finished<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
+	alert_message('Job has finished<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'" target="_blank">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
 
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
