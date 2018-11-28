@@ -256,7 +256,8 @@ function select_compound_format(compound_format){
 	// https://cactus.nci.nih.gov/chemical/structure/"structure identifier"/"representation"
 
 	
-	if (current_smiles != '') {
+	// if (current_smiles != '') {
+	if (false) {
 	    smiles_encoded = encodeURI(current_smiles);
 	    console.log("smiles_encoded:"+smiles_encoded);
 	    submit_data = {"smiles_string":smiles_encoded};

@@ -49,20 +49,20 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <ul class="navbar-nav">
                 <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#predict_page_id">Prediction Model</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#respiraTox_homeMenu">respiraTox</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#predict_page_id">Predict Compound</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_aboutMenu">About</a>
+                    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_aboutMenu">Software</a>
                 </li>
                 <!-- <li class="nav-item"> -->
                 <!--   <a class="nav-link" data-toggle="modal" data-target="#respiraTox_JSMEEditor">JSME Editor</a> -->
                 <!-- </li> -->
 
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#contact_page_id">Contact</a>
+                    <a class="nav-link" target="_blank" href="https://www.item.fraunhofer.de/en/press-and-media/news/respiratox.html">Contact&#8593;</a>
                 </li>
             </ul>
         </nav>
@@ -104,7 +104,7 @@
                 <!-- <small id="smiles_helptext" class="text-muted"><br/>Select what structure format to use and paste or enter compound</small>  -->
                 <!-- <div class="input-group mb-3">  -->
                 <!-- 	<div class="input-group-prepend">  -->
-                <!-- 	  <span class="input-group-text" id="smiles_input_desc"><object width="75">SMILES</object></span>  -->
+                <!-- 	  <span class="input-group-text" id="smiles_input_desc"><object width="100">SMILES</object></span>  -->
                 <!-- 	</div>  -->
                 <!-- 	<input id="smiles_input_id" type="text" class="form-control" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="smiles_label" aria-describedby="smiles_input_desc"></input> -\-> -->
                 <!-- </div>  -->
@@ -113,13 +113,13 @@
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="btn-group" id="basic-addon3">
-	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="compound_format_button_id" width="60">SMILES</object></button>
+	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="compound_format_button_id" width="85">SMILES</object></button>
 	    <div class="dropdown-menu">
 	      <!-- <a class="dropdown-item" href="#">SMILES <img src="./icons/111163-justicons/svg/note-interface-symbol.svg" alt="copy&paste" height="16" width="20"> </a> -->
 	      <a class="dropdown-item" onclick="return select_compound_format('SMILES')"  href="#">SMILES <img src="./icons/111163-justicons/svg/note-interface-symbol.svg" alt="copy&paste" height="16" width="20"> </a>
 	      <a class="dropdown-item" onclick="return select_compound_format('EDITOR')"  href="#">EDITOR <img src="./icons/111163-justicons/svg/note-interface-symbol.svg" alt="copy&paste" height="16" width="20"> </a>
-	      <a class="dropdown-item" onclick="return select_compound_format('MDL')">MDL<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
-	      <a class="dropdown-item" onclick="return select_compound_format('SDF')">SDF<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
+	      <a class="dropdown-item disabled text-muted" onclick="return select_compound_format('MDL')">MDL<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
+	      <a class="dropdown-item disabled text-muted" onclick="return select_compound_format('SDF')">SDF<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
 	    </div>
 	  </span>
                     </div>
@@ -131,7 +131,7 @@
             <small id="compound_id_helptext" class="text-muted"><br/>Enter an optinional name or ID (e.g. a CAS number))</small>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="compound_id_input_text"><object width="75">Name</object></span>
+                    <span class="input-group-text" id="compound_id_input_text"><object width="100">Name</object></span>
                 </div>
                 <input id="compound_id_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="compound_id_label" ari\ a-describedby="compound_id_input_id"></input>
             </div>
@@ -158,7 +158,7 @@
                 <small id="distance_method_helptext" class="text-muted"><br/>Select similarity calculation method (default: Tanimoto)</small>
                 <div class="input-group mb-3">
                     <span class="btn-group" id="basic-addon3">
-	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="60">Similarity</object></button>
+	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="85">Similarity</object></button>
 	    <div class="dropdown-menu">
 	      <a class="dropdown-item" onclick="return select_distance_method('Tanimoto')">Tanimoto</a>
 	      <a class="dropdown-item" onclick="return select_distance_method ('EuclidSub')" disabled>EuclidSub</a>
@@ -180,7 +180,7 @@
                 <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is PubChem)</small>
                 <div class="input-group mb-3">
                     <span class="btn-group" id="basic-addon3">
-	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="60">Fingerprint</object></button>
+	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="85">Fingerprint</object></button>
 	    <div class="dropdown-menu">
 	      <a class="dropdown-item" onclick="return select_fingerprint_type('PubChem')">PubChem</a>
 	      <!-- <a class="dropdown-item" onclick="return select_fingerprint_type('ECFP-1024')">ECFP-1024</a> -->
@@ -458,7 +458,6 @@
                     <h5 class="modal-title" id="respiraTox_JSMEEditorTitle_id">JSME Editor to enter your compound</h5>
                 </div>
 		<div class="modal-body">
-		  <div>Please note: it might be required to press the clean the drawing area (press white rectange)</div>
 		  <div><a href="http://peter-ertl.com/jsme/2013_03/help.html" target="_blank">Help page</a> for the JSMEEditor</div>
                     <div id="jsme_container" style="align: center"></div>
                 </div>
