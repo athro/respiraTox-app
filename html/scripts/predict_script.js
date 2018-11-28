@@ -592,6 +592,11 @@ function activate_compound_information(neighbour_number) {
 	if (neighbour_data['chemical_name'] == undefined) {
 	    neighbour_data['chemical_name'] = 'undefined';
 	}
+	// hack for JSME Editor depeict
+	if (neighbour_data['compound_structure_smiles_js']) {
+	    neighbour_data['compound_structure_smiles_js'] = neighbour_data['compound_structure_smiles_js'];
+	}
+	
     
 	respiraTox_compound_information_modal_header_html_here = respiraTox_compound_information_modal_header_html;
 	// set back to HTML
@@ -822,10 +827,10 @@ function submit_for_prediction(respiraTox_alert_id){
 	console.log("compound_input_value (prediction) was empty:");
 	error_message = error_message + "Empty compound structure!<br/>";
     }
-    if (!check_if_valid_smiles(compound_input_value)) {
-	console.log("Illegal SMILES sting:");
-	error_message = error_message + "The SMILES sting is not valid!<br/>";
-    }
+    // if (!check_if_valid_smiles(compound_input_value)) {
+    // 	console.log("Illegal SMILES sting:");
+    // 	error_message = error_message + "The SMILES sting is not valid!<br/>";
+    // }
     if(error_message){
 	alert_message(error_message);
 	return false

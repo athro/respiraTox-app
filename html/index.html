@@ -329,7 +329,12 @@
                         <div class="row">
                             <div class="col-6">
                                 <div><small class="text-muted">Structure</small></div>
-                                <div><small>#compound_structure_smiles#</small></div>
+				<div code="JME.class" archive="JME.jar" width="100" height="100">
+				  <param name="options" value="depict,useopenchemlib">
+				  <param name="smiles" value="#compound_structure_smiles_js#">
+				  <!-- <param name="smiles" value="CCCCC"> -->
+				</div>
+				<div><small>#compound_structure_smiles#</small></div>
                             </div>
                             <div class="col-2">
                                 <div><small class="text-muted">Name:</small></div>
@@ -472,9 +477,9 @@
     </small>
     <!-- https://www.flaticon.com/packs/justicons/3 -->
     <script type="text/javascript" language="javascript" src="scripts/predict_script.js"></script>
-    <script>
-       clean_table();
-    </script>
+    <!-- <script> -->
+    <!--    clean_table(); -->
+    <!-- </script> -->
 
 </body>
 
