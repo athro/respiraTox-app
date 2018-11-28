@@ -49,10 +49,10 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#predict_page_id">Prediction Model</a>
+                    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_homeMenu">respiraTox</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_homeMenu">respiraTox</a>
+                    <a class="nav-link" data-toggle="modal" data-target="#respiraTox_modelMenu">Prediction Model</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#respiraTox_aboutMenu">Software</a>
@@ -89,11 +89,11 @@
 
     <div id="predict_page_id" class="container tab-pane">
         <br>
-        <h3>Predict a Compound</h3>
+        <h3>respiraTox: respiratory irritation prediction service</h3>
     </div>
     <div class="container">
         <div>
-            <div class="alert alert-primary" role="alert" style="display:block; height: 100px;" id="respiraTox_alert_id">Job information will appear here</div>
+            <div class="alert alert-primary" role="alert" style="display:block; height: 100px;" id="respiraTox_alert_id">Job information will appear here<br/>Please enter a compound and submit<br/>This website will not work for Internet Explorer!</div>
         </div>
     </div>
 
@@ -450,6 +450,70 @@
         </div>
     </div>
 
+
+    <!-- Modal respiraTox Model description -->
+    <div class="modal fade" id="respiraTox_modelMenu" tabindex="-1" role="dialog" aria-labelledby="respiraTox_modelMenuTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="respiraTox_modelMenuTitle_id">The respiraTox Prediction Model</h5>
+                </div>
+                <div class="modal-body">
+<div>
+The respiraTox prediction model on pulmonary irritation has been trained using 1997 organic compounds. The model uses binary data on absence/occurrence of irritation; either sensory irritation or histopthalogical effects indicating tissue irritation or damage.<br>
+Information in irritation properties are retrieved from the following sources:<br>
+<p style="margin-left: 20px;">
+	Acute toxicity studies with inhalation exposure from the ECHA CHEM database -  https://echa.europa.eu/ (source named: echa  acute tox),<br>
+	Repeated dose studies with inhalation exposure from the Fraunhofer RepDose® database   -https://repdose.item.fraunhofer.de/ (source named: RepDose)<br>
+	Hazardous Substance Inventory from Toxnet - https://toxnet.nlm.nih.gov/newtoxnet/hsdb.htm (source named: HSDB)<br>
+	Existing datasets on Alarie assays and their RD50 values - http://www.pitt.edu/~rd50/ (source named: alarie assay)<br>
+	Irritation Endpoints  ECHA - https://echa.europa.eu/ (source named: echa  irritation)<br>
+	C&L Harmonized - ECHA - https://echa.europa.eu/de/regulations/clp/harmonised-classification-and-labelling, (source named: echa  C&L H)<br>
+	Acute Tox Inhalation Studies from the Fraunhofer AcuTox database  (source named: AcuTox)<br>
+</p>
+Information on structures are retrieved in the form of smile codes from:<br>
+<p style="margin-left: 20px;">
+1.	Fraunhofer RepDose database<br>
+2.	ChemIDplus<sup><a href="#fn1" id="ref1">1</a></sup><br>
+3.	Chemicalbook<sup><a href="#fn2" id="ref2">2</a></sup><br>
+4.	SmilesCas<sup><a href="#fn3" id="ref3">3</a></sup><br>
+</p>
+<p>Using the smile codes we calculated physicochemical properties to be used by the training algorithm. The Tools for calculating these properties include CDK<sup><a href="#fn4" id="ref4">4</a></sup>, RDKit<sup><a href="#fn5" id="ref5">5</a></sup>, and Indiego<sup><a href="#fn6" id="ref6">6</a></sup>.</p>
+<p>Also we used output of several QSAR models from EpiSuite<sup><a href="#fn7" id="ref7">7</a></sup> and Vega Hub<sup><a href="#fn8" id="ref8">8</a></sup> and structural descriptors in the form of Morgan Fingerprints<sup><a href="#fn9" id="ref9">9</a></sup>, also known as circular fingerprints (ECFP<sup><a href="#fn10" id="ref10">10</a></sup>). A more detailed description of all applied descriptors and models will be published.</p>
+<p>In our 5-fold cross validation of trainings data we measured the models performance in area under ROC curve (AUC) and the current model resulted in an AUC of 0.71.</p>
+
+<h4>References:</h4>
+<sup id="fn1">1. <a href="https://chem.nlm.nih.gov/chemidplus/" target="_blank">https://chem.nlm.nih.gov/chemidplus/</a></sup>
+<br>
+<sup id="fn2">2. <a href="https://www.chemicalbook.com/" target="_blank">https://www.chemicalbook.com/</a></sup>
+<br>
+<sup id="fn3">3. <a href="https://www.srcinc.com/what-we-do/environmental/scientific-databases.html" target="_blank">https://www.srcinc.com/what-we-do/environmental/scientific-databases.html</a></sup>
+<br>
+<sup id="fn4">4. <a href="https://cdk.github.io/" target="_blank">https://cdk.github.io/</a></sup>
+<br>
+<sup id="fn5">5. <a href="https://www.rdkit.org/" target="_blank">https://www.rdkit.org/</a></sup>
+<br>
+<sup id="fn6">6. <a href="http://lifescience.opensource.epam.com/indigo/" target="_blank">http://lifescience.opensource.epam.com/indigo/</a></sup>
+<br>
+<sup id="fn7">7. <a href="https://www.epa.gov/tsca-screening-tools/epi-suitetm-estimation-program-interface" target="_blank">https://www.epa.gov/tsca-screening-tools/epi-suitetm-estimation-program-interface</a></sup>
+<br>
+<sup id="fn8">8. <a href="https://www.vegahub.eu/" target="_blank">https://www.vegahub.eu/</a></sup>
+<br>
+<sup id="fn9">9. <a href="https://www.rdkit.org/docs/GettingStartedInPython.html#rogers" target="_blank">Rogers, D.; Hahn, M. Extended-Connectivity Fingerprints. J. Chem. Inf. and Model. 50:742-54 (2010).</a></sup>
+<br>
+<sup id="fn10">10. <a href="https://www.rdkit.org/docs/GettingStartedInPython.html#feature-definitions-used-in-the-morgan-fingerprints" target="_blank">feature definitions used in the morgan fingerprints</a></sup>
+<br>
+</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
     <!-- Modal respiraTox JSMEEditor -->
     <div class="modal fade" id="respiraTox_JSMEEditor" tabindex="-1" role="dialog" aria-labelledby="respiraTox_JSMEEditorTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
