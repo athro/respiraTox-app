@@ -296,12 +296,22 @@ def save_compound(compound_hash,exclude=['thread']):
             if results_collected and results_collected['value']:
                 # assuming one single compound prediction
                 results = results_collected['value'][0]
-                resp_irritation = results["Prediction (endpoint)"]
-                keys = list(results.keys())
-                keys.remove("Prediction (endpoint)")
-                compound_hash["calculated_data"] = {k: results[k] for k in keys}
-                compound_hash["Prediction (endpoint)"] = resp_irritation
-                compound_hash["status"] = STATUS.RUN_JOB_END
+                # secondary check:                
+                # put some fall back in - HACK!
+                resp_irritation = -1
+                compound_hash["Prediction (endpoint)"] = -1
+                compound_hash["calculated_data"] = {}
+                compound_hash["status"] = STATUS.COLLECTING_JOB_ERROR
+                try:
+                    resp_irritation = results["Prediction (endpoint)"]
+                    keys = list(results.keys())
+                    keys.remove("Prediction (endpoint)")
+                    compound_hash["Prediction (endpoint)"] = resp_irritation
+                    compound_hash["calculated_data"] = {k: results[k] for k in keys}
+                    compound_hash["status"] = STATUS.RUN_JOB_END
+                except:
+                    print('DEBUG: No "Prediction (endpoint)" in results!')
+                    pass
             else:
                 compound_hash["calculated_data"] = {}
                 compound_hash["Prediction (endpoint)"] = -1
