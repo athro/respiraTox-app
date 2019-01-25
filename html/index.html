@@ -89,7 +89,7 @@
 
     <div id="predict_page_id" class="container tab-pane">
         <br>
-        <h3>respiraTox: respiratory irritation prediction service</h3>
+        <h3>respiraTox: respiratory irritation prediction model</h3>
     </div>
     <div class="container">
         <div>
@@ -123,16 +123,19 @@
 	    </div>
 	  </span>
                     </div>
-                    <input id="compound_input_id_text" type="text" class="form-control" style="display:block" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
+                    <input id="compound_input_id_text" type="text" class="form-control" style="display:block" value="" placeholder="Enter SMILES here" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
+		    <button type="button" class="btn btn-primary" onclick="return clear_input_and_canvas()"><object id="clear_button_id" width="85">Clear</object></button>
+                    <!-- <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button> -->
                     <button id="compound_input_id_button" type="button" class="btn alert-primary" style="display:none" value="" aria-label="compound_button_label" aria-describedby="compound_button_label">Upload</button>
                 </div>
             </div>
 
-            <small id="compound_id_helptext" class="text-muted"><br/>Enter an optinional name or ID (e.g. a CAS number))</small>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="compound_id_input_text"><object width="100">Name</object></span>
-                </div>
+	    <!-- OPTIONAL ID -->
+            <small style="display:none" id="compound_id_helptext" class="text-muted" ><br/>Enter an optinional name or ID</small>
+            <div style="display:none" class="input-group mb-3">
+                <div class="input-group-prepend"> 
+                    <span class="input-group-text" id="compound_id_input_text"><object width="100">Name</object></span> 
+                </div> 
                 <input id="compound_id_input_id" type="text" class="form-control" value="" placeholder="00-000" aria-label="compound_id_label" ari\ a-describedby="compound_id_input_id"></input>
             </div>
 
@@ -177,7 +180,7 @@
 
 	    <!-- Fingerprint type selection -->
             <div class="input-group mb-3">
-                <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is PubChem)</small>
+                <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is ECFP-2048)</small>
                 <div class="input-group mb-3">
                     <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="85">Fingerprint</object></button>
@@ -187,7 +190,7 @@
 	      <a class="dropdown-item" onclick="return select_fingerprint_type('ECFP-2048')">ECFP-2048</a>
 	    </div>
 	    <fieldset disabled>
-	       <input id="fingerprint_type_id" type="text" class="form-control" style="display:block"  value="PubChem" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
+	       <input id="fingerprint_type_id" type="text" class="form-control" style="display:block"  value="ECFP-2048" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
 	    </fieldset>
 	  </span>
                 </div>
@@ -249,15 +252,14 @@
                 <div class="input-group-prepend">
                     <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button>
                     <button id="smiles_refresh_button_id" type="button" class="btn btn-primary" onclick="refresh_prediction()" disabled>Refresh Jobs Status</button>
+		    <button id="download_neighbours_button" type="button" class="btn btn-primary" disabled>&#8595;Neighbours (CSV)</button>
+		    <button id="download_prediction_button" type="button" class="btn btn-primary" disabled>&#8595;Prediction (TXT)</button>
 
                 </div>
         </form>
         </div>
 
-	<!-- <button type="button" class="btn input-group-text" ><object id="dummy_button_id" onclick="clean_everything()">Dummy Test Button</object></button> -->
-
 	<div class="container">
-	  
             <table class="table table-sm table-hover table-striped table-bordered" id="neighbour_table_id" style="display:bulk" style="width:100%">
                 <caption>Neighbours</caption>
                 <thead>
@@ -461,7 +463,7 @@
                 <div class="modal-body">
 <div>
 The respiraTox prediction model on pulmonary irritation has been trained using 1997 organic compounds. The model uses binary data on absence/occurrence of irritation; either sensory irritation or histopthalogical effects indicating tissue irritation or damage.<br>
-Information in irritation properties are retrieved from the following sources:<br>
+Information irritation properties are retrieved from the following sources:<br>
 <p style="margin-left: 20px;">
 	Acute toxicity studies with inhalation exposure from the ECHA CHEM database -  https://echa.europa.eu/ (source named: echa  acute tox),<br>
 	Repeated dose studies with inhalation exposure from the Fraunhofer RepDose® database   -https://repdose.item.fraunhofer.de/ (source named: RepDose)<br>
@@ -483,26 +485,17 @@ Information on structures are retrieved in the form of smile codes from:<br>
 <p>In our 5-fold cross validation of trainings data we measured the models performance in area under ROC curve (AUC) and the current model resulted in an AUC of 0.71.</p>
 
 <h4>References:</h4>
-<sup id="fn1">1. <a href="https://chem.nlm.nih.gov/chemidplus/" target="_blank">https://chem.nlm.nih.gov/chemidplus/</a></sup>
 <br>
-<sup id="fn2">2. <a href="https://www.chemicalbook.com/" target="_blank">https://www.chemicalbook.com/</a></sup>
-<br>
-<sup id="fn3">3. <a href="https://www.srcinc.com/what-we-do/environmental/scientific-databases.html" target="_blank">https://www.srcinc.com/what-we-do/environmental/scientific-databases.html</a></sup>
-<br>
-<sup id="fn4">4. <a href="https://cdk.github.io/" target="_blank">https://cdk.github.io/</a></sup>
-<br>
-<sup id="fn5">5. <a href="https://www.rdkit.org/" target="_blank">https://www.rdkit.org/</a></sup>
-<br>
-<sup id="fn6">6. <a href="http://lifescience.opensource.epam.com/indigo/" target="_blank">http://lifescience.opensource.epam.com/indigo/</a></sup>
-<br>
-<sup id="fn7">7. <a href="https://www.epa.gov/tsca-screening-tools/epi-suitetm-estimation-program-interface" target="_blank">https://www.epa.gov/tsca-screening-tools/epi-suitetm-estimation-program-interface</a></sup>
-<br>
-<sup id="fn8">8. <a href="https://www.vegahub.eu/" target="_blank">https://www.vegahub.eu/</a></sup>
-<br>
-<sup id="fn9">9. <a href="https://www.rdkit.org/docs/GettingStartedInPython.html#rogers" target="_blank">Rogers, D.; Hahn, M. Extended-Connectivity Fingerprints. J. Chem. Inf. and Model. 50:742-54 (2010).</a></sup>
-<br>
-<sup id="fn10">10. <a href="https://www.rdkit.org/docs/GettingStartedInPython.html#feature-definitions-used-in-the-morgan-fingerprints" target="_blank">feature definitions used in the morgan fingerprints</a></sup>
-<br>
+<p><sup id="fn1">1. <a href="https://chem.nlm.nih.gov/chemidplus/" target="_blank">https://chem.nlm.nih.gov/chemidplus/</a></sup></p>
+<p><sup id="fn2">2. <a href="https://www.chemicalbook.com/" target="_blank">https://www.chemicalbook.com/</a></sup></p>
+<p><sup id="fn3">3. <a href="https://www.srcinc.com/what-we-do/environmental/scientific-databases.html" target="_blank">https://www.srcinc.com/what-we-do/environmental/scientific-databases.html</a></sup></p>
+<p><sup id="fn4">4. <a href="https://cdk.github.io/" target="_blank">https://cdk.github.io/</a></sup></p>
+<p><sup id="fn5">5. <a href="https://www.rdkit.org/" target="_blank">https://www.rdkit.org/</a></sup></p>
+<p><sup id="fn6">6. <a href="http://lifescience.opensource.epam.com/indigo/" target="_blank">http://lifescience.opensource.epam.com/indigo/</a></sup></p>
+<p><sup id="fn7">7. <a href="https://www.epa.gov/tsca-screening-tools/epi-suitetm-estimation-program-interface" target="_blank">https://www.epa.gov/tsca-screening-tools/epi-suitetm-estimation-program-interface</a></sup></p>
+<p><sup id="fn8">8. <a href="https://www.vegahub.eu/" target="_blank">https://www.vegahub.eu/</a></sup></p>
+<p><sup id="fn9">9. <a href="https://www.rdkit.org/docs/GettingStartedInPython.html#rogers" target="_blank">Rogers, D.; Hahn, M. Extended-Connectivity Fingerprints. J. Chem. Inf. and Model. 50:742-54 (2010).</a></sup></p>
+<p><sup id="fn10">10. <a href="https://www.rdkit.org/docs/GettingStartedInPython.html#feature-definitions-used-in-the-morgan-fingerprints" target="_blank">feature definitions used in the morgan fingerprints</a></sup></p>
 </div>
                 </div>
                 <div class="modal-footer">

@@ -31,6 +31,9 @@ let table_body_var = document.getElementById("neighbour_table_body_id");
 let table_var = document.getElementById("neighbour_table_id");
 let prediction_display_area_var = document.getElementById("prediction_display_area_id");
 
+let download_neighbours_button_var = document.getElementById("download_neighbours_button");
+let download_prediction_button_var = document.getElementById("download_prediction_button");
+
 let local_color_scheme = {
     red: "rgba(245,198,203,1.0)",
     green: "rgba(195,230,203,1.0)",
@@ -312,6 +315,8 @@ function select_compound_format(compound_format){
             $("#respiraTox_JSMEEditor").modal();
 	    jsmeApplet.repaint();
 	    jsmeApplet.deferredRepaint();
+	    // set input nbutton selection to default
+	    compound_format_button_var.innerHTML = "SMILES";
 
 	}
 	// let compound_input_editor_modal = $("#respiraTox_JSMEEditor");
@@ -546,7 +551,7 @@ function formater(x,base=10,round=2,cut=12) {
 		console.error('Formatter Error: returning "NO DATA"');
 		console.error(error);
 		return "NO DATA";
-	    }
+2	    }
 	    if (x.length > cut+3) {
 		parsed = x.substring(0,cut)+'...';
 	    }
@@ -669,27 +674,38 @@ function renderPredictionResult(predictionResult,appdomain) {
     let prediction_result_int = parseFloat(predictionResult).toFixed(1)
     let prediction_color = local_color_scheme.white;
     let prediction_label = '';
+    let appdomain_label  = '';
     let applicabilitydomain_display_area_var = document.getElementById('applicabilitydomain_display_area_id');
     if (prediction_result_int >= 0.0) {
+	// == 1
 	if (prediction_result_int > 0.0) {
 	    prediction_color = local_color_scheme.reliable_green;
 	    prediction_label = 'nonirritant';
-	} else {
+	} else if (prediction_result_int >= 0.0) {
+	// == 0
 	    prediction_color = local_color_scheme.reliable_red;
 	    prediction_label = 'irritant';
+	} else {
+	// == -1 - clearing
+	    prediction_color = local_color_scheme.white;
+	    prediction_label = '';
 	}
     }
     prediction_display_area_var.style.setProperty("background-color",prediction_color);
     prediction_display_area_var.innerHTML = prediction_label
     // deal with AppDomain
 
-    applicabilitydomain_display_area_var.innerHTML = appdomain;
+    appdomain_label = appdomain;
     let applicabilitydomain_color = local_color_scheme.white;
     if (appdomain == 'reliable') {
-    	applicabilitydomain_color = local_color_scheme.reliable_green; 
+    	applicabilitydomain_color = local_color_scheme.reliable_green;
     } else if (appdomain == 'unreliable') {
     	applicabilitydomain_color = local_color_scheme.reliable_red; 
+    } else {
+	appdomain_label == 'CLEARED';
+    	applicabilitydomain_color = local_color_scheme.white; 
     }
+    applicabilitydomain_display_area_var.innerHTML = appdomain_label;
     applicabilitydomain_display_area_var.style.setProperty("background-color",applicabilitydomain_color);
 }
 
@@ -698,7 +714,7 @@ function analyseResponse(response) {
     let status = response.status[0];
     let thread_status = response.thread.status;
     let thread_running_time = response.thread.running_time;
-
+    
     var datatable = $('#neighbour_table_id').DataTable();
 
     // job running
@@ -708,12 +724,15 @@ function analyseResponse(response) {
 	respiraTox_request_status = status;
 	respiraTox_request_ID = response["job_id"];
 	hideElement(table_var);
+	disableElement(download_neighbours_button_var);
+	disableElement(download_prediction_button_var);
 	renderPredictionResult(-1,'');
 	alert_message('Job is running<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'" target="_blank">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
     }
     // job finished
     else if (status == 11) {
 	job_running = false;
+
 	respiraTox_request_status = status;
 	respiraTox_request_result = response["Prediction (endpoint)"];
 
@@ -726,8 +745,8 @@ function analyseResponse(response) {
         // datatable = $('#neighbour_table_id').DataTable();
 
 	datatable.clear();
-	datatable.destroy()
-	renderResultTableNew(respiraTox_request_neighbours)
+	datatable.destroy();
+	renderResultTableNew(respiraTox_request_neighbours);
 	renderPredictionResult(respiraTox_request_result,appdomain);
 	datatable = $('#neighbour_table_id').DataTable();
 	datatable.draw();
@@ -746,6 +765,9 @@ function analyseResponse(response) {
 
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
+	enableElement(download_neighbours_button_var);
+	enableElement(download_prediction_button_var);
+
     }
     else if (status == 15) {
 	job_running = false;
@@ -758,6 +780,8 @@ function analyseResponse(response) {
 	hideElement(table_var);
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
+	disableElement(download_neighbours_button_var);
+	disableElement(download_prediction_button_var);
 	renderPredictionResult(-1,'');
     }
     console.log('Status is:' + status);
@@ -849,17 +873,61 @@ function submit_for_prediction(respiraTox_alert_id){
 }
 
 compound_input_var.addEventListener("input",function() {
-    console.log("compound_input_var:"+compound_input_var.value);
+    console.log("compound_input_var1:"+compound_input_var.value);
     // Clean the actual text input
     compound_input_var.value = compound_input_var.value.replace(/[^A-Za-z0-9@\.\+\-\?!\(\)\[\]\{\}/\\=#\$:\*]/g,'');
 
-    // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
-    SmilesDrawer.parse(compound_input_var.value, function(tree) {
-	// Draw to the canvas
-	smiles_drawer.draw(tree,"smiles_canvas", "light", false);
-    });
+    if (compound_input_var.value != '') {
+	// Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
+	SmilesDrawer.parse(compound_input_var.value, function(tree) {
+	    // Draw to the canvas
+	    // console.log("compound_input_var2a:"+compound_input_var.value);
+	    // console.log("compound_input_var2b:"+tree);
+	    smiles_drawer.draw(tree,"smiles_canvas", "light", false);
+	});
+    } else {
+	clear_smiles_drawer_canvas();
+	// console.log("compound_input_var3:"+compound_input_var.value);
+	// console.log(smiles_drawer.canvasWrapper.ctx);
+	// // clear the drawer by creating a new one?
+	// // smiles_drawer.canvasWrapper.ctx.clearRect(0, 0, smiles_drawer.canvasWrapper.canvas.offsetWidth, smiles_drawer.canvasWrapper.canvas.offsetHeight);
+	// smiles_drawer.canvasWrapper.ctx.clearRect(0, 0,1000,1000);
+
+	// smiles_drawer.canvasWrapper.reset();
+	// smiles_drawer.canvasWrapper.clear();
+	// smiles_drawer = new SmilesDrawer.Drawer(smiles_canvas_options);
+
+    }
 });
 
+function clear_smiles_drawer_canvas() {
+    	smiles_drawer.canvasWrapper.ctx.clearRect(0, 0,1000,1000);
+}
+
+function clear_input_and_canvas() {
+    compound_input_var.value = "";
+    clear_smiles_drawer_canvas();
+    renderPredictionResult(-1,'');
+    select_compound_format('SMILES');
+    clean_table();
+    disableElement(download_neighbours_button_var);
+    disableElement(download_prediction_button_var);
+
+    // table_body_var.innerHTML = '';
+    // datatable.clear();
+    // datatable.destroy()
+    // datatable = $('#neighbour_table_id').DataTable();
+    // datatable.draw();
+    // hideElement(table_var);
+
+    // datatable.draw();
+    // datatable.destroy();
+    // datatable = $('#neighbour_table_id').DataTable();
+    // renderResultTableNew({})
+
+    // hideElement(table_var);
+    // renderResultTable({});
+}
 function clean_table() {
     var datatable = $('#neighbour_table_id').DataTable();
     datatable.clear();
@@ -870,3 +938,81 @@ function clean_table() {
 function check_if_valid_smiles(potential_smiles_string) {
     return potential_smiles_string.trim().match(/^([^J][0-9BCOHNSOPrIFla@+\-\[\]\(\)\\\/%=#$,.~;&!]{6,})$/ig);
 }
+
+
+function download(filename, text) {
+    var element = document.createElement('a');
+
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + text);
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+
+// Start file download.
+	disableElement(download_prediction_button_var);
+
+// document.getElementById("download_neighbours_button").addEventListener("click", function(){
+download_neighbours_button_var.addEventListener("click", function(){
+    // Generate download of neighbours
+    var filename = "Neighbours_Job_"+respiraTox_request_ID+".csv";
+    var tsv_sep = ',';
+    var neighbours = respiraTox_request_neighbours;
+    var header_keys = ["rank","compound_name","compound_cas_number","compound_similarity_score", "compound_structure_smiles", "compound_source", 'compound_endpoint_sensory_irritation', 'compound_endpoint_tissue_damage', 'compound_endpoint_no_irritation'];
+    var myData = [header_keys.join(tsv_sep)];
+    
+    for (var i = 0; i < neighbours.length; i++){
+	neighbour = neighbours[i];
+	var neighbour_data = [];
+	for (var j = 0; j < header_keys.length; j++){
+	    var dummy = '"NOT SET"';
+	    try {
+		dummy = '"'+neighbour[header_keys[j]]+'"';
+	    } catch (exception) {
+		console.log(exception);
+	    }
+	    neighbour_data.push(dummy);
+	}
+	myData.push(neighbour_data.join(tsv_sep))
+    }
+    
+
+    download(filename, myData.join('\n'));
+}, false);
+
+download_prediction_button_var.addEventListener("click", function(){
+    // Generate download of prediction
+    var filename = "Prediction_Job_"+respiraTox_request_ID+".csv";
+    var tsv_sep = '\t';
+    
+    var myData = [["Information","Value"].join(tsv_sep)];
+    myData.push(["compound_structure_smiles:",respiraTox_request_data["compound_structure_smiles"]].join(tsv_sep));
+    myData.push(["respiraTox_compound_prediction:",respiraTox_request_result].join(tsv_sep));
+    myData.push(["respiraTox_compound_prediction_confidence:",respiraTox_request_data["Prediction (endpoint) (Confidence)"]].join(tsv_sep));
+    myData.push(["applicability_domain:",respiraTox_request_data["Prediction"]].join(tsv_sep));
+    myData.push(["p(compound_endpoint_no_irritation=0):",respiraTox_request_data["P (compound_endpoint_no_irritation=0)"]].join(tsv_sep));
+    myData.push(["p(compound_endpoint_no_irritation=1):",respiraTox_request_data["P (compound_endpoint_no_irritation=1)"]].join(tsv_sep));
+    // myData.push([":",respiraTox_request_data[""]].join(tsv_sep));
+    // myData.push([":",respiraTox_request_data[""]].join(tsv_sep));
+    // myData.push([":",respiraTox_request_data[""]].join(tsv_sep));
+    // calculation_distance_method
+    // calculation_fingerprint_type
+    // compound_substructure_filter
+    // P (compound_endpoint_no_irritation=0)
+    // P (compound_endpoint_no_irritation=1)
+    // Prediction
+    // Prediction (endpoint) (Confidence): 0.9847652561734487
+    // acid: "0"
+    // anorganic: "1"
+    // base: "0"
+
+    console.log(myData.join('\n'))
+    download(filename, myData.join('\n'));
+}, false);
+
