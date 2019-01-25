@@ -89,7 +89,6 @@ var compound_information_modal_var  = document.getElementById("compound_informat
 var compound_information_modal_html = " "+compound_information_modal_var.innerHTML;
 
 // new alert modal (try)
-respiraTox_alertMessageModal
 var alert_modal_var  = document.getElementById("respiraTox_alertMessageModal");    
 var alert_modal_title_var  = document.getElementById("respiraTox_alertMessageModalTitle_id");    
 var alert_modal_body_var  = document.getElementById("respiraTox_alertMessageModalBody_id");    
@@ -140,8 +139,10 @@ function getAllFuncs(obj) {
     });
 }
 
-function alert_modal(message) {
-    
+function alert_modal(title,message) {
+    alert_modal_title_var.innerHTML  = title;
+    alert_modal_body_var.innerHTML  = message;
+    $('#respiraTox_alertMessageModal').modal('show');
 }
 
 
@@ -383,7 +384,7 @@ function renderResultTableNew(neighbours) {
 
     for (var i = 0; i < neighbours.length; i++){
 	neighbour = neighbours[i];
-	console.log(neighbour);
+	// console.log(neighbour);
 	var irritation_row_class = "table-success";
 	if (neighbour["compound_endpoint_no_irritation"] == "0") {
 	    irritation_row_class = "table-danger";
@@ -656,7 +657,7 @@ function renderNeighbour(neighbour,counter) {
 
 function renderResultTable(neighbours) {
     console.log("renderResultTable:");
-    console.log('neighbours = '+neighbours)
+    // console.log('neighbours = '+neighbours)
     let inner_html = "";
     for (var i = 0; i < neighbours.length; i++){
 	inner_html = inner_html + renderNeighbour(neighbours[i],i);
@@ -741,6 +742,8 @@ function analyseResponse(response) {
 	job_running = false;
 
 	respiraTox_request_status = status;
+	// response = walkObj(response, checkAndFixNull);
+
 	respiraTox_request_result = response["Prediction (endpoint)"];
 	try {
 	    respiraTox_request_result_conf = response["calculated_data"]["Prediction (endpoint) (Confidence)"];
@@ -788,13 +791,25 @@ function analyseResponse(response) {
 	respiraTox_request_result = -1
 	respiraTox_request_data   = {}
 	respiraTox_request_neighbours   = [];
-	alert_message("Job did not finish<br/>Resetting system job variables");
+
+	var addtional_error = '';
+	
+	try {
+	    addtional_error = "<br/>Model error: "+response.workflow_rt_err_string+" (Error code: "+response.workflow_rt_err+")"
+	} catch  (exception) {
+	    console.log('exception occurred: Could not retrieve additional model error');
+	}
+
+	let error_msg = "Job did not finish"+addtional_error+"<br/>Resetting system job variables";
+	alert_message(error_msg);
+	alert_modal('Runtime Error',error_msg);
 	hideElement(table_var);
 	enableElement(smiles_submit_button_var);
 	disableElement(smiles_refresh_button_var);
 	disableElement(download_neighbours_button_var);
 	disableElement(download_prediction_button_var);
 	renderPredictionResult(-1,'',-1.0);
+	clear_input_and_canvas();
     }
     console.log('Status is:' + status);
     console.log('Job running flag is: '+job_running);
@@ -1027,3 +1042,37 @@ download_prediction_button_var.addEventListener("click", function(){
     download(filename, myData.join("\r\n"));
 }, false);
 
+
+
+var what = Object.prototype.toString;
+
+function walkObj(obj, fn) {
+  var wo = what.call(obj);
+  if (wo == "[object Object]") {
+    Object.keys(obj).forEach(function(key){
+      fn(obj, key);
+      var item = obj[key], w = what.call(item);
+      if (w == "[object Object]" || w == "[object Array]") {
+        walkObj(item, fn);
+      }
+    });
+  }
+  else if (wo == "[object Array]") {
+    obj.forEach(function(item, ix) {
+      fn(obj, ix);
+    });
+    obj.forEach(function(item, ix) {
+      var w = what.call(item);
+      if (w == "[object Object]" || w == "[object Array]") {
+        walkObj(item, fn);
+      }
+    });
+  }
+}
+
+function checkAndFixNull(parent, key) {
+  var value = parent[key], w = what.call(value);
+  if ((w == "[object Object]") && (value.TEXT === null) && (value['@nil'] === true)) {
+    parent[key] = null;
+  }
+}

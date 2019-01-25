@@ -76,6 +76,15 @@ STATUS_ERRORS = [
     STATUS.OUTFILE_DELETION_ERROR,
 ]
 
+knime_workflow_error_codes = {
+    '001':'No smiles supplied',
+    '002':'RDKit Parsing/Sanitization Error',
+    '003':'Uncertain structure Error (contains *)',
+    '004':'Element Error (inorganic compound?) contains metal, please test in different model',
+    '005':'Inorganic compounds are out of AD, please test in different model',
+    '006':'Multi constituent please do not enter disconnected structures at this time (execpt: [Na+].* & co.)',
+     }
+    
 # settings = {
 #     'port':5555,
 #     'IP':'127.0.0.1',
@@ -316,7 +325,11 @@ def save_compound(compound_hash,exclude=['thread']):
                 compound_hash["calculated_data"] = {}
                 compound_hash["Prediction (endpoint)"] = -1
                 compound_hash["status"] = STATUS.COLLECTING_JOB_ERROR
-                
+            try:
+                compound_hash["workflow_rt_err"] = results["RT_ERR"]
+                compound_hash["workflow_rt_err_string"] = knime_workflow_error_codes[results["RT_ERR"]]
+            except:
+                pass
             new_hash["calculated_data"] = compound_hash["calculated_data"]
             new_hash["Prediction (endpoint)"] = compound_hash["Prediction (endpoint)"]
     [setHash(new_hash,compound_key,compound_hash[compound_key]) for compound_key in compound_hash.keys() if compound_key not in exclude]
