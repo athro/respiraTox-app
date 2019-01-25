@@ -77,6 +77,7 @@ let jsme_editor_applet = document.getElementById("jsmeApplet");
 var respiraTox_request_status       = 0;
 var respiraTox_request_ID           = -1;
 var respiraTox_request_result       = -1;
+var respiraTox_request_result_conf  = -1.0;
 var respiraTox_request_data         = {};
 var respiraTox_request_neighbours   = [];
 
@@ -667,11 +668,12 @@ function renderResultTable(neighbours) {
     
 }    
 
-function renderPredictionResult(predictionResult,appdomain) {
+function renderPredictionResult(predictionResult,appdomain, predictionResultConfidence) {
     // predictionResult == 1 - irritation : 0 - no irritation
     // appdomain: reliable vs 
     console.log("renderPredictionResult");
     let prediction_result_int = parseFloat(predictionResult).toFixed(1)
+    // let prediction_result_conf = parseFloat(predictionResult).toFixed(5)
     let prediction_color = local_color_scheme.white;
     let prediction_label = '';
     let appdomain_label  = '';
@@ -690,6 +692,11 @@ function renderPredictionResult(predictionResult,appdomain) {
 	    prediction_color = local_color_scheme.white;
 	    prediction_label = '';
 	}
+
+	if ((prediction_label != '') && (predictionResultConfidence > 0.0)) {
+	    prediction_label = prediction_label+" ("+predictionResultConfidence.toFixed(3)+")"; 
+	}
+
     }
     prediction_display_area_var.style.setProperty("background-color",prediction_color);
     prediction_display_area_var.innerHTML = prediction_label
@@ -735,6 +742,11 @@ function analyseResponse(response) {
 
 	respiraTox_request_status = status;
 	respiraTox_request_result = response["Prediction (endpoint)"];
+	try {
+	    respiraTox_request_result_conf = response["calculated_data"]["Prediction (endpoint) (Confidence)"];
+	} catch (exception) {
+	    console.log('exception occurred: Could not find response["calculated_data"]["Prediction (endpoint) (Confidence)"] in response');
+        }
 
 	let appdomain =  response["calculated_data"]["Prediction"];
 	// console.log('appdomain:'+appdomain);
@@ -747,7 +759,7 @@ function analyseResponse(response) {
 	datatable.clear();
 	datatable.destroy();
 	renderResultTableNew(respiraTox_request_neighbours);
-	renderPredictionResult(respiraTox_request_result,appdomain);
+	renderPredictionResult(respiraTox_request_result,appdomain,respiraTox_request_result_conf);
 	datatable = $('#neighbour_table_id').DataTable();
 	datatable.draw();
 	
@@ -782,7 +794,7 @@ function analyseResponse(response) {
 	disableElement(smiles_refresh_button_var);
 	disableElement(download_neighbours_button_var);
 	disableElement(download_prediction_button_var);
-	renderPredictionResult(-1,'');
+	renderPredictionResult(-1,'',-1.0);
     }
     console.log('Status is:' + status);
     console.log('Job running flag is: '+job_running);
@@ -907,7 +919,7 @@ function clear_smiles_drawer_canvas() {
 function clear_input_and_canvas() {
     compound_input_var.value = "";
     clear_smiles_drawer_canvas();
-    renderPredictionResult(-1,'');
+    renderPredictionResult(-1,'',-1.0);
     select_compound_format('SMILES');
     clean_table();
     disableElement(download_neighbours_button_var);
@@ -939,11 +951,11 @@ function check_if_valid_smiles(potential_smiles_string) {
     return potential_smiles_string.trim().match(/^([^J][0-9BCOHNSOPrIFla@+\-\[\]\(\)\\\/%=#$,.~;&!]{6,})$/ig);
 }
 
-
+// from : https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
 function download(filename, text) {
     var element = document.createElement('a');
 
-    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + text);
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
 
     element.style.display = 'none';
@@ -983,7 +995,7 @@ download_neighbours_button_var.addEventListener("click", function(){
     }
     
 
-    download(filename, myData.join('\n'));
+    download(filename, myData.join("\r\n"));
 }, false);
 
 download_prediction_button_var.addEventListener("click", function(){
@@ -1012,7 +1024,6 @@ download_prediction_button_var.addEventListener("click", function(){
     // anorganic: "1"
     // base: "0"
 
-    console.log(myData.join('\n'))
-    download(filename, myData.join('\n'));
+    download(filename, myData.join("\r\n"));
 }, false);
 
