@@ -109,7 +109,7 @@
                 <!-- 	<input id="smiles_input_id" type="text" class="form-control" value="" placeholder="c1(c(cccc1)CC)CCC" aria-label="smiles_label" aria-describedby="smiles_input_desc"></input> -\-> -->
                 <!-- </div>  -->
 
-                <small id="smiles_helptext" class="text-muted"><br/>Select structure format and enter or upload compound structure</small>
+                <small id="smiles_helptext" class="text-muted"><br/>Select input type and enter compound structure for prediction</small>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="btn-group" id="basic-addon3">
@@ -122,12 +122,12 @@
 	      <a class="dropdown-item disabled text-muted" onclick="return select_compound_format('SDF')">SDF<img src="./icons/111163-justicons/svg/upload-to-internet.svg" alt="copy&paste" height="16" width="20"> </a>
 	    </div>
 	  </span>
-                    </div>
-                    <input id="compound_input_id_text" type="text" class="form-control" style="display:block" value="" placeholder="Enter SMILES here" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
-		    <button type="button" class="btn btn-primary" onclick="return clear_input_and_canvas()"><object id="clear_button_id" width="85">Clear</object></button>
-                    <!-- <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button> -->
-                    <button id="compound_input_id_button" type="button" class="btn alert-primary" style="display:none" value="" aria-label="compound_button_label" aria-describedby="compound_button_label">Upload</button>
-                </div>
+	    </div>
+	    <input id="compound_input_id_text" type="text" class="form-control" style="display:block" value="" placeholder="Enter SMILES here" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
+	    <button type="button" class="btn btn-primary" onclick="return clear_input_and_canvas()"><object id="clear_button_id" width="85">Clear</object></button>
+	    <!-- <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button> -->
+	    <button id="compound_input_id_button" type="button" class="btn alert-primary" style="display:none" value="" aria-label="compound_button_label" aria-describedby="compound_button_label">Upload</button>
+	    </div>
             </div>
 
 	    <!-- OPTIONAL ID -->
@@ -158,7 +158,7 @@
 		  
             <!-- Distance calculation -->
             <div class="input-group mb-3">
-                <small id="distance_method_helptext" class="text-muted"><br/>Select similarity calculation method (default: Tanimoto)</small>
+                <small id="distance_method_helptext" class="text-muted"><br/>Select similarity calculation method for neighbour table</small>
                 <div class="input-group mb-3">
                     <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="distance_method_button_id" width="85">Similarity</object></button>
@@ -180,7 +180,7 @@
 
 	    <!-- Fingerprint type selection -->
             <div class="input-group mb-3">
-                <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used (default is ECFP-2048)</small>
+                <small id="fingerprint_type_helptext" class="text-muted"><br/>Select the desired fingerprint type to be used for neighbour table</small>
                 <div class="input-group mb-3">
                     <span class="btn-group" id="basic-addon3">
 	    <button type="button" class="btn input-group-text dropdown-toggle" data-toggle="dropdown"><object id="fingerprint_type_button_id" width="85">Fingerprint</object></button>
@@ -190,46 +190,58 @@
 	      <a class="dropdown-item" onclick="return select_fingerprint_type('ECFP-2048')">ECFP-2048</a>
 	    </div>
 	    <fieldset disabled>
-	       <input id="fingerprint_type_id" type="text" class="form-control" style="display:block"  value="ECFP-2048" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
+	    <input id="fingerprint_type_id" type="text" class="form-control" style="display:block"  value="ECFP-2048" aria-label="compound_text_label" aria-describedby="smiles_input_desc"></input>
 	    </fieldset>
-	  </span>
-                </div>
-            </div>
-	    
-            <div class="input-group mb-3">
-                <small id="smiles_canvas_helptext" class="text-muted"><br/>Structure from input</small>
-                <div class="canvas_class">
-                    <canvas id="smiles_canvas" width="250" height="150"></canvas>
-                </div>
-                <small id="applicabilitydomain_helptext" class="text-muted"><br/>Applicability Domain</small>
-                <div class="d-flex p-3 bg-white text-black">
-                    <div style="width: 150px; height: 80px; background-color: white;">
-                        <div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
-                        <div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
-                            <div class="d-flex p-3 bg-white text-muted">
-                                <div style="width: 50px; height: 80px; background-color: white;">
-                                    <small><b><div id="applicabilitydomain_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: white;"></div></b></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+	    </span>
+	    </div>
+	    </div>
 
-                <small id="prediction_helptext" class="text-muted"><br/>Prediction</small>
-                <div class="d-flex p-3 bg-white text-black">
-                    <div style="width: 150px; height: 80px; background-color: white;">
-                        <div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
-                        <div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
-                            <div class="d-flex p-3 bg-white text-muted">
-                                <div style="width: 50px; height: 80px; background-color: white;">
-                                    <small><b><div id="prediction_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color:white;"></div></b></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+	    <div class="input-group mb-3">
+	    <div class="input-group-prepend">
+	      <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button>
+	      <button id="smiles_refresh_button_id" type="button" class="btn btn-primary" onclick="refresh_prediction()" disabled>Refresh Jobs Status</button>
+	      <button id="download_neighbours_button" type="button" class="btn btn-primary" disabled>&#8595;Neighbours (CSV)</button>
+	      <button id="download_prediction_button" type="button" class="btn btn-primary" disabled>&#8595;Prediction (TXT)</button>
+	      
+	    </div>
+	    </div>
 
-                <!-- <small id="prediction_helptext" class="text-muted"><br/>Prediction</small> -->
+	    <!-- <div class="input-group mb-3"> -->
+	    <!--   <small id="information_pane" class="text-muted"><br/>Information Pane</small> -->
+	    <div class="input-group mb-3">
+	      <div id="smiles_canvas_helptext" class="text-muted"><br/>Structure from input</div>
+	    <div class="canvas_class">
+	      <canvas id="smiles_canvas" width="250" height="150"></canvas>
+	    </div>
+	    <div id="applicabilitydomain_helptext" class="text-muted"><br/>Applicability Domain</div>
+	    <div class="d-flex p-3 bg-white text-black">
+	    <div style="width: 150px; height: 80px; background-color: white;">
+	    <div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
+	    <div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
+	    <div class="d-flex p-3 bg-white text-muted">
+	    <div style="width: 50px; height: 80px; background-color: white;">
+	      <small><b><div id="applicabilitydomain_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color: white;"></div></b></small>
+	      </div>
+	      </div>
+	      </div>
+	      </div>
+	      </div>
+	      
+	      <div id="prediction_helptext" class="text-muted"><br/>Prediction</div>
+	      <div class="d-flex p-3 bg-white text-black">
+	      <div style="width: 150px; height: 80px; background-color: white;">
+	      <div class="mh-100" style="width: 25px; height: 15px; background-color: white;"></div>
+	      <div class="mh-100" style="width: 150px; height: 50px; background-color: white;">
+	      <div class="d-flex p-3 bg-white text-muted">
+	      <div style="width: 50px; height: 80px; background-color: white;">
+		<small><b><div id="prediction_display_area_id" class="mh-100" style="text-align: center; height: 20px; width: 80px; background-color:white;"></div></b></small>
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
+		
+		<!-- <small id="prediction_helptext" class="text-muted"><br/>Prediction</small> -->
                 <!-- <div class="d-flex p-3 bg-white text-black"> -->
                 <!--     <div style="width: 50px; height: 80px; background-color: white;"> -->
                 <!--         <div class="mh-100" style="width: 15px; height: 15px; background-color: white;"></div> -->
@@ -246,20 +258,21 @@
                 <!--     <\!-- <div class="p-2 bg-light" width=300 id="pred_flex">1</div> -\-> -->
                 <!-- </div> -->
 		
-            </div>
+            <!-- </div> -->
+	    </div>
 	    
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button>
-                    <button id="smiles_refresh_button_id" type="button" class="btn btn-primary" onclick="refresh_prediction()" disabled>Refresh Jobs Status</button>
-		    <button id="download_neighbours_button" type="button" class="btn btn-primary" disabled>&#8595;Neighbours (CSV)</button>
-		    <button id="download_prediction_button" type="button" class="btn btn-primary" disabled>&#8595;Prediction (TXT)</button>
+	    <!-- <div class="input-group mb-3"> -->
+	    <!-- <div class="input-group-prepend"> -->
+	    <!--   <button id="smiles_submit_button_id" type="button" class="btn btn-primary" onclick="return submit_for_prediction()">Submit for Prediction</button> -->
+	    <!--   <button id="smiles_refresh_button_id" type="button" class="btn btn-primary" onclick="refresh_prediction()" disabled>Refresh Jobs Status</button> -->
+	    <!--   <button id="download_neighbours_button" type="button" class="btn btn-primary" disabled>&#8595;Neighbours (CSV)</button> -->
+	    <!--   <button id="download_prediction_button" type="button" class="btn btn-primary" disabled>&#8595;Prediction (TXT)</button> -->
+	      
+	    <!-- </div> -->
+	    </form>
+	    </div>
 
-                </div>
-        </form>
-        </div>
-
-	<div class="container">
+	    <div class="container">
             <table class="table table-sm table-hover table-striped table-bordered" id="neighbour_table_id" style="display:bulk" style="width:100%">
                 <caption>Neighbours</caption>
                 <thead>
