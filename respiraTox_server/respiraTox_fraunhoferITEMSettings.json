@@ -1,6 +1,7 @@
 {
     "port": 5555,
     "IP": "127.0.0.1",
+    "job_timeout":180,
     "knime":
     {
 	"application": "/home/respirat/knime_3.6.1/knime",

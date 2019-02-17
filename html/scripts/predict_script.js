@@ -735,7 +735,11 @@ function analyseResponse(response) {
 	disableElement(download_neighbours_button_var);
 	disableElement(download_prediction_button_var);
 	renderPredictionResult(-1,'');
-	alert_message('Job is running<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'" target="_blank">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
+	if(thread_status === 'running') {
+	    alert_message('Job is running<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'" target="_blank">'+respiraTox_request_ID+"</a><br/> Running time: "+thread_running_time+" secs");
+	}else{
+	    alert_message('Job is queued ('+thread_status+')<br/>Job ID = <a href="'+base_URL+respiraTox_request_ID+'" target="_blank">'+respiraTox_request_ID+"</a><br/> Running time: Job will start shortly");
+	}
     }
     // job finished
     else if (status == 11) {

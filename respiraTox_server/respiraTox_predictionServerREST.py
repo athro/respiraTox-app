@@ -1,6 +1,7 @@
 import os,os.path
 import sys
 import subprocess
+import threading
 import json
 import time
 
@@ -20,6 +21,9 @@ except:
     pass
 
 debug       = False
+
+# # internal variable - ugly as global
+# job_timeout = 600
 
 
 def saveGetDefault(the_hash,the_key,the_default=None):
@@ -62,6 +66,7 @@ STATUS.RUN_JOB_START            = 'Run job started'
 STATUS.RUN_JOB_PROCESSING       = 'Run job in process'
 STATUS.RUN_JOB_END              = 'Run job finished'
 STATUS.RUN_JOB_ERROR            = 'Run job error occurred (Runtime Error)'
+STATUS.RUN_JOB_QUEUED           = 'Run job queued'
 STATUS.COLLECTING_JOB           = 'Collecting job results'
 STATUS.COLLECTING_JOB_DATA      = 'Collecting job results (data loaded)'
 STATUS.COLLECTING_JOB_ERROR     = 'Collecting job resulted in an error'
@@ -101,6 +106,11 @@ knime_workflow_error_codes = {
 #     }
     
 settings = None
+
+# new job queue issues
+global_job_queue           = None
+global_job_queue_intervall = 5     # in seconds
+global_job_process_thread  = None
 
 
 compounds = [
@@ -287,6 +297,11 @@ compounds = [
     ]
 
 
+# print including time
+def printt(*arg):
+    time_stamp = time.strftime('%X')
+    print(time_stamp,*arg)
+
 def setHash(the_hash,the_key,the_value):
     the_hash[the_key] = the_value
 
@@ -334,47 +349,192 @@ def save_compound(compound_hash,exclude=['thread']):
             new_hash["Prediction (endpoint)"] = compound_hash["Prediction (endpoint)"]
     [setHash(new_hash,compound_key,compound_hash[compound_key]) for compound_key in compound_hash.keys() if compound_key not in exclude]
     return new_hash
-    
-class Job:
-    timeout = 60
-    def __init__(self,cmds):
-        self.starttime = time.time()
-        self.lastcheck = self.starttime
-        self.current_running_time = self.lastcheck-self.starttime
-        print('Job(cmds)',cmds)
-        self.process   = subprocess.Popen(cmds, shell=False)
-        self.status    = self.process.poll()
-        self.status_string = "running"
 
+
+# my own Job queue
+class JobQueue:
+    def __init__(self):
+        self.items = []
+
+    def empty(self):
+        return self.items == []
+
+    def put(self, item):
+        self.items.insert(0,item)
+
+    def get(self):
+        return self.items.pop()
+
+    def size(self):
+        return len(self.items)
+
+    def __str__(self):
+        return 'JobQueue: {}'.format(['Job:{}'.format(x.__str__()) for x in self.items])
+
+
+# class for containing JobObjects
+
+class Jobs:
+    
+    def __init__(self):
+        self.current_job = None
+        self.job_queue   = JobQueue()
+
+    def addJob(self,job):
+        job_to_queue = job
+        if type(job) == type([]):
+            job_to_queue = Job(cmds)
+        self.job_queue.put(job_to_queue)
+
+    # job finshed detected from outside
+    def currentJobFinishedSignal(self):
+        self.current_job = None
+        
+    def processQueue(self):
+        # trace
+        print()
+        printt('*'*80)
+        job_running = False
+        # check if we currently have a job running
+        if self.current_job:
+            job_status_own = self.current_job.finished()
+            printt('processQueue05a',job_status_own)
+            printt('processQueue05b',self.current_job)
+            # the last job finished
+            job_running = not job_status_own # if finished we would get a True
+            if job_status_own:
+                printt('processQueue05c')
+                self.current_job = None
+        # check if the job queue is still full - in case of no current job, start a new one from queue
+        if not job_running and not self.job_queue.empty():
+            printt('processQueue10a:new job start')
+            self.current_job = self.job_queue.get()
+            self.current_job.start()
+            job_running = True
+            printt('new job start')
+        if not job_running and self.job_queue.empty():
+            printt('No job running and none in queue')
+            
+        printt(self)
+        printt('*'*80)
+        # print( threading.enumerate() )
+        print()
+        # global global_job_process_thread
+        global_job_process_thread.run()
+
+    def __str__(self):
+        return '{}\t{}'.format(self.current_job,self.job_queue)
+    
+
+# new Job class to work with Jobs objects
+# Job need to be created (initialized)
+# start Job now separetely
+
+class Job:
+    global settings
+
+    # not sure why this is not working right now
+    timeout = 600
+    try:
+        timeout = settings['job_timeout']
+    except:
+        pass
+    
+    def __init__(self,cmds):
+        self.cmds                 = cmds
+        self.starttime            = None
+        self.current_running_time = -1
+        self.lastcheck            = None
+        self.status               = None
+        self.status_string        = "initialised"
+        printt('Job(cmds)',self.cmds)
+
+        
+    def start(self):
+        self.starttime            = time.time()
+        self.lastcheck            = self.starttime
+        self.current_running_time = self.lastcheck-self.starttime
+        self.process              = subprocess.Popen(self.cmds, shell=False)
+        self.status               = self.process.poll()
+        self.status_string        = "running"
+        
     def finished(self):
         # check if terminated:
-        self.lastcheck = time.time()
-        self.status    = self.process.poll() 
+        if self.status_string != 'initialised':
+            self.lastcheck = time.time()
+            self.status    = self.process.poll() 
 
-        #print('self.status',self.status)
-        if self.status != None:
-            #print('Process finished')
-            self.status_string = "finished"
-            return True
-        # else:
-            #print('Process running')
+            #printt('self.status',self.status)
+            if self.status != None:
+                #printt('Process finished')
+                self.status_string = "finished"
+                return True
+            # else:
+                #printt('Process running')
 
-        self.current_running_time = self.lastcheck-self.starttime
+            self.current_running_time = self.lastcheck-self.starttime
 
-        if self.current_running_time > self.timeout:
-            print('Process should be killed')
-            self.status_string = "timeout"
+            if self.current_running_time > self.timeout:
+                printt('Process should be killed')
+                self.status_string = "timeout"
         return False
-    
-    def __str__(self,o):
+
+    def __str__(self):
         return_val =  {
             'starttime':self.starttime,
             'current_running_time':self.current_running_time,
             'lastcheck':self.lastcheck,
-            'status':self.status
+            'status':self.status,
+            'status':self.cmds
             }
 
-        return return_val
+        return '{}'.format(return_val)
+
+
+
+    
+# class Job:
+#     global settings
+#     timeout = settings['job_timeout']
+    
+#     def __init__(self,cmds):
+#         self.starttime = time.time()
+#         self.lastcheck = self.starttime
+#         self.current_running_time = self.lastcheck-self.starttime
+#         print('Job(cmds)',cmds)
+#         self.process   = subprocess.Popen(cmds, shell=False)
+#         self.status    = self.process.poll()
+#         self.status_string = "running"
+
+#     def finished(self):
+#         # check if terminated:
+#         self.lastcheck = time.time()
+#         self.status    = self.process.poll() 
+
+#         #print('self.status',self.status)
+#         if self.status != None:
+#             #print('Process finished')
+#             self.status_string = "finished"
+#             return True
+#         # else:
+#             #print('Process running')
+
+#         self.current_running_time = self.lastcheck-self.starttime
+
+#         if self.current_running_time > self.timeout:
+#             print('Process should be killed')
+#             self.status_string = "timeout"
+#         return False
+    
+#     def __str__(self,o):
+#         return_val =  {
+#             'starttime':self.starttime,
+#             'current_running_time':self.current_running_time,
+#             'lastcheck':self.lastcheck,
+#             'status':self.status
+#             }
+
+#         return return_val
 
 
 class respiraToxSettings:
@@ -406,6 +566,7 @@ class respiraToxSettings:
         return {
             'port':5555,
             'IP':'127.0.0.1',
+            "job_timeout":120,
             'knime':{
                 'application':'/Applications/KNIME 3.5.2.app/Contents/MacOS/Knime',
                 'default_parameters':['-reset', '-nosplash', '--launcher.suppressErrors', '-application', 'org.knime.product.KNIME_BATCH_APPLICATION'],
@@ -715,7 +876,11 @@ def _runJob(job_id,compound_id,compound_structure_smiles,results=None):
 
     
     try:
+        # create job
         job_thread = Job(cmds)
+        # put into queue
+        global_job_queue.addJob(job_thread)
+        
         results['status'] = STATUS.RUN_JOB_PROCESSING
         results['thread'] = job_thread
     except Exception as e:
@@ -822,7 +987,8 @@ def setup(settings):
         # print('Using the following JSON directory: <<{}>>'.format(knime_json_dir))
         # should check whether this is a directory and whether it is writable
         None
-        
+
+
     
     app = Flask(__name__)
     @app.after_request
@@ -844,9 +1010,11 @@ def setup(settings):
         host=settings['IP'],
         port=settings['port'],
         # debug=eval(settings['debug'])
-        debug=True
+        debug=False
         )
 
+    # print( threading.enumerate() )
+    
 
 rest_app = None
     
@@ -862,9 +1030,23 @@ if __name__ == '__main__':
     settings = None
     settingsInstance = respiraToxSettings(options.settings_filename)
     settings = settingsInstance.getSettings()
-    
+
+    # set up job queue
+    # global global_job_queue
+    global_job_queue = Jobs()
+    # setting up job check thread
+    # global global_job_queue_intervall
+    # global global_job_process_thread
+    global_job_process_thread = threading.Timer(global_job_queue_intervall, global_job_queue.processQueue)  # timer is set to global_job_queue_intervall seconds
+    global_job_process_thread.start()
+
     rest_app  = setup(settings)
 
+    # clean up thread 
+    if global_job_process_thread.is_alive():
+        global_job_process_thread.cancel()
+
+    print('REST SETUP FINISHED')
 ## curl test commands:
 
 # GET

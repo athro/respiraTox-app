@@ -1,6 +1,7 @@
 {
     "port": 5555,
     "IP": "127.0.0.1",
+    "job_timeout":120,
     "knime":
     {
 	"application": "/Applications/KNIME 3.6.1.app/Contents/MacOS/Knime",
