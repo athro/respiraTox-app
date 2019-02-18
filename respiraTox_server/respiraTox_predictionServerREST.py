@@ -11,6 +11,8 @@ from flask_restful import Api,Resource, reqparse
 from pprint import pprint
 from optparse import OptionParser
 
+# debug timer threads - recursion error
+recursionCount = 0
 
 # import openbabel python module for SMILES to MOL convertion
 openbabel = False
@@ -109,7 +111,7 @@ settings = None
 
 # new job queue issues
 global_job_queue           = None
-global_job_queue_intervall = 5     # in seconds
+global_job_queue_intervall = 2     # in seconds
 global_job_process_thread  = None
 
 
@@ -395,27 +397,35 @@ class Jobs:
         print()
         printt('*'*80)
         job_running = False
+        debug_status_information = 'None'
         # check if we currently have a job running
         if self.current_job:
             job_status_own = self.current_job.finished()
-            printt('processQueue05a',job_status_own)
-            printt('processQueue05b',self.current_job)
+            # printt('processQueue05a',job_status_own)
+            # printt('processQueue05b',self.current_job)
             # the last job finished
             job_running = not job_status_own # if finished we would get a True
+            debug_status_information = 'job finished, setting removing current job'
             if job_status_own:
-                printt('processQueue05c')
+                # printt('processQueue05c')
                 self.current_job = None
         # check if the job queue is still full - in case of no current job, start a new one from queue
         if not job_running and not self.job_queue.empty():
-            printt('processQueue10a:new job start')
+            # printt('processQueue10a:new job start')
             self.current_job = self.job_queue.get()
             self.current_job.start()
             job_running = True
-            printt('new job start')
+            debug_status_information = 'new job started'
         if not job_running and self.job_queue.empty():
             printt('No job running and none in queue')
-            
-        printt(self)
+            debug_status_information = 'No job running and none in queue'
+
+        global recursionCount
+        printt('Job Queue Status: {}'.format(debug_status_information))
+        recursionCount += 1
+        printt('Number called:    {}'.format(recursionCount))
+        printt('Current Job:      {}'.format('{}'.format(self.current_job))[:40])
+        printt('Length Queue:     {}'.format(self.job_queue.size()))
         printt('*'*80)
         # print( threading.enumerate() )
         print()
