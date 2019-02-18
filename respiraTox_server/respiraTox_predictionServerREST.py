@@ -430,7 +430,7 @@ class Jobs:
         # print( threading.enumerate() )
         print()
         # global global_job_process_thread
-        global_job_process_thread.run()
+        # global_job_process_thread.run()
 
     def __str__(self):
         return '{}\t{}'.format(self.current_job,self.job_queue)
@@ -688,6 +688,9 @@ class Compounds(Resource):
 
         compounds.append(compound)
 
+        # update job queue
+        global_job_queue.processQueue()
+
         return save_compound(compound,['thread']), 201
 
         
@@ -705,6 +708,10 @@ class Compound(Resource):
     
     # get existing compound
     def get(self, job_id):
+
+        # update job queue
+        global_job_queue.processQueue()
+        
         global compounds
         for compound in compounds:
             if job_id == compound["job_id"]:
@@ -766,6 +773,10 @@ class Compound(Resource):
             )
         
         compounds.append(compound)
+
+        # update job queue
+        global_job_queue.processQueue()
+
         return save_compound(compound),202
 
     # update existing compound if exsists or create new one otherwise
@@ -792,6 +803,10 @@ class Compound(Resource):
             }
         
         compounds.append(compound)
+
+        # update job queue
+        global_job_queue.processQueue()
+        
         return save_compound(compound),201
 
     
@@ -1047,14 +1062,14 @@ if __name__ == '__main__':
     # setting up job check thread
     # global global_job_queue_intervall
     # global global_job_process_thread
-    global_job_process_thread = threading.Timer(global_job_queue_intervall, global_job_queue.processQueue)  # timer is set to global_job_queue_intervall seconds
-    global_job_process_thread.start()
+    # global_job_process_thread = threading.Timer(global_job_queue_intervall, global_job_queue.processQueue)  # timer is set to global_job_queue_intervall seconds
+    # global_job_process_thread.start()
 
     rest_app  = setup(settings)
 
     # clean up thread 
-    if global_job_process_thread.is_alive():
-        global_job_process_thread.cancel()
+    # if global_job_process_thread.is_alive():
+    #     global_job_process_thread.cancel()
 
     print('REST SETUP FINISHED')
 ## curl test commands:
