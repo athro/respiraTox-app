@@ -11,6 +11,12 @@ from flask_restful import Api,Resource, reqparse
 from pprint import pprint
 from optparse import OptionParser
 
+# make life colourfull
+import colorama
+from colorama import Fore, Back, Style
+colorama.init()
+
+
 # debug timer threads - recursion error
 recursionCount = 0
 
@@ -302,7 +308,8 @@ compounds = [
 # print including time
 def printt(*arg):
     time_stamp = time.strftime('%X')
-    print(time_stamp,*arg)
+    print(Fore.GREEN,time_stamp,*arg,Style.RESET_ALL)
+    # print(Style.RESET_ALL),
 
 def setHash(the_hash,the_key,the_value):
     the_hash[the_key] = the_value
@@ -395,7 +402,7 @@ class Jobs:
     def processQueue(self):
         # trace
         print()
-        printt('*'*80)
+        printt('*'*120)
         job_running = False
         debug_status_information = 'None'
         # check if we currently have a job running
@@ -423,10 +430,10 @@ class Jobs:
         global recursionCount
         printt('Job Queue Status: {}'.format(debug_status_information))
         recursionCount += 1
-        printt('Number called:    {}'.format(recursionCount))
-        printt('Current Job:      {}'.format('{}'.format(self.current_job))[:40])
+        # printt('Number called:    {}'.format(recursionCount))
+        printt('Current Job:      {}'.format(str(self.current_job)[:100]))
         printt('Length Queue:     {}'.format(self.job_queue.size()))
-        printt('*'*80)
+        printt('*'*120)
         # print( threading.enumerate() )
         print()
         # global global_job_process_thread
