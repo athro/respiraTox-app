@@ -11,6 +11,10 @@ from flask_restful import Api,Resource, reqparse
 from pprint import pprint
 from optparse import OptionParser
 
+
+# include sqlalchemiy and the user definitions
+import respiraTox_users
+
 # make life colourfull
 import colorama
 from colorama import Fore, Back, Style
@@ -564,9 +568,10 @@ class respiraToxSettings:
             try:
                 self.settings = json.load(open(settings_filename))
                 settings_read = True
+                print(self.settings)
             except Exception as e:
                 print('An exception occurred: <<{}>>'.format(e))
-                pass
+                # pass
         # if settings could not be read
         if not settings_read:
             print('Could not read settings file <<{}>>'.format(settings_filename))
